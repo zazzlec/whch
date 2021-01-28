@@ -1,0 +1,69 @@
+{
+  "_from": "resize-detector",
+  "_id": "resize-detector@0.2.2",
+  "_inBundle": false,
+  "_integrity": "sha1-sgfnKRK+8L2p+4Jf6JTtlobKll4=",
+  "_location": "/resize-detector",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "resize-detector",
+    "name": "resize-detector",
+    "escapedName": "resize-detector",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "http://r.cnpmjs.org/resize-detector/download/resize-detector-0.2.2.tgz",
+  "_shasum": "b207e72912bef0bda9fb825fe894ed9686ca965e",
+  "_spec": "resize-detector",
+  "_where": "E:\\上锅人员\\智能燃烧\\q",
+  "author": {
+    "name": "Justineo",
+    "url": "justice360@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/Justineo/resize-detector/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "description": "Element resize detection, both modern way and cross browser.",
+  "devDependencies": {
+    "@rollup/plugin-buble": "^0.21.1",
+    "babel-eslint": "^8.2.6",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "rollup": "^1.31.1",
+    "rollup-plugin-postcss": "^2.1.1",
+    "rollup-plugin-terser": "^5.2.0"
+  },
+  "homepage": "https://github.com/Justineo/resize-detector#readme",
+  "keywords": [
+    "element",
+    "resize",
+    "observer"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "esm/index.js",
+  "name": "resize-detector",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Justineo/resize-detector.git"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "prepare": "npm run build"
+  },
+  "version": "0.2.2"
+}

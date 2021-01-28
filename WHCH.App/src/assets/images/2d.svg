@@ -1,0 +1,23 @@
+<svg width="392" height="391" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="#fff" id="canvas_background" height="393" width="394" y="-1" x="-1"/>
+  <g display="none" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%" id="svg_6"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="20.059619" x2="42.667628" y1="320.056902" x1="41.334296" stroke-width="1.5" fill="none" stroke="#000"/>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="58.059342" x2="-168.330679" y1="58.059342" x1="-168.997341" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_3" y2="20.726281" x2="377.832088" y1="20.726281" x1="43.167627" stroke-width="1.5" fill="none"/>
+  <polyline stroke-linecap="round" id="svg_4" points="-138.33089784194166,74.05922561910427 -138.33089784194166,74.05922561910427 " stroke-width="1.5" stroke="#000" fill="none"/>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_5" y2="320.890213" x2="376.998752" y1="21.392943" x1="377.165433" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none" stroke="#000"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_17" y2="126.537437" x2="189.499999" y1="319.037683" x1="189.5" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_18" y2="174.787488" x2="314.500124" y1="126.53744" x1="189" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_19" y2="201.037515" x2="254.000045" y1="174.537493" x1="314.500124" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_20" y2="318.5377" x2="255.000061" y1="200.53752" x1="253.500055" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+ </g>
+</svg>
