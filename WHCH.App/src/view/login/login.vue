@@ -12,7 +12,7 @@
           <Card  :bordered="false">
             <div slot="title" style="width:100%;height:20px">
                 <div style="width:20px;height:20px;float:left"><img  :src="maxLogo" style="width:20px;height:20px" /></div>
-                <div style="width:50%;height:20px;line-height:20px;float:left;color:#222;font-weight: bold;margin-left:6px">国华锦界锅炉智能运行系统</div>
+                <div style="width:50%;height:20px;line-height:20px;float:left;color:#222;font-weight: bold;margin-left:6px">五河电厂智能燃烧系统</div>
             </div>
             <div class="form-con">
               <login-form

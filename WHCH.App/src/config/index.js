@@ -2,7 +2,7 @@ export default {
   /**
    * @description 配置显示在浏览器标签的title
    */
-  title: '国华锦界锅炉智能运行系统',
+  title: '五河电厂智能燃烧系统',
   /**
    * @description token在Cookie中存储的天数，默认1天
    */
