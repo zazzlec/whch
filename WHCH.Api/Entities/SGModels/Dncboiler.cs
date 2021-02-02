@@ -10,32 +10,19 @@ namespace WHCH.Api.Entities
 	[Serializable]
 	public class Dncboiler
 	{
-
+    
+    
+    
         /// <summary>
-        /// 运行状态（0：停机 1：运行）
-        /// </summary>
-
-
-        public System.Int32 NowStatus { get; set; }
-
-
-        /// <summary>
-        /// 状态更新时间
-        /// </summary>
-
-
-        public DateTime? Sta_time { get; set; }
-
-        /// <summary>
-        /// 序号
-        /// </summary>
+    	/// 序号
+    	/// </summary>
         [Key,Required]
    
         public System.Int32 Id { get; set; } 
         
     
         /// <summary>
-    	/// 
+    	/// 锅炉名称
     	/// </summary>
         
    
@@ -51,7 +38,7 @@ namespace WHCH.Api.Entities
         
     
         /// <summary>
-    	/// 
+    	/// 备注
     	/// </summary>
         
    
@@ -63,16 +50,65 @@ namespace WHCH.Api.Entities
     	/// </summary>
         
    
-        public System.Int32 Edfh { get; set; }
-
-        /// <summary>
-        /// 巡测取值数
-        /// </summary>
-        public System.Int32 CircleNum { get; set; }
+        public System.Int32 Edfh { get; set; } 
         
-        public System.Int32 Ch_Run { get; set; }
-        public DateTime? Ch_StartTime { get; set; }
-        public DateTime? Ch_EndTime { get; set; }
+    
+        /// <summary>
+    	/// 运行状态（0：停机 1：运行）
+    	/// </summary>
+        
+   
+        public System.Int32 NowStatus { get; set; } 
+        
+    
+        /// <summary>
+    	/// 吹灰列表清空负荷
+    	/// </summary>
+        
+   
+        public System.Int32 Fh_Chlistrun { get; set; } 
+        
+    
+        /// <summary>
+    	/// 是否正在执行吹灰
+    	/// </summary>
+        
+   
+        public System.Int32 Ch_Run { get; set; } 
+        
+    
+        /// <summary>
+    	/// 吹灰开始时间
+    	/// </summary>
+        
+   
+        public DateTime? Ch_StartTime { get; set; } 
+        
+    
+        /// <summary>
+    	/// 吹灰结束时间
+    	/// </summary>
+        
+   
+        public DateTime? Ch_EndTime { get; set; } 
+        
+    
+        /// <summary>
+    	/// 正平衡效率
+    	/// </summary>
+        
+   
+        public System.Double Positive { get; set; } 
+        
+    
+        /// <summary>
+    	/// 反平衡效率
+    	/// </summary>
+        
+   
+        public System.Double Counter { get; set; } 
+        
+	
         /// <summary>
         /// 是否可用(0:禁用,1:可用)
         /// </summary>

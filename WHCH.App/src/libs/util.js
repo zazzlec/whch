@@ -19,6 +19,7 @@ export const setToken = (token) => {
 }
 
 export const getToken = () => {
+  // console.log(TOKEN_KEY);
   const token = localStorage.getItem(TOKEN_KEY);
   if (token) return token
   else return ""

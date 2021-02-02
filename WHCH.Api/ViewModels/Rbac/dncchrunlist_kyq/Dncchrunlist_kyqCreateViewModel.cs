@@ -55,6 +55,7 @@ namespace WHCH.Api.ViewModels.Rbac.Dncchrunlist_kyq
     	/// 吹灰器ID
     	/// </summary>
     	public WHCH.Api.Entities.Dncchqpoint DncChqpoint { get; set; } 
+        public int DncChqpointId { get; set; }
     	
 	
     
@@ -69,6 +70,7 @@ namespace WHCH.Api.ViewModels.Rbac.Dncchrunlist_kyq
     	/// 锅炉ID
     	/// </summary>
     	public WHCH.Api.Entities.Dncboiler DncBoiler { get; set; } 
+        public int DncBoilerId { get; set; }
     	
 	
     

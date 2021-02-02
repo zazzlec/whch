@@ -77,11 +77,11 @@ namespace WHCH.Api.Entities
         
     
         /// <summary>
-    	/// 污染率上限
+    	/// 堵塞率
     	/// </summary>
         
    
-        public System.Double Wrlhigh_Val { get; set; } 
+        public System.Double Dsl_Val { get; set; } 
         
     
         /// <summary>

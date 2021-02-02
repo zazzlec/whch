@@ -19,6 +19,7 @@ using WHCH.Api.RequestPayload.Rbac.Boiler;
 using WHCH.Api.ViewModels.Rbac.Dncboiler;
 using System.Transactions;
 using System.Collections.Generic;
+using WHCH.Api.Utils;
 using MySql.Data.MySqlClient;
 
 namespace WHCH.Api.Controllers.Api.WHCH1
@@ -110,7 +111,7 @@ namespace WHCH.Api.Controllers.Api.WHCH1
             var response = ResponseModelFactory.CreateInstance;
             if (model.K_Name_kw.Trim().Length <= 0)
             {
-                response.SetFailed("请输入");
+                response.SetFailed("请输入锅炉名称");
                 return Ok(response);
             }
             using (_dbContext)
@@ -146,23 +147,13 @@ namespace WHCH.Api.Controllers.Api.WHCH1
         [ProducesResponseType(200)]
         public IActionResult Edit(string code)
         {
-            try
+            using (_dbContext)
             {
-                using (_dbContext)
-                {
-                    var entity = _dbContext.Dncboiler.FirstOrDefault(x => x.Id  == int.Parse(code));
-                    var response = ResponseModelFactory.CreateInstance;
-                    response.SetData(_mapper.Map<Dncboiler, DncboilerCreateViewModel>(entity));
-                    return Ok(response);
-                }
-            }
-            catch (Exception e)
-            {
+                var entity = _dbContext.Dncboiler.FirstOrDefault(x => x.Id ==  int.Parse(code));
                 var response = ResponseModelFactory.CreateInstance;
-                response.SetError(e.Message);
+                response.SetData(_mapper.Map< Dncboiler, DncboilerCreateViewModel>(entity));
                 return Ok(response);
             }
-            
         }
 
         /// <summary>
@@ -205,6 +196,13 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 entity.Status = model.Status;
                 entity.IsDeleted = model.IsDeleted;
                 entity.Edfh = model.Edfh;
+                entity.NowStatus = model.NowStatus;
+                entity.Fh_Chlistrun = model.Fh_Chlistrun;
+                entity.Ch_Run = model.Ch_Run;
+                entity.Ch_StartTime = model.Ch_StartTime;
+                entity.Ch_EndTime = model.Ch_EndTime;
+                entity.Positive = model.Positive;
+                entity.Counter = model.Counter;
 
                 _dbContext.SaveChanges();
                 return Ok(response);
@@ -236,13 +234,32 @@ namespace WHCH.Api.Controllers.Api.WHCH1
         {
             using (_dbContext)
             {
-                var parameters = ids.Split(",").Select((id, index) => new MySqlParameter(string.Format("@p{0}", index), id)).ToList();
-                var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
-                var sql = string.Format("UPDATE Dncboiler SET IsDeleted=@IsDeleted WHERE id IN ({0})", parameterNames);
-                parameters.Add(new MySqlParameter("@IsDeleted", (int)isDeleted));
-                _dbContext.Database.ExecuteSqlCommand(sql, parameters);
-                var response = ResponseModelFactory.CreateInstance;
-                return response;
+                if (ToolService.DbType.Equals("mysql")){
+                    var parameters = ids.Split(",").Select((id, index) => new MySqlParameter(string.Format("@p{0}", index), id)).ToList();
+                    var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
+                    
+                    var sql1= string.Format("delete from  Dncboiler  WHERE id IN ({0}) and IsDeleted=1", parameterNames);
+                    _dbContext.Database.ExecuteSqlCommand(sql1);
+                    
+                    var sql = string.Format("UPDATE Dncboiler SET IsDeleted=@IsDeleted WHERE id IN ({0})", parameterNames);
+                    parameters.Add(new MySqlParameter("@IsDeleted", (int)isDeleted));
+                    _dbContext.Database.ExecuteSqlCommand(sql, parameters);
+                    var response = ResponseModelFactory.CreateInstance;
+                    return response;
+                }else{
+                    var parameters = ids.Split(",").Select((id, index) => new SqlParameter(string.Format("@p{0}", index), id)).ToList();
+                    var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
+                    
+                    var sql1= string.Format("delete from  Dncboiler  WHERE id IN ({0}) and IsDeleted=1", parameterNames);
+                    _dbContext.Database.ExecuteSqlCommand(sql1);
+                    
+                    var sql = string.Format("UPDATE Dncboiler SET IsDeleted=@IsDeleted WHERE id IN ({0})", parameterNames);
+                    parameters.Add(new SqlParameter("@IsDeleted", (int)isDeleted));
+                    _dbContext.Database.ExecuteSqlCommand(sql, parameters);
+                    var response = ResponseModelFactory.CreateInstance;
+                    return response;
+                }
+                
             }
         }
 
@@ -270,13 +287,24 @@ namespace WHCH.Api.Controllers.Api.WHCH1
         {
             using (_dbContext)
             {
-                var parameters = ids.Split(",").Select((id, index) => new MySqlParameter(string.Format("@p{0}", index), id)).ToList();
-                var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
-                var sql = string.Format("UPDATE Dncboiler SET Status=@Status WHERE id IN ({0})", parameterNames);
-                parameters.Add(new MySqlParameter("@Status", (int)status));
-                _dbContext.Database.ExecuteSqlCommand(sql, parameters);
-                var response = ResponseModelFactory.CreateInstance;
-                return response;
+                if (ToolService.DbType.Equals("mysql")){
+                    var parameters = ids.Split(",").Select((id, index) => new MySqlParameter(string.Format("@p{0}", index), id)).ToList();
+                    var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
+                    var sql = string.Format("UPDATE Dncboiler SET Status=@Status WHERE id IN ({0})", parameterNames);
+                    parameters.Add(new MySqlParameter("@Status", (int)status));
+                    _dbContext.Database.ExecuteSqlCommand(sql, parameters);
+                    var response = ResponseModelFactory.CreateInstance;
+                    return response;
+                }else{
+                    var parameters = ids.Split(",").Select((id, index) => new SqlParameter(string.Format("@p{0}", index), id)).ToList();
+                    var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
+                    var sql = string.Format("UPDATE Dncboiler SET Status=@Status WHERE id IN ({0})", parameterNames);
+                    parameters.Add(new SqlParameter("@Status", (int)status));
+                    _dbContext.Database.ExecuteSqlCommand(sql, parameters);
+                    var response = ResponseModelFactory.CreateInstance;
+                    return response;
+                }
+                
             }
         }
 
@@ -339,7 +367,7 @@ namespace WHCH.Api.Controllers.Api.WHCH1
 
                                 if (item.K_Name_kw.Trim().Length <= 0)
                                 {
-                                    response.SetFailed("请输入");
+                                    response.SetFailed("请输入锅炉名称");
                                     return Ok(response);
                                 }
       

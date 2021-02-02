@@ -48,6 +48,7 @@ namespace WHCH.Api.ViewModels.Rbac.Dncchlist
     	/// 吹灰器ID
     	/// </summary>
     	public WHCH.Api.Entities.Dncchqpoint DncChqpoint { get; set; } 
+        public int DncChqpointId { get; set; }
     	
 	
     
@@ -66,9 +67,9 @@ namespace WHCH.Api.ViewModels.Rbac.Dncchlist
 	
     
         /// <summary>
-    	/// 污染率上限
+    	/// 堵塞率
     	/// </summary>
-        public System.Double Wrlhigh_Val { get; set; } 
+        public System.Double Dsl_Val { get; set; } 
     	
 	
     
@@ -83,6 +84,7 @@ namespace WHCH.Api.ViewModels.Rbac.Dncchlist
     	/// 锅炉ID
     	/// </summary>
     	public WHCH.Api.Entities.Dncboiler DncBoiler { get; set; } 
+        public int DncBoilerId { get; set; }
     	
 	
     

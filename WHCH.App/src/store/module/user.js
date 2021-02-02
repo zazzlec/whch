@@ -23,7 +23,7 @@ export default {
   state: {
     userName: '',
     userGuid: '',
-    user_type: -1,
+    user_type: 0,
     avatorImgPath: '',
     token: getToken(),
     access: '',
@@ -117,6 +117,7 @@ export default {
         }).then(res => {
           const data = res.data
           if (data.code === 200 && data && data.data) {
+            console.log(data.data);
             commit('setToken', data.data)
           } else {
 
@@ -168,7 +169,7 @@ export default {
             commit('setAvator', data.avator)
             commit('setUserName', data.user_name)
             commit('setUserGuid', data.user_guid)
-            commit('setAccess', data.access)
+            commit('setAccess',   getUnion(data.access, staticRouters))
             //commit('setPages', getUnion(data.pages, staticRouters))
             commit('setPermissions', data.permissions)
             commit("setUserType", data.user_type);

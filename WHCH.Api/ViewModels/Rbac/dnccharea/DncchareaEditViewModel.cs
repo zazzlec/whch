@@ -12,14 +12,13 @@ namespace WHCH.Api.ViewModels.Rbac.Dnccharea
         /// <summary>
     	/// 序号
     	/// </summary>
-        public System.Int32 Id { get; set; }
-        public System.Double Wrlhigh_Val { get; set; }
-
-        public DateTime? RealTime { get; set; }
+        public System.Int32 Id { get; set; } 
+	
+    
         /// <summary>
-        /// 区域描述
-        /// </summary>
-        public System.String K_Name_kw { get; set; } 
+    	/// 区域描述
+    	/// </summary>
+        public System.String Name_kw { get; set; } 
 	
     
         /// <summary>
@@ -41,21 +40,57 @@ namespace WHCH.Api.ViewModels.Rbac.Dnccharea
 	
     
         /// <summary>
-    	/// 吹灰类型ID
-    	/// </summary>
-    	public System.String DncChtype { get; set; } 
-	
-    
-        /// <summary>
-    	/// 吹灰类型名称
-    	/// </summary>
-        public System.String DncChtype_Name { get; set; } 
-	
-    
-        /// <summary>
     	/// 污染率
     	/// </summary>
         public System.Double Wrl_Val { get; set; } 
+	
+    
+        /// <summary>
+    	/// 污染率待吹灰上限
+    	/// </summary>
+        public System.Double Wrldch_Val { get; set; } 
+	
+    
+        /// <summary>
+    	/// 污染率执行上限
+    	/// </summary>
+        public System.Double Wrlexec_Val { get; set; } 
+	
+    
+        /// <summary>
+    	/// 堵塞率
+    	/// </summary>
+        public System.Double Dsl_Val { get; set; } 
+	
+    
+        /// <summary>
+    	/// 堵塞率待吹灰上限
+    	/// </summary>
+        public System.Double Dslhigh_Val { get; set; } 
+	
+    
+        /// <summary>
+    	/// 堵塞率执行上限
+    	/// </summary>
+        public System.Double Dslexec_Val { get; set; } 
+	
+    
+        /// <summary>
+    	/// 参考温升
+    	/// </summary>
+        public System.Double Ckws_Val { get; set; } 
+	
+    
+        /// <summary>
+    	/// 参考压降
+    	/// </summary>
+        public System.Double Ckyj_Val { get; set; } 
+	
+    
+        /// <summary>
+    	/// 实际时间
+    	/// </summary>
+        public DateTime? RealTime { get; set; } 
 	
 	
         /// <summary>

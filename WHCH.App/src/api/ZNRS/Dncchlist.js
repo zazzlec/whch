@@ -1,4 +1,4 @@
-
+﻿
 
 import axios from '@/libs/api.request'
 
@@ -36,15 +36,6 @@ export const createChlist = (data) => {
 export const loadChlist = (data) => {
   return axios.request({
     url: 'Dncchlist' +'/edit/' + data.code,
-    method: 'get',
-    withPrefix: false,
-    prefix:"api/WHCH1/"
-  })
-}
-
-export const runpush = (data) => {
-  return axios.request({
-    url: 'Dncchlist' +'/RunPush/?bid=' + data.bid+'&type='+data.type,
     method: 'get',
     withPrefix: false,
     prefix:"api/WHCH1/"

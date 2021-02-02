@@ -28,8 +28,8 @@ Vue.use(OrgTree);
 /* eslint-disable */
 // if (process.env.NODE_ENV !== 'production') require('@/mock')
 
-import hasPermission from '@/directive/hasPermission.js';
-Vue.use(hasPermission);
+// import hasPermission from '@/directive/hasPermission.js';
+// Vue.use(hasPermission);
 Vue.use(ViewUI);
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)

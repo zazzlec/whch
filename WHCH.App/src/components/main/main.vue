@@ -1,80 +1,11 @@
 <template>
   <Layout style="height: 100%" class="main">
-    <Sider
-      hide-trigger
-      collapsible
-      :width="256"
-      :collapsed-width="64"
-      v-model="collapsed"
-      class="left-sider"
-      :style="{overflow: 'hidden'}"
-    >
-      <side-menu
-        accordion
-        ref="sideMenu"
-        :active-name="$route.name"
-        :collapsed="collapsed"
-        @on-select="turnToPage"
-        :menu-list="menuList"
-      >
-        <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
-        <div class="logo-con">
-          <!-- <img v-show="!collapsed" :src="maxLogo" key="max-logo"> -->
-          <span v-show="!collapsed" style="color:#fff;font-size:26px;font-weight:700;text-align:center;display:block;letter-spacing:2px;padding-top:8px;">
-            <img v-show="!collapsed" :src="biglogo" key="min-logo">
-          </span>
-          <span v-show="collapsed" style="color:#fff;font-size:30px;font-weight:700;text-align:center;display:block;padding-top:5px;">
-            <img v-show="collapsed" :src="minLogo" key="min-logo" style="height:33px;">
-          </span>
-        </div>
-      </side-menu>
-    </Sider>
-    <Layout>
-      <Header class="header-con" >
-        <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
-          <!-- <div class="tag-nav-wrapper">
-            <tags-nav
-              :value="$route"
-              @input="handleClick"
-              :list="tagNavList"
-              @on-close="handleCloseTag"
-            />
-          </div> -->
-          <div class="hmiddle" >
-            <div class="tag-nav-wrapper">
-              <tags-nav
-                :value="$route"
-                @input="handleClick"
-                :list="tagNavList"
-                @on-close="handleCloseTag" />
-            </div>
-          </div>
-          <user :message-unread-count="unreadCount" :user-avator="userAvator"/>
-          <fullscreen v-model="isFullscreen" style="float:left;margin-right:10px;"/>
-        </header-bar>
-      </Header>
-      <Content class="main-content-con">
-        <Layout class="main-layout-con">
-          <!-- <div class="tag-nav-wrapper">
-            <tags-nav
-              :value="$route"
-              @input="handleClick"
-              :list="tagNavList"
-              @on-close="handleCloseTag"
-            />
-          </div> -->
           <Content class="content-wrapper">
             <keep-alive :include="cacheList">
               <router-view/>
             </keep-alive>
             <ABackTop :height="100" :bottom="80" :right="50" container=".content-wrapper"></ABackTop>
           </Content>
-          <div class="foot">
-            上海锅炉厂有限公司 ©2020  当前版本 2.0
-          </div>
-        </Layout>
-      </Content>
-    </Layout>
   </Layout>
 </template>
 <script>
@@ -237,7 +168,7 @@ export default {
       });
       this.setBreadCrumb(newRoute);
       this.setTagNavList(getNewTagList(this.tagNavList, newRoute));
-      this.$refs.sideMenu.updateOpenName(newRoute.name);
+      // this.$refs.sideMenu.updateOpenName(newRoute.name);
     }
   },
   mounted() {
@@ -253,11 +184,11 @@ export default {
     // 设置初始语言
     this.setLocal(this.$i18n.locale);
     // 如果当前打开页面不在标签栏中，跳到homeName页
-    if (!this.tagNavList.find(item => item.name === this.$route.name)) {
-      this.$router.push({
-        name: this.$config.homeName
-      });
-    }
+    // if (!this.tagNavList.find(item => item.name === this.$route.name)) {
+    //   this.$router.push({
+    //     name: this.$config.homeName
+    //   });
+    // }
     // 获取未读消息条数
     //this.getUnreadMessageCount();
     this.$Loading.destroy();

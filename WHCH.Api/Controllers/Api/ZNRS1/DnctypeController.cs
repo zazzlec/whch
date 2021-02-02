@@ -19,6 +19,7 @@ using WHCH.Api.RequestPayload.Rbac.Type;
 using WHCH.Api.ViewModels.Rbac.Dnctype;
 using System.Transactions;
 using System.Collections.Generic;
+using WHCH.Api.Utils;
 using MySql.Data.MySqlClient;
 
 namespace WHCH.Api.Controllers.Api.WHCH1
@@ -148,7 +149,7 @@ namespace WHCH.Api.Controllers.Api.WHCH1
         {
             using (_dbContext)
             {
-                var entity = _dbContext.Dnctype.FirstOrDefault(x => (x.Id+"") == code);
+                var entity = _dbContext.Dnctype.FirstOrDefault(x => x.Id ==  int.Parse(code));
                 var response = ResponseModelFactory.CreateInstance;
                 response.SetData(_mapper.Map< Dnctype, DnctypeCreateViewModel>(entity));
                 return Ok(response);
@@ -225,13 +226,32 @@ namespace WHCH.Api.Controllers.Api.WHCH1
         {
             using (_dbContext)
             {
-                var parameters = ids.Split(",").Select((id, index) => new MySqlParameter(string.Format("@p{0}", index), id)).ToList();
-                var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
-                var sql = string.Format("UPDATE Dnctype SET IsDeleted=@IsDeleted WHERE id IN ({0})", parameterNames);
-                parameters.Add(new MySqlParameter("@IsDeleted", (int)isDeleted));
-                _dbContext.Database.ExecuteSqlCommand(sql, parameters);
-                var response = ResponseModelFactory.CreateInstance;
-                return response;
+                if (ToolService.DbType.Equals("mysql")){
+                    var parameters = ids.Split(",").Select((id, index) => new MySqlParameter(string.Format("@p{0}", index), id)).ToList();
+                    var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
+                    
+                    var sql1= string.Format("delete from  Dnctype  WHERE id IN ({0}) and IsDeleted=1", parameterNames);
+                    _dbContext.Database.ExecuteSqlCommand(sql1);
+                    
+                    var sql = string.Format("UPDATE Dnctype SET IsDeleted=@IsDeleted WHERE id IN ({0})", parameterNames);
+                    parameters.Add(new MySqlParameter("@IsDeleted", (int)isDeleted));
+                    _dbContext.Database.ExecuteSqlCommand(sql, parameters);
+                    var response = ResponseModelFactory.CreateInstance;
+                    return response;
+                }else{
+                    var parameters = ids.Split(",").Select((id, index) => new SqlParameter(string.Format("@p{0}", index), id)).ToList();
+                    var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
+                    
+                    var sql1= string.Format("delete from  Dnctype  WHERE id IN ({0}) and IsDeleted=1", parameterNames);
+                    _dbContext.Database.ExecuteSqlCommand(sql1);
+                    
+                    var sql = string.Format("UPDATE Dnctype SET IsDeleted=@IsDeleted WHERE id IN ({0})", parameterNames);
+                    parameters.Add(new SqlParameter("@IsDeleted", (int)isDeleted));
+                    _dbContext.Database.ExecuteSqlCommand(sql, parameters);
+                    var response = ResponseModelFactory.CreateInstance;
+                    return response;
+                }
+                
             }
         }
 
@@ -259,13 +279,24 @@ namespace WHCH.Api.Controllers.Api.WHCH1
         {
             using (_dbContext)
             {
-                var parameters = ids.Split(",").Select((id, index) => new MySqlParameter(string.Format("@p{0}", index), id)).ToList();
-                var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
-                var sql = string.Format("UPDATE Dnctype SET Status=@Status WHERE id IN ({0})", parameterNames);
-                parameters.Add(new MySqlParameter("@Status", (int)status));
-                _dbContext.Database.ExecuteSqlCommand(sql, parameters);
-                var response = ResponseModelFactory.CreateInstance;
-                return response;
+                if (ToolService.DbType.Equals("mysql")){
+                    var parameters = ids.Split(",").Select((id, index) => new MySqlParameter(string.Format("@p{0}", index), id)).ToList();
+                    var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
+                    var sql = string.Format("UPDATE Dnctype SET Status=@Status WHERE id IN ({0})", parameterNames);
+                    parameters.Add(new MySqlParameter("@Status", (int)status));
+                    _dbContext.Database.ExecuteSqlCommand(sql, parameters);
+                    var response = ResponseModelFactory.CreateInstance;
+                    return response;
+                }else{
+                    var parameters = ids.Split(",").Select((id, index) => new SqlParameter(string.Format("@p{0}", index), id)).ToList();
+                    var parameterNames = string.Join(", ", parameters.Select(p => p.ParameterName));
+                    var sql = string.Format("UPDATE Dnctype SET Status=@Status WHERE id IN ({0})", parameterNames);
+                    parameters.Add(new SqlParameter("@Status", (int)status));
+                    _dbContext.Database.ExecuteSqlCommand(sql, parameters);
+                    var response = ResponseModelFactory.CreateInstance;
+                    return response;
+                }
+                
             }
         }
 
