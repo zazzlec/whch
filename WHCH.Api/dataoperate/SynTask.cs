@@ -14,7 +14,9 @@ using SynWHCH;
 namespace WHCH.Api.dataoperate
 {
     
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class SynTask
     {
         public static double yl_fh_out;
