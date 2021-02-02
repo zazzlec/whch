@@ -11,8 +11,15 @@
     min-height: @h;
     display:block;
     float: left;
-    // border: 1px solid red;
-    padding-top: 38px;
+    .drop{
+          height:40px;
+          line-height:40px;
+          font-size:16px;
+          position:absolute;
+          left: 30px;
+          top: 5px;
+          z-index: 999;
+        }
   }
   .r{
     width: 90%;
@@ -46,6 +53,7 @@
         // border:1px solid red;
         display:block;
         float: left;
+        
       }
       .c{
         width: 10%;
@@ -138,7 +146,7 @@
           margin-top: 3px;
           display: block;
           width:100%;
-          height:189px;
+          height:300px;
           background-color: @bcolor;
           .ivu-col{
             height: 30px;
@@ -158,9 +166,22 @@
 }
 </style>
 <template  >
+
+
+
+
   <div class="example"  :style="{width:'100%',height:'100%',margin:'0px',padding:'0px' }">
     <div class="l">
-      <Menu :theme="'light'" active-name="0"  style="width:96%" @on-select="hanldselect">
+      <Dropdown class="drop"  @on-click="drophld">
+        <a href="javascript:void(0)" >
+            {{boiler}}
+            <Icon type="ios-arrow-down"></Icon>
+        </a>
+        <DropdownMenu slot="list" >
+            <DropdownItem v-for="(item,index) in boilers" :selected="item.id==boilerid" :name="item.k_Name_kw"  v-bind:key="'iuyiy'+index">{{item.k_Name_kw}}</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+      <Menu :theme="'light'" active-name="0"  style="width:96%;margin-top:50px" @on-select="hanldselect">
             <MenuItem name="0">
                 主界面
             </MenuItem>
@@ -238,7 +259,8 @@
       <Tabs value="name1" v-if="pagenow==2">
         <TabPane label="灰渣可燃物" name="name1">
           <Card :bordered="false">
-                <span slot="title"><b>灰渣可燃物</b></span>
+                
+                <span slot="title"><b>日期范围:</b><DatePicker  @on-change="handleSearch"  type="datetimerange" format="yyyy-MM-dd" placeholder="选择日期范围" style="width: 200px;margin-left:20px"></DatePicker><Button type="primary" style="float:right;margin-right:10px">添加</Button></span>
                 <!-- <span style="float:right"><Button type="primary">新增</Button></span> -->
                 <div class="b">
                   <Row :gutter="16" class="qlist2h" >
@@ -317,6 +339,23 @@ import "echarts/lib/component/legend";
 import EEE from "@/assets/font/iconfont.css";
 
 
+//工具包
+import { getDateMore,sortBy,gradientColor,getDate ,eqarr} from "@/libs/tools";
+import {
+  getBoilerListAll
+} from "@/api/ZNRS/Dncboiler";
+// import {
+//   getHzpointnowList,
+//   createHzpointnow,
+//   loadHzpointnow,
+//   editHzpointnow,
+//   deleteHzpointnow
+// } from "@/api/ZNRS/Dnchzpointnow";
+import {
+  getHzpointList
+} from "@/api/ZNRS/Dnchzpoint";
+
+
 import { noxdata,n2_1,n2_2,n2_3,n3_2, n4_1, n4_2, n4_3,n5_1, n5_2, n5_3,n5_4} from "@/api/echart/mkgl";
 
 export default {
@@ -331,16 +370,113 @@ export default {
       name6:{
         data5:[],
         data6:[]
-      }
+      },
+      timer2:null,
+      //机组
+      boilertime:"",
+      boilerid:-1,
+      boiler:"",
+      boilers:[],
     }
   },
   methods:{
+    //机组加载
+    initboiler(){
+      let o=this;
+      getBoilerListAll().then(res => {
+          o.boilers=getDateMore(res.data.data,-1,["syntime",]);
+          if(o.boilerid==-1){
+            o.boiler=o.boilers[0].k_Name_kw;
+            o.boilerid=o.boilers[0].id;
+            o.boilertime=o.boilers[0].syntime;
+          }else{
+            o.boilers.map(x=>{
+              if(x.id==o.boilerid){
+                o.boilertime=x.syntime;
+              }
+            });
+          }
+      });
+    },
+    drophld(name){
+      this.boilers.map(o=>{
+        if(o.k_Name_kw==name){
+          this.boilerid=o.id;
+          this.boiler=o.k_Name_kw;
+          this.boilertime=o.syntime;
+          this.refreshall(this.boilerid);
+        }
+      });
+    },
     hanldselect(n){
       this.pagenow=n;
+    },
+    handleSearch(d){
+      console.log(d);
+    },
+    hzburn(bid){
+      
+    },
+    refreshall(bid){
+      // console.log(bid);
+      let o=this;
+      getHzpointList({
+            totalCount: 0,
+            pageSize: 2000,
+            currentPage: 1,
+            kw: "",
+            isDeleted: 0,
+            status: -1,
+            boilerid: bid,
+            t:"10",
+            sort: [
+              {
+                direct: "DESC",
+                field: "id"
+              }
+            ]
+          }).then(res => {
+            let d= getDateMore(res.data.data,2,["realTime",]);
+            //console.log(JSON.stringify(d));
+            noxdata.xAxis.data=d.map(x=>{
+              return x.realTime;
+            }).reverse();
+
+            noxdata.series[0].data = d.map(x=>{
+              let arr=eval("("+x.pvalue+")") ;
+              let sum=0;
+              for (let index = 0; index < arr.length; index++) {
+                sum+=arr[index];
+              }
+              return sum/arr.length;
+            }).reverse();;
+            // let reData = new Array(), i;
+            // for (i = 0; i < 8; i++) {
+            //     for (var j = state.length - 1; j >= 0; j--) {
+            //         reData.push([i, j, state[j][i]]);
+            //     }
+            // }
+            // let lll=reData.map(item=>{
+            //   return  [item[1], item[0], item[2] || '-'];
+            // })
+            // leftdata.series[0].data = lll;
+      });
     }
   },
   mounted () {
-    //
+    let o=this;
+    o.initboiler();
+
+    o.timer2=setInterval(() => {
+      if(o.boilerid==-1){
+        return;
+      }
+      o.refreshall(o.boilerid);
+      clearInterval(this.timer2);
+    }, 5000);
+  },
+  beforeDestroy() {
+    clearInterval(this.timer2);
   }
 }
 </script>

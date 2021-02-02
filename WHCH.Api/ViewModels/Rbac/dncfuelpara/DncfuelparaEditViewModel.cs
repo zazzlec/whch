@@ -48,7 +48,7 @@ namespace WHCH.Api.ViewModels.Rbac.Dncfuelpara
         /// <summary>
     	/// 水的三相点绝对温度
     	/// </summary>
-        public System.Double Watertemp3 { get; set; } 
+        //public System.Double Watertemp3 { get; set; } 
 	
     
         /// <summary>

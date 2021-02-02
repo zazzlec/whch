@@ -173,7 +173,7 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 entity.Carbon = model.Carbon;
                 entity.Hydrogen = model.Hydrogen;
                 entity.O2 = model.O2;
-                entity.Watertemp3 = model.Watertemp3;
+                //entity.Watertemp3 = model.Watertemp3;
                 entity.Nitrogen = model.Nitrogen;
                 entity.Sulfur = model.Sulfur;
                 entity.H2o = model.H2o;

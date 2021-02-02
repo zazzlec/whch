@@ -37,18 +37,22 @@ namespace WHCH.Api.ViewModels.Rbac.Dnclzburn
         /// <summary>
     	/// 锅炉名称
     	/// </summary>
-        public System.String DncBoiler_Name { get; set; } 
-	
-    
+        public System.String DncBoiler_Name { get; set; }
+
+
         /// <summary>
-    	/// 值
-    	/// </summary>
-        public System.Decimal Pvalue { get; set; } 
-	
-    
+        /// 值
+        /// </summary>
+        public System.Double Pvalue { get; set; }
+
+        public System.String BJson { get; set; }
+        public System.String FJson { get; set; }
+        public System.Double Fvalue { get; set; }
+
+
         /// <summary>
-    	/// 备注
-    	/// </summary>
+        /// 备注
+        /// </summary>
         public System.String Remark { get; set; } 
 	
 	
