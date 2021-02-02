@@ -29,10 +29,9 @@ export const noxdata = {
     },
     yAxis: {
         type: 'value',
-        data: ['深度一', '深度二', '深度三']
     },
     series: [{
-        data: [150, 230, 224, 218, 135, 147, 260],
+        data: [],
         type: 'line'
     }]
 }

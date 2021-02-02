@@ -48,13 +48,15 @@ namespace WHCH.Api.ViewModels.Rbac.Dnclzburn
         /// <summary>
     	/// 值
     	/// </summary>
-        public System.Decimal Pvalue { get; set; } 
-    	
-	
-    
+        public System.Double Pvalue { get; set; }
+
+        public System.String BJson { get; set; }
+        public System.String FJson { get; set; }
+        public System.Double Fvalue { get; set; }
+
         /// <summary>
-    	/// 备注
-    	/// </summary>
+        /// 备注
+        /// </summary>
         public System.String Remark { get; set; } 
     	
 	

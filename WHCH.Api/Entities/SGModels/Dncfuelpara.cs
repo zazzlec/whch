@@ -65,7 +65,7 @@ namespace WHCH.Api.Entities
     	/// </summary>
         
    
-        public System.Double Watertemp3 { get; set; } 
+        //public System.Double Watertemp3 { get; set; } 
         
     
         /// <summary>

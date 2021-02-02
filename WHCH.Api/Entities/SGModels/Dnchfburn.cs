@@ -51,12 +51,6 @@ namespace WHCH.Api.Entities
         public System.String DncBoiler_Name { get; set; } 
         
     
-        /// <summary>
-    	/// 添加时间
-    	/// </summary>
-        
-   
-        public DateTime? AddTime { get; set; } 
         
     
         /// <summary>
@@ -64,14 +58,14 @@ namespace WHCH.Api.Entities
     	/// </summary>
         
    
-        public System.Decimal Pvalue { get; set; } 
-        
-    
+        public System.Double Pvalue { get; set; }
+        public System.Int32 Lid { get; set; }
+
         /// <summary>
-    	/// 备注
-    	/// </summary>
-        
-   
+        /// 备注
+        /// </summary>
+
+
         public System.String Remark { get; set; } 
         
 	

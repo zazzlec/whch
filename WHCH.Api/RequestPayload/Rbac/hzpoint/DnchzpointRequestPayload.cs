@@ -16,6 +16,8 @@ namespace WHCH.Api.RequestPayload.Rbac.Hzpoint
         /// 状态
         /// </summary>
         public Status Status { get; set; }
+
+        public string t { get; set; }
     }
 }
 
