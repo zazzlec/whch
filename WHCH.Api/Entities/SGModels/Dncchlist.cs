@@ -89,7 +89,7 @@ namespace WHCH.Api.Entities
     	/// </summary>
         
    
-        public System.Int32 AddReason { get; set; } 
+        public System.String AddReason { get; set; } 
         
     
         /// <summary>

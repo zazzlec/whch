@@ -707,10 +707,10 @@ export default {
   },
   methods: {
     loadMenuList() {
-      getMenuList(this.stores.menu.query).then(res => {
-        this.stores.menu.data = res.data.data;
-        this.stores.menu.query.totalCount = res.data.totalCount;
-      });
+      // getMenuList(this.stores.menu.query).then(res => {
+      //   this.stores.menu.data = res.data.data;
+      //   this.stores.menu.query.totalCount = res.data.totalCount;
+      // });
     },
     handleOpenFormWindow() {
       this.formModel.opened = true;
@@ -735,7 +735,7 @@ export default {
       this.formModel.selection = selection;
     },
     handleRefresh() {
-      this.loadMenuList();
+      // this.loadMenuList();
     },
     handleShowCreateWindow() {
       this.handleSwitchFormModeToCreate();
@@ -780,7 +780,7 @@ export default {
         if (res.data.code === 200) {
           this.$Message.success(res.data.message);
           this.handleCloseFormWindow();
-          this.loadMenuList();
+          // this.loadMenuList();
           this.handleRefreshMenuTreeData();
         } else {
           this.$Message.warning(res.data.message);
@@ -792,7 +792,7 @@ export default {
         if (res.data.code === 200) {
           this.$Message.success(res.data.message);
           this.handleCloseFormWindow();
-          this.loadMenuList();
+          // this.loadMenuList();
           this.handleRefreshMenuTreeData();
         } else {
           this.$Message.warning(res.data.message);
@@ -816,10 +816,10 @@ export default {
       
     },
     doLoadMenu(guid) {
-      loadMenu({ guid: guid }).then(res => {
-        this.formModel.fields = res.data.data.model;
-        this.stores.menuTree.data = res.data.data.tree;
-      });
+      // loadMenu({ guid: guid }).then(res => {
+      //   this.formModel.fields = res.data.data.model;
+      //   this.stores.menuTree.data = res.data.data.tree;
+      // });
     },
     handleDelete(params) {
       this.doDelete(params.row.guid);
@@ -832,7 +832,7 @@ export default {
       deleteMenu(ids).then(res => {
         if (res.data.code === 200) {
           this.$Message.success(res.data.message);
-          this.loadMenuList();
+          // this.loadMenuList();
         } else {
           this.$Message.warning(res.data.message);
         }
@@ -862,7 +862,7 @@ export default {
       }).then(res => {
         if (res.data.code === 200) {
           this.$Message.success(res.data.message);
-          this.loadMenuList();
+          // this.loadMenuList();
           this.formModel.selection=[];
         } else {
           this.$Message.warning(res.data.message);
@@ -871,7 +871,7 @@ export default {
       });
     },
     handleSearchMenu() {
-      this.loadMenuList();
+      // this.loadMenuList();
     },
     rowClsRender(row, index) {
       if (row.isDeleted) {
@@ -880,9 +880,9 @@ export default {
       return "";
     },
     doLoadMenuTree() {
-      loadMenuTree(null).then(res => {
-        this.stores.menuTree.data = res.data.data;
-      });
+      // loadMenuTree(null).then(res => {
+      //   this.stores.menuTree.data = res.data.data;
+      // });
     },
     handleMenuTreeSelectChange(nodes) {
       var node = nodes[0];
@@ -895,9 +895,9 @@ export default {
       this.doLoadMenuTree();
     },
     doLoadSearchMenuTree() {
-      loadMenuTree(null).then(res => {
-        this.stores.menu.sources.menuTree.data = res.data.data;
-      });
+      // loadMenuTree(null).then(res => {
+      //   this.stores.menu.sources.menuTree.data = res.data.data;
+      // });
     },
     handleSearchMenuTreeSelectChange(nodes) {
       var node = nodes[0];
@@ -905,7 +905,7 @@ export default {
         this.stores.menu.query.parentGuid = node.guid;
         this.stores.menu.query.parentName = node.title;
       }
-      this.loadMenuList();
+      // this.loadMenuList();
     },
     handleRefreshSearchMenuTreeData() {
       this.doLoadSearchMenuTree();
@@ -919,15 +919,15 @@ export default {
     handleClearSearchMenuTreeSelection() {
       this.stores.menu.query.parentGuid = "";
       this.stores.menu.query.parentName = "请选择...";
-      this.loadMenuList();
+      // this.loadMenuList();
     },
     handlePageChanged(page) {
       this.stores.menu.query.currentPage = page;
-      this.loadMenuList();
+      // this.loadMenuList();
     },
     handlePageSizeChanged(pageSize) {
       this.stores.menu.query.pageSize = pageSize;
-      this.loadMenuList();
+      // this.loadMenuList();
     },
     handleLoadIconDataSource(keyword) {
       this.stores.menu.sources.iconSources.loading = true;
@@ -939,9 +939,9 @@ export default {
     }
   },
   mounted() {
-    this.loadMenuList();
-    this.doLoadMenuTree();
-    this.doLoadSearchMenuTree();
+    // this.loadMenuList();
+    // this.doLoadMenuTree();
+    // this.doLoadSearchMenuTree();
   }
 };
 </script>

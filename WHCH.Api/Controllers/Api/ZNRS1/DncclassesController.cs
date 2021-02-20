@@ -52,11 +52,21 @@ namespace WHCH.Api.Controllers.Api.WHCH1
         {
             using (_dbContext)
             {
-                var list = _dbContext.Dncclasses.ToList();
-                list = list.FindAll(x => x.IsDeleted != CommonEnum.IsDeleted.Yes );
                 var response = ResponseModelFactory.CreateInstance;
-                response.SetData(list);
-                return Ok(response);
+                try
+                {
+                    var list = _dbContext.Dncclasses.ToList();
+                    list = list.FindAll(x => x.IsDeleted != CommonEnum.IsDeleted.Yes);
+
+                    response.SetData(list);
+                    return Ok(response);
+                }
+                catch (Exception  yy)
+                {
+                    response.SetError(yy.Message);
+                    return Ok(response);
+                }
+                
             }
         }
         /// <summary>

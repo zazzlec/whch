@@ -6,9 +6,9 @@ namespace WHCH.Api.ViewModels.Rbac.Dncfuelpara
 {
 	public class DncfuelparaJsonModel
 	{
-    
-    
-    
+
+
+        public System.String K_Name_kw { get; set; }
         /// <summary>
     	/// 序号
     	/// </summary>

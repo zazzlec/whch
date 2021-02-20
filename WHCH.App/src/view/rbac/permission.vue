@@ -786,9 +786,9 @@ export default {
       this.loadPermissionList();
     },
     doLoadMenuTree(selectedGuid) {
-      loadMenuTree(selectedGuid).then(res => {
-        this.sources.formSource.menuTree.data = res.data.data;
-      });
+      // loadMenuTree(selectedGuid).then(res => {
+      //   this.sources.formSource.menuTree.data = res.data.data;
+      // });
     },
     handleMenuTreeSelectChange(nodes) {
       var node = nodes[0];
@@ -798,12 +798,12 @@ export default {
       }
     },
     handleRefreshMenuTreeData(selectedGuid) {
-      this.doLoadMenuTree(selectedGuid || null);
+      // this.doLoadMenuTree(selectedGuid || null);
     },
     doLoadSearchMenuTree() {
-      loadMenuTree(null).then(res => {
-        this.sources.searchSource.menuTree.data = res.data.data;
-      });
+      // loadMenuTree(null).then(res => {
+      //   this.sources.searchSource.menuTree.data = res.data.data;
+      // });
     },
     handleSearchMenuTreeSelectChange(nodes) {
       var node = nodes[0];

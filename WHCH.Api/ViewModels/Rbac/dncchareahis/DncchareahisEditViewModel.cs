@@ -6,9 +6,9 @@ namespace WHCH.Api.ViewModels.Rbac.Dncchareahis
 {
 	public class DncchareahisEditViewModel
 	{
-    
-    
-    
+
+
+        public System.Int32 AreaId { get; set; }
         /// <summary>
     	/// 序号
     	/// </summary>

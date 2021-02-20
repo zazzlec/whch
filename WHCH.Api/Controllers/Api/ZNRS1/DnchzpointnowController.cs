@@ -71,7 +71,10 @@ namespace WHCH.Api.Controllers.Api.WHCH1
             {
                 var query = _dbContext.Dnchzpointnow.AsQueryable();
                 //模糊查询
-                
+
+                List<int> ts = new List<int>();
+                ts=payload.t.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x=> int.Parse(x)).ToList();
+
                 //是否删除，是否启用
                 if (payload.IsDeleted > CommonEnum.IsDeleted.All)
                 {
@@ -81,7 +84,18 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 {
                     query = query.Where(x => x.Status == payload.Status);
                 }
-                
+
+                if (!string.IsNullOrEmpty(payload.t))
+                {
+                    query = query.Where(x => ts.Contains( x.DncTypeId ));
+                }
+
+                if (!string.IsNullOrEmpty(payload.boilerid+""))
+                {
+                    query = query.Where(x => x.DncBoilerId == payload.boilerid);
+                }
+
+
                 if (payload.FirstSort != null)
                 {
                     query = query.OrderBy(payload.FirstSort.Field, payload.FirstSort.Direct == "DESC");

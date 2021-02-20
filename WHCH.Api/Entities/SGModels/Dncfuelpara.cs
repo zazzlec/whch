@@ -33,14 +33,14 @@ namespace WHCH.Api.Entities
     	/// </summary>
         
    
-        public System.String DncBoiler_Name { get; set; } 
-        
-    
+        public System.String DncBoiler_Name { get; set; }
+        public System.String K_Name_kw { get; set; }
+
         /// <summary>
-    	/// 碳(收到基)
-    	/// </summary>
-        
-   
+        /// 碳(收到基)
+        /// </summary>
+
+
         public System.Double Carbon { get; set; } 
         
     

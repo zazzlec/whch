@@ -26,6 +26,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WHCH.App", "WHCH.App\", "{7
 		SlnRelativePath = "WHCH.App\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mltest", "mltest\mltest.csproj", "{1E1A15A8-6015-4B7F-BF8D-2F3BCF9DCE76}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{79C64183-EA2B-492C-81C2-B24B46F1CB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79C64183-EA2B-492C-81C2-B24B46F1CB07}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{79C64183-EA2B-492C-81C2-B24B46F1CB07}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{1E1A15A8-6015-4B7F-BF8D-2F3BCF9DCE76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E1A15A8-6015-4B7F-BF8D-2F3BCF9DCE76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E1A15A8-6015-4B7F-BF8D-2F3BCF9DCE76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E1A15A8-6015-4B7F-BF8D-2F3BCF9DCE76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

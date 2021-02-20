@@ -745,24 +745,23 @@
 
     <div id="way" class="liumian" ></div>
 
-    <div id="area" class="areacolor" :style="{display:pageview==3?'':'none'}">
+    <!-- <div id="area" class="areacolor" :style="{display:pageview==3?'':'none'}">
       <div class="s"></div>
       <div class="x"></div>
       <div class="t1">0</div>
       <div class="t2">1</div>
       <div class="t3">1.35</div>
       <div class="wrl">污染率色条</div>
-    </div>
+    </div> -->
 
     
     <!-- 吹灰侧边栏 -->
     <div id="queue" class="queue" >
       <div class="btn" @click="togle">
         <img :src="cebtn" />
-        <div class="wenzi">等待吹灰</div>
+        <div class="wenzi">吹灰列表</div>
       </div>
       <div class="q">
-        <div class="h" >吹灰总时长（秒）: <b style="font-size:15px">{{chuilong}}</b></div>
         <div class="waith" >
           <div class="t1">序号</div>
           <div class="t2">编号</div>
@@ -776,6 +775,8 @@
           </div>
           
         </div>
+        <Button  :disabled="waitlist.length==0" @click="okchui" type="primary" style="margin:2px 70px">吹灰执行</Button>
+
       </div>
     </div>
 
@@ -786,18 +787,19 @@
         <div class="wenzi">空预器</div>
       </div>
       <div class="q">
-        <div class="h" >加入时间: <b style="font-size:15px">{{ runtimekyq}}</b></div>
         <div class="runh" >
           <div class="t1">编号</div>
-          <div class="t2">烟气效率</div>
+          <div class="t2">时间</div>
         </div>
         <div class="run" >
-          <div  v-bind:class="{ active: (info.runTime != '' && info.offTime == '') ,end : info.offTime != ''}"  style="width:100%;height:30px;" v-for="(info,iop) in kyqlist" v-bind:key="'kyqlist'+iop">
-            <div class="t1"><span v-bind:class="{ act: (info.runTime != '' && info.offTime == '')}"></span>{{info.name_kw}}</div>
-            <div class="t2" >{{lll}}</div>
+          <div    style="width:100%;height:30px;" v-for="(info,iop) in kyqlist" v-bind:key="'kyqlist'+iop">
+            <div class="t1"><span ></span>{{info.name_kw}}</div>
+            <div class="t2">{{info.addTime}}</div>
+            <!-- <div class="t2" >{{lll}}</div> -->
           </div>
         </div>
-        
+        <Button  :disabled="kyqlist.length==0" @click="okchui2" type="primary" style="margin:2px 70px">吹灰执行</Button>
+
       </div>
     </div>
 
@@ -842,7 +844,7 @@ import "echarts/lib/component/legend";
 
 //c吹灰队列
 import {
-  getChlistList,
+  getChlistList,dochui,dochui2
 } from "@/api/ZNRS/Dncchlist";
 
 import {
@@ -876,7 +878,7 @@ import { STLLoader } from 'three/examples/js/loaders/STLLoader';
 
 // import stats from 'stats-js';
 // import dat from 'dat.gui';
-import { irs,iks,ils,ias } from "@/api/chuihui/point";
+import { ibs,ias} from "@/api/chuihui/point";
 
 import chu from "@/assets/images/chu.png";
 import ru from "@/assets/images/ru.png";
@@ -975,7 +977,7 @@ export default {
 
 
       ir_rouletteScene:[],
-      ik_rouletteScene:[],
+      ib_rouletteScene:[],
       il_rouletteScene:[],
       ia_rouletteScene:[],
 
@@ -1176,7 +1178,7 @@ export default {
       o.ir_rouletteScene.map(x=>{
         o.scene.remove(x);
       });
-      o.ik_rouletteScene.map(x=>{
+      o.ib_rouletteScene.map(x=>{
         o.scene.remove(x);
       });
       o.il_rouletteScene.map(x=>{
@@ -1207,7 +1209,7 @@ export default {
           if(key=="ir"){
             o.scene.add(o.ir_rouletteScene[i-1]);
           }else if(key=="ik"){
-            o.scene.add(o.ik_rouletteScene[i-1]);
+            o.scene.add(o.ib_rouletteScene[i-1]);
           }else if(key=="il"){
             o.scene.add(o.il_rouletteScene[i-1]);
           }else if(key=="ia"){
@@ -1215,70 +1217,7 @@ export default {
           }
       }
     },
-    //污染率颜色计算
-    calacolor(v1,index_v1,arr){
-      let o=this;
-      if(v1<=1){
-            if(index_v1==-1){
-              index_v1=0;
-            }
-            arr.map(y=>{
-              // console.log(JSON.stringify(y));
-              y.material = new THREE.MeshBasicMaterial({
-                color: o.colorstep[index_v1],opacity:0.7,transparent:true
-              });
-            });
-          }else if(v1<=1.35){
-            if(index_v1==13){
-              index_v1=12;
-            }
-            arr.map(y=>{
-              y.material = new THREE.MeshBasicMaterial({
-                color: o.colorstep[index_v1],opacity:0.7,transparent:true
-              });
-            });
-          }else{
-            arr.map(y=>{
-              y.material = new THREE.MeshBasicMaterial({
-                color: 0x730303,opacity:0.8,transparent:true
-              });
-            });
-          }
-    },
-    //污染率上色（跟initpoint刷点一起刷新）
-    wrl3d(){
 
-      let o=this;
-      o.ccdada.map(x=>{
-        let v1=x.l/x.h;
-        v1=Math.round(v1 * 100) / 100;
-        let index_v1=Math.round(v1*10)-1;
-        let v2=x.r/x.h;
-        v2=Math.round(v2 * 100) / 100;
-        let index_v2=Math.round(v2*10)-1;
-        if(x.n=='屏式过热器'){
-          o.calacolor(v1,index_v1,o.wrldmes.pg_z);
-          o.calacolor(v2,index_v2,o.wrldmes.pg_y);
-        }else if(x.n=='高温过热器'){
-          o.calacolor(v1,index_v1,o.wrldmes.gg_z);
-          o.calacolor(v2,index_v2,o.wrldmes.gg_y);
-        }else if(x.n=='高温再热器'){
-          o.calacolor(v1,index_v1,o.wrldmes.gz_z);
-          o.calacolor(v2,index_v2,o.wrldmes.gz_y);
-        }else if(x.n=='低温再热器'){
-          o.calacolor(v1,index_v1,o.wrldmes.dz_z);
-          o.calacolor(v2,index_v2,o.wrldmes.dz_y);
-        }else if(x.n=='低温过热器'){
-          o.calacolor(v1,index_v1,o.wrldmes.dg_z);
-          o.calacolor(v2,index_v2,o.wrldmes.dg_y);
-        }else if(x.n=='主省煤器'){
-          o.calacolor(v1,index_v1,o.wrldmes.zs_z);
-          o.calacolor(v2,index_v2,o.wrldmes.zs_y);
-        }else if(x.n=='分级省煤器'){
-          o.calacolor(v1,index_v1,o.wrldmes.fjs);
-        }
-      });
-    },
     init() {
       let o=this;
       let container = document.getElementById('d3');
@@ -1293,39 +1232,25 @@ export default {
 
       loader.load(`${o.publicPath}model/fs.dae`, function( collada ){
         let rouletteScene = collada.scene;
-        rouletteScene.scale.set(0.03,0.03,0.03);
-        //点
-        // let tt=irs({x:o.x,z:o.z,y:o.y,col:rouletteScene});
-        // o.ir_points=tt[0];
-        // //短吹
-        // o.ir_points.map(mess=>{
-        //   o.scene.add( mess );
-        // });
-        // o.ir_rouletteScene=tt[1];
+        rouletteScene.scale.set(0.09,0.09,0.09);
 
-        let kk=iks({x:o.x,z:o.z,y:o.y,col:rouletteScene});
-        o.ik_points=kk[0];
+
+        let kk=ibs({x:o.x,z:o.z,y:o.y,col:rouletteScene});
+        o.ib_points=kk[0];
         //长吹
-        o.ik_points.map(mess=>{
+        o.ib_points.map(mess=>{
           o.scene.add( mess );
         });
-        o.ik_rouletteScene=kk[1];
+        o.ib_rouletteScene=kk[1];
 
-        // let ll=ils({x:o.x,z:o.z,y:o.y,col:rouletteScene});
-        // o.il_points=ll[0];
-        // //半长吹
-        // o.il_points.map(mess=>{
-        //   o.scene.add( mess );
-        // });
-        // o.il_rouletteScene=ll[1];
+        let aa=ias({x:o.x,z:o.z,y:o.y,col:rouletteScene});
+        o.ia_points=aa[0];
+        //长吹
+        o.ia_points.map(mess=>{
+          o.scene.add( mess );
+        });
+        o.ia_rouletteScene=aa[1];
 
-        // let aa=ias({x:o.x,z:o.z,y:o.y,col:rouletteScene});
-        // o.ia_points=aa[0];
-        // //半长吹
-        // o.ia_points.map(mess=>{
-        //   o.scene.add( mess );
-        // });
-        // o.ia_rouletteScene=aa[1];
 
         o.chuisingle();
 
@@ -1337,16 +1262,6 @@ export default {
       function( xhr) {
         //ole.log((xhr.loaded/xhr.total * 100)+"% loaded");
       });
-
-      // loader.load(`${o.publicPath}model/wuhe.dae`, function( collada ){
-      //   //将模型的场景加入到整体的场景
-      //   let rouletteScene = collada.scene;
-      //   rouletteScene.scale.set(0.1,0.1,0.1);
-      //   o.scene.add(rouletteScene);
-      // },
-      // function( xhr) {
-      //   //ole.log((xhr.loaded/xhr.total * 100)+"% loaded");
-      // });
 
 
       let t=0;
@@ -1428,12 +1343,17 @@ export default {
       let raycaster = new THREE.Raycaster();
       let mouse = new THREE.Vector2();
       o.labelRenderer.domElement.addEventListener("mousemove", (event) => {
-        
-          mouse.x = (event.clientX / o.labelRenderer.domElement.clientWidth) * 2 - 1 - 0.1;
-          mouse.y = -(event.clientY / o.labelRenderer.domElement.clientHeight) * 2 + 1 + 0.1 ;
+        // console.log(1);
+          // mouse.x = (event.clientX / o.labelRenderer.domElement.clientWidth) * 2 - 1 - 0.1;
+          // mouse.y = -(event.clientY / o.labelRenderer.domElement.clientHeight) * 2 + 1 + 0.1 ;
+          
+          mouse.x = (event.clientX / o.labelRenderer.domElement.clientWidth) * 2 - 1-0.01;
+          mouse.y = -(event.clientY / o.labelRenderer.domElement.clientHeight) * 2  + 1+0.01;
+          
+
           
           raycaster.setFromCamera(mouse, o.camera);
-          let objects=o.ir_points.concat(o.ik_points).concat(o.il_points).concat(o.ia_points);
+          let objects=o.ib_points.concat(o.ia_points);
           let intersects = raycaster.intersectObjects(objects);
          // console.log(intersects.length);
           
@@ -1613,221 +1533,7 @@ export default {
       return arr;
     },
     
-    blowingir(i){
-      let o=this;
-      //控制两侧面旋转方向
-      if(Math.floor((i-1)/6)%2===1){
-        if(o.ir_rouletteScene[i-1]){
-          o.ir_rouletteScene[i-1].rotation.x += 0.3;
-        }
-      }else{
-        if(o.ir_rouletteScene[i-1]){
-          o.ir_rouletteScene[i-1].rotation.y += 0.3;
-        }
-      }
 
-
-      let exit=eqarr(o.queueshis,o.queues);
-      if(exit){
-        return;
-      }
-
-      //变长
-      if(o.ir_points[i-1]&&o.scales<3){
-        o.ir_points[i-1].scale.y += 0.1;
-      }
-
-      if(Math.floor((i-1)/12)%2===1){
-        if(o.ir_points[i-1]&&o.trans<0.01){
-          o.ir_points[i-1].translateY(-0.0003);
-          
-        }
-      }else{
-        if(o.ir_points[i-1]&&o.trans<0.01){
-          o.ir_points[i-1].translateY(0.0003);
-        }
-      }
-    },
-    blowingik(i){
-      let o=this;
-      if(o.ik_rouletteScene[i-1])o.ik_rouletteScene[i-1].rotation.y += 0.3;
-
-      let exit=eqarr(o.queueshis,o.queues);
-      if(exit){
-        return;
-      }
-      //变长
-      if(o.ik_points[i-1]&&o.scales<12){
-        o.ik_points[i-1].scale.y += 0.1;
-      }
-
-      if(i%2===1){
-        if(o.ik_points[i-1]&&o.trans<0.03){
-          o.ik_points[i-1].translateY(0.0006);
-        }
-      }else{
-        if(o.ik_points[i-1]&&o.trans<0.03){
-          o.ik_points[i-1].translateY(-0.0006);
-        }
-      }
-    },
-    blowingil(i){
-      let o=this;
-      if(o.il_rouletteScene[i-1])o.il_rouletteScene[i-1].rotation.y += 0.3;
-
-      let exit=eqarr(o.queueshis,o.queues);
-      if(exit){
-        return;
-      }
-
-      //变长
-      if(o.il_points[i-1]&&o.scales<12){
-        o.il_points[i-1].scale.y += 0.1;
-      }
-
-      if(i%2===1){
-        if(o.il_points[i-1]&&o.trans<0.03){
-          o.il_points[i-1].translateY(0.0006);
-        }
-      }else{
-        if(o.il_points[i-1]&&o.trans<0.03){
-          o.il_points[i-1].translateY(-0.0006);
-        }
-      }
-    },
-    blowingia(i){
-      let o=this;
-      if(o.ia_rouletteScene[i-1])o.ia_rouletteScene[i-1].rotation.y += 0.3;
-
-      let exit=eqarr(o.queueshis,o.queues);
-      if(exit){
-        return;
-      }
-
-      //变长
-      if(o.ia_points[i-1]&&o.scales<12){
-        o.ia_points[i-1].scale.y += 0.1;
-      }
-
-      
-      if(o.ia_points[i-1]&&o.trans<0.03){
-        o.ia_points[i-1].translateY(-0.0006);
-      }
-      
-    },
-    _blowingir(i){
-      let o=this;
-      let exit=eqarr(o.queueshis,o.queues);
-      if(exit){
-        return;
-      }
-
-      let t=[];
-      let p={};
-      p.name_kw=o.ir_points[i-1].name.toUpperCase();;
-      t.push(p);
-      o.pointcolor(t,0xffffff,"#87CEFA");
-    },
-    __blowingir(i){
-      let o=this;
-
-      //变短
-      if(o.ir_points[i-1]&&o.ir_points[i-1].scale.y>1){
-        o.ir_points[i-1].scale.y -= 0.1;
-      }
-
-      if(Math.floor((i-1)/12)%2===1){
-        if(o.ir_points[i-1]&&o.tamap["ir"+i]<0.01){
-          o.ir_points[i-1].translateY(0.0003);
-        }
-      }else{
-        if(o.ir_points[i-1]&& o.tamap["ir"+i] <0.01){
-          o.ir_points[i-1].translateY(-0.0003);
-        }
-      }
-    },
-    _blowingik(i){
-      let o=this;
-      let exit=eqarr(o.queueshis,o.queues);
-      if(exit){
-        return;
-      }
-
-      let t=[];
-      let p={};
-      p.name_kw=o.ik_points[i-1].name.toUpperCase();
-      t.push(p);
-      o.pointcolor(t,0xffffff,"#FFFFFF");
-    },
-    __blowingik(i){
-      let o=this;
-
-      //变短
-      if(o.ik_points[i-1]&&o.ik_points[i-1].scale.y>1){
-        o.ik_points[i-1].scale.y -= 0.1;
-      }
-
-      if(i%2===1){
-        if(o.ik_points[i-1]&&o.tamap["ik"+i]<0.03){
-          o.ik_points[i-1].translateY(-0.0006);
-        }
-      }else{
-        if(o.ik_points[i-1]&&o.tamap["ik"+i]<0.03){
-          o.ik_points[i-1].translateY(+0.0006);
-        }
-      }
-    },
-    _blowingil(i){
-      let o=this;
-      let exit=eqarr(o.queueshis,o.queues);
-      if(exit){
-        return;
-      }
-      let t=[];
-      let p={};
-      p.name_kw=o.il_points[i-1].name.toUpperCase();;
-      t.push(p);
-      o.pointcolor(t,0xffffff,"#FFFFFF");
-    },
-    __blowingil(i){
-      let o=this;
-      //变短
-      if(o.il_points[i-1]&&o.il_points[i-1].scale.y>1){
-        o.il_points[i-1].scale.y -= 0.1;
-      }
-      if(i%2===1){
-        if(o.il_points[i-1]&&o.tamap["il"+i]<0.03){
-          o.il_points[i-1].translateY(-0.0006);
-        }
-      }else{
-        if(o.il_points[i-1]&&o.tamap["il"+i]<0.03){
-          o.il_points[i-1].translateY(0.0006);
-        }
-      }
-    },
-    _blowingia(i){
-      let o=this;
-      let exit=eqarr(o.queueshis,o.queues);
-      if(exit){
-        return;
-      }
-      let t=[];
-      let p={};
-      p.name_kw=o.ia_points[i-1].name.toUpperCase();;
-      t.push(p);
-      o.pointcolor(t,0xffffff,"#FFFFFF");
-    },
-    __blowingia(i){
-      let o=this;
-
-      //变短
-      if(o.ia_points[i-1]&&o.ia_points[i-1].scale.y>1){
-        o.ia_points[i-1].scale.y -= 0.1;
-      }
-      if(o.ia_points[i-1]&&o.tamap["ia"+i]<0.03){
-        o.ia_points[i-1].translateY(0.0006);
-      }
-    },
     //右侧队列
     quenlist(bid){
       let o=this;
@@ -1841,7 +1547,7 @@ export default {
             boilerid:bid,
             sort: [
               {
-                direct: "DESC",
+                direct: "ASC",
                 field: "id"
               }
             ]
@@ -1883,7 +1589,7 @@ export default {
     initpoint(bid){
       let o=this;
       if(o.boilerid!=-1){
-        getCh_parameterList({
+        getParameterList({
               totalCount: 0,
               pageSize: 20,
               currentPage: 1,
@@ -1902,9 +1608,9 @@ export default {
             o.$Message.warning('该机组不存在或已停用！');
           }else{
             let t=getDateMore(res.data.data,1,[])[0];
-            o.paramobj=res.data.data[0];
-            o.loop=(t.loop==1);
-            console.log(o.loop);
+            // o.paramobj=res.data.data[0];
+            // o.loop=(t.loop==1);
+            // console.log(o.loop);
           }
         });
       }
@@ -1977,39 +1683,6 @@ export default {
           n=n.toLowerCase();
           let tpe=n.substr(0,2);
           let index=n.substr(2);
-          if(tpe=="ir"){
-            o.ir_points[index-1].tip=ttt;
-            //2d 短吹温蒂
-            let y2d=document.querySelectorAll(".w"+ x.name_kw);
-            for (let index = 0; index < y2d.length; index++) {
-              let element = y2d[index];
-              element.innerHTML=x.now_temp_qp_Val.toFixed(1);
-              o.idandwd.push({ k : x.name_kw ,v : x.now_temp_qp_Val.toFixed(1) });
-            }
-
-            //背火侧温度
-            for (let i = 0; i < 4; i++) {
-              let cen=1+24*i;
-              if( index % 24 == 1){
-                if(i == parseInt(index/24))o.data2d[0].item[3-i].b=x.now_temp_bh_Val;
-              }else if(index%24==7){
-                if(i==parseInt(index/24))o.data2d[3].item[3-i].b=x.now_temp_bh_Val;
-              }else if(index%24==13){
-                if(i==parseInt(index/24))o.data2d[2].item[3-i].b=x.now_temp_bh_Val;
-              }else if(index%24==19){
-                if(i==parseInt(index/24))o.data2d[1].item[3-i].b=x.now_temp_bh_Val;
-              }
-              
-            }
-            
-            
-          }else if(tpe=="ik"){
-            o.ik_points[index-1].tip=ttt;
-          }else if(tpe=="il"){
-            o.il_points[index-1].tip=ttt;
-          }else if(tpe=="ia"){
-            o.ia_points[index-1].tip=ttt;
-          }
 
 
         });
@@ -2045,7 +1718,7 @@ export default {
       });
 
       //2d 燃烧区域漆片温度
-      getChhzpointList({
+      getHzpointList({
             totalCount: 0,
             pageSize: 20,
             currentPage: 1,
@@ -2084,63 +1757,62 @@ export default {
       });
 
       //2d 长吹
-      getChareaList({
-            totalCount: 0,
-            pageSize: 20,
-            currentPage: 1,
-            kw: "",
-            isDeleted: 0,
-            status: -1,
-            boilerid:bid,
-            sort: [
-              {
-                direct: "DESC",
-                field: "id"
-              }
-            ]
-          }).then(res => {
-        let t = getDateMore(res.data.data,2,["realTime",]);;
-        if(t.length>0){
-          o.time2d=t[0].realTime;
-        }
-        o.ccdada=o.ccdada.map(x=>{
-          let l=0;
-          let r=0;
-          let h=0;
-          for (let index = 0; index < t.length; index++) {
-            let y = t[index];
-            let arrn=y.k_Name_kw.split('（');
-            let now=y.wrl_Val;
-            let high=y.wrlhigh_Val;
+    //  getChareaList({
+    //         totalCount: 0,
+    //         pageSize: 20,
+    //         currentPage: 1,
+    //         kw: "",
+    //         isDeleted: 0,
+    //         status: -1,
+    //         boilerid:bid,
+    //         sort: [
+    //           {
+    //             direct: "DESC",
+    //             field: "id"
+    //           }
+    //         ]
+    //       }).then(res => {
+    //     let t = getDateMore(res.data.data,2,["realTime",]);;
+    //     if(t.length>0){
+    //       o.time2d=t[0].realTime;
+    //     }
+    //     o.ccdada=o.ccdada.map(x=>{
+    //       let l=0;
+    //       let r=0;
+    //       let h=0;
+    //       for (let index = 0; index < t.length; index++) {
+    //         let y = t[index];
+    //         let arrn=y.k_Name_kw.split('（');
+    //         let now=y.wrl_Val;
+    //         let high=y.wrlhigh_Val;
             
-            if(arrn[0]==x.n){
-              if(arrn.length>1){
-                if(arrn[1].indexOf("左")!=-1){
-                  l=now;
-                }else{
-                  r=now;
-                }
-              }else{
-                l=now;
-              }
-              h=high;
-            }
-          }
-          return {
-            n:x.n,
-            l:l,
-            r:r,
-            h:h
-          }
-        });
+    //         if(arrn[0]==x.n){
+    //           if(arrn.length>1){
+    //             if(arrn[1].indexOf("左")!=-1){
+    //               l=now;
+    //             }else{
+    //               r=now;
+    //             }
+    //           }else{
+    //             l=now;
+    //           }
+    //           h=high;
+    //         }
+    //       }
+    //       return {
+    //         n:x.n,
+    //         l:l,
+    //         r:r,
+    //         h:h
+    //       }
+    //     });
 
-        if(o.ccdada.length==8){
-          o.lll=o.ccdada[7].l;
-        }
+    //     if(o.ccdada.length==8){
+    //       o.lll=o.ccdada[7].l;
+    //     }
         
-        o.wrl3d();
-       // console.log(JSON.stringify(o.ccdada));
-      });
+    //    // console.log(JSON.stringify(o.ccdada));
+    //   });
     },
     //点涂色
     pointcolor(u,color,color2d){
@@ -2256,147 +1928,93 @@ export default {
       let o=this;
       o.lables.map(x=>{
         let n=x.k;
-        if(n.indexOf("|")==-1){
           n=n.toLowerCase();
           let tpe=n.substr(0,2);
           let index=n.substr(2);
-          if(tpe=="ir"){
-            o.ir_points[index-1].remove(x.v);
-          }else if(tpe=="ik"){
-            o.ik_points[index-1].remove(x.v);
-          }else if(tpe=="il"){
-            o.il_points[index-1].remove(x.v);
-          }else if(tpe=="ia"){
-            o.ia_points[index-1].remove(x.v);
+          if(o.ib_points[index*2-2]){
+            o.ib_points[index*2-2].remove(x.v);
           }
-        }else{
-          let arr=n.split("|");
-          let l=arr[0];
-          let r=arr[1];
-          o.wrldmes[l][r].remove(x.v);
-          o.wrl3d();
-        }
-        
+          if(o.ia_points[index*2-2]){
+            o.ia_points[index*2-2].remove(x.v);
+          }
       });
       o.lables=[];
     },
     showlable(nm){
-      
+      // console.log(nm.name);
       let o=this;
       o.clearlable();
-      if(nm.name.indexOf("|")==-1){
         let earthDiv = document.createElement( 'div' );
         earthDiv.id=nm.name;
         earthDiv.className = 'labeles6';
-        earthDiv.innerHTML = nm.tip ;
-        if(nm.name.toLowerCase().substr(0,2)=="ir"){
-          earthDiv.style.marginTop = '-4.5em';
+        earthDiv.innerHTML = nm.name.toUpperCase() ;
+        // if(nm.name.toLowerCase().substr(0,2)=="ir"){
+        //   earthDiv.style.marginTop = '-4.5em';
+        // }else{
+        //   earthDiv.style.marginTop = '-2.8em';
+        // }   ib_points
+        earthDiv.style.marginTop = '-1.8em';
+
+
+        let earthLabel = new CSS2DObject( earthDiv );
+        earthLabel.position.set( 0, 0, 0 );
+
+        let index=nm.name.substr(2);
+
+
+        if(nm.name.toLowerCase().substr(0,2)=="ib"){
+          o.ib_points[index*2-2].add( earthLabel );
         }else{
-          earthDiv.style.marginTop = '-2.8em';
+          o.ia_points[index*2-2].add( earthLabel );
         }
         
-        let earthLabel = new CSS2DObject( earthDiv );
-        earthLabel.position.set( 0, 0, 0 );
-
-        let n=nm.name;
-        n=n.toLowerCase();
-        let tpe=n.substr(0,2);
-        let index=n.substr(2);
-        if(tpe=="ir"){
-          o.ir_points[index-1].add( earthLabel );
-        }else if(tpe=="ik"){
-          o.ik_points[index-1].add( earthLabel );
-        }else if(tpe=="il"){
-          o.il_points[index-1].add( earthLabel );
-        }else if(tpe=="ia"){
-          o.ia_points[index-1].add( earthLabel );
-        }
-        o.lables.push({k:n,v:earthLabel});
-      }else{
-        let arr=nm.name.split("|");
-        let l=arr[0];
-        let r=arr[1];
-        let earthDiv = document.createElement( 'div' );
-        earthDiv.id=l;
-        earthDiv.className = 'labeles6';
-        earthDiv.innerHTML = o.quyudiv(l) ;
-        let earthLabel = new CSS2DObject( earthDiv );
-        earthLabel.position.set( 0, 0, 0 );
-        o.wrldmes[l][r].add( earthLabel );
+        // let n=nm.name;
+        // n=n.toLowerCase();
+        // let tpe=n.substr(0,2);
+        // let index=n.substr(2);
+        // if(tpe=="ir"){
+        //   o.ir_points[index-1].add( earthLabel );
+        // }else if(tpe=="ik"){
+        //   o.ik_points[index-1].add( earthLabel );
+        // }else if(tpe=="il"){
+        //   o.il_points[index-1].add( earthLabel );
+        // }else if(tpe=="ia"){
+        //   o.ia_points[index-1].add( earthLabel );
+        // }
         o.lables.push({k:nm.name,v:earthLabel});
-
-        o.wrldmes[l].map(x=>{
-        // x.material.opacity = 1;
-        x.material = new THREE.MeshBasicMaterial({
-                color: 0x4169E1,opacity:1,transparent:true
-              });
-        });
-      }
     },
-    quyudiv(id){
-      let o=this;
-      let t=[];
-      o.ccdada.map(x=>{
-        let v1 = x.l/x.h;
-        v1=Math.round(v1 * 100) / 100;
-        let v2=x.r/x.h;
-        v2=Math.round(v2 * 100) / 100;
-        if(x.n=='屏式过热器'){
-          t.push({k:"pg_z",v:'屏式过热器<br>左侧<br>污染率:'+v1});
-          t.push({k:"pg_y",v:'屏式过热器<br>右侧<br>污染率:'+v2});
-        }else if(x.n=='高温过热器'){
-          t.push({k:"gg_z",v:'高温过热器<br>左侧<br>污染率:'+v1});
-          t.push({k:"gg_y",v:'高温过热器<br>右侧<br>污染率:'+v2});
-        }else if(x.n=='高温再热器'){
-          t.push({k:"gz_z",v:'高温再热器<br>左侧<br>污染率:'+v1});
-          t.push({k:"gz_y",v:'高温再热器<br>右侧<br>污染率:'+v2});
-        }else if(x.n=='低温再热器'){
-          t.push({k:"dz_z",v:'低温再热器<br>左侧<br>污染率:'+v1});
-          t.push({k:"dz_y",v:'低温再热器<br>右侧<br>污染率:'+v2});
-        }else if(x.n=='低温过热器'){
-          t.push({k:"dg_z",v:'低温过热器<br>左侧<br>污染率:'+v1});
-          t.push({k:"dg_y",v:'低温过热器<br>右侧<br>污染率:'+v2});
-        }else if(x.n=='主省煤器'){
-          t.push({k:"zs_z",v:'主省煤器<br>左侧<br>污染率:'+v1});
-          t.push({k:"zs_y",v:'主省煤器<br>右侧<br>污染率:'+v2});
-        }else if(x.n=='分级省煤器'){
-          t.push({k:"fjs",v:'分级省煤器<br>污染率:'+v1});
-        }
-      });
-      let result="";
-      t.map(x=>{
-        if(x.k==id){
-          result=x.v;
-        }
-      });
-      return result;
-    },
+    
     hanldlermove(e){
       let k177=document.querySelectorAll(".tip12");
       k177[0].style.top=e.clientY-35 +"px";
       k177[0].style.left=e.clientX-75+"px";
     },
-    tip90(id){
+    okchui(){
       let o=this;
-      let k1=document.querySelectorAll("."+id);
-      let k177=document.querySelectorAll(".tip12");
-      k177[0].style.display="block";
-      o.pointall.map(x=>{
-        if(x.name_kw==id){
-          o.tipmes=x.ttt.replace("<br>","\n").replace("<br/>","\n").replace("<br>","\n").replace("<br>","\n");
-          o.tipmes=o.tipmes;
+      dochui({
+            code:o.boilerid
+          }).then(res => {
+        if (res.data.code === 200) {
+          this.$Message.success(res.data.message);
+          
+        } else {
+          this.$Message.warning(res.data.message);
         }
       });
-      
-      k1[0].addEventListener("mousemove",o.hanldlermove,false);
     },
-    tip91(id){
+
+    okchui2(){
       let o=this;
-      let k1=document.querySelectorAll("."+id);
-      let k177=document.querySelectorAll(".tip12");
-      o.tipmes="";
-      k1[0].removeEventListener("mousemove",o.hanldlermove,false);
-      k177[0].style.display="none";
+      dochui2({
+            code:o.boilerid
+          }).then(res => {
+        if (res.data.code === 200) {
+          this.$Message.success(res.data.message);
+          
+        } else {
+          this.$Message.warning(res.data.message);
+        }
+      });
     }
   },
   mounted() {

@@ -18,17 +18,17 @@ export const initRouter = (vm) => {
   //   headers: { 'Authorization': 'Bearer ' + getToken() }
   // })
 
-  axios.request({
-    url: 'account/menu',
-    method: 'get'
-  }).then(res => {
-    var menuData = res.data
-    // 格式化菜单
-    list = formatMenu(menuData)
-    // 刷新界面菜单
-    //vm.$store.commit('setMenuList', list)
-    vm.$store.commit('refreshMenuList', list)
-  });
+  // axios.request({
+  //   url: 'account/menu',
+  //   method: 'get'
+  // }).then(res => {
+  //   var menuData = res.data
+  //   // 格式化菜单
+  //   list = formatMenu(menuData)
+  //   // 刷新界面菜单
+  //   //vm.$store.commit('setMenuList', list)
+  //   vm.$store.commit('refreshMenuList', list)
+  // });
 
   return list
 }
@@ -36,15 +36,15 @@ export const initRouter = (vm) => {
 // 加载菜单，在创建路由时使用
 export const loadMenu = () => {
   let list = []
-  axios.request({
-    url: 'account/menu',
-    method: 'get'
-  }).then(res => {
-    var menuData = res.data
-    // 这是后端回传给前端的数据，如上面所说的
-    // 格式化菜单
-    list = formatMenu(menuData)
-  });
+  // axios.request({
+  //   url: 'account/menu',
+  //   method: 'get'
+  // }).then(res => {
+  //   var menuData = res.data
+  //   // 这是后端回传给前端的数据，如上面所说的
+  //   // 格式化菜单
+  //   list = formatMenu(menuData)
+  // });
 
   return list
 }

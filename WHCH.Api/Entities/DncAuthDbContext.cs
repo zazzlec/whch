@@ -113,6 +113,9 @@ namespace WHCH.Api.Entities
         public DbSet<Dncclasses> Dncclasses { get; set; }
         public DbSet<Dnchfburn> Dnchfburn { get; set; }
         public DbSet<Dnclzburn> Dnclzburn { get; set; }
+        public DbSet<Dncboilerrat> Dncboilerrat { get; set; }
+        public DbSet<Dncpointkks_data> Dncpointkks_data { get; set; }
+
 
         #region DbQuery
 

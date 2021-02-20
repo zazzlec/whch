@@ -36,516 +36,6 @@ let material = new THREE.MeshPhysicalMaterial({
 
 let radiolll=0.0019;
 //短吹 IR 1-96
-export const irs = ({
-  x,
-  z,
-  y,
-  col
-}) => {
-  let arr = [];
-  let arr2 =[];
-  let b1 = - 0.09;//最小面一排高度
-  // //y 蓝色线，前后面移动
-  // //z 绿色线，上下
-  // //x 左右
-  let geometry = new THREE.CylinderGeometry(radiolll,radiolll, 0.003, 32);
-  //let material = new THREE.MeshBasicMaterial({ color: '#ffffff' });
-
-  for (let index = 0; index < 6; index++) {
-    let ir_1_6 = new THREE.Mesh(geometry, material);
-    ir_1_6.position.set(x - 0.175 + index * 0.0142, z + b1, y - 0.055);
-    ir_1_6.rotation.x = 1.56;
-    ir_1_6.name = "ir"+(index+1);
-    let cc = col.clone();
-    cc.position.set(x - 0.175 + index * 0.0142, z + b1, y - 0.059);
-    cc.rotation.x = 1.56;
-
-    arr2.push(cc);
-    arr.push(ir_1_6);
-  }
-
-  for (let index = 0; index < 6; index++) {
-    let ir_7_12 = new THREE.Mesh(geometry, material);
-    ir_7_12.position.set(x - 0.09, z + b1, y - 0.042 + index * 0.0142);
-    ir_7_12.rotation.x = 1.56;
-    ir_7_12.rotation.z = 1.56;
-    ir_7_12.name = "ir"+(index+7);
-    let cc = col.clone();
-    cc.position.set(x - 0.085, z + b1, y - 0.042 + index * 0.0142);
-    cc.rotation.x = 1.56;
-    cc.rotation.z = 1.56;
-    arr2.push(cc);
-    arr.push(ir_7_12);
-  }
-
-  for (let index = 0; index < 6; index++) {
-    let ir_13_18 = new THREE.Mesh(geometry, material);
-    ir_13_18.position.set(x - 0.175 + 0.071 - (index * 0.0142), z + b1, y + 0.045);
-    ir_13_18.rotation.x = 1.56;
-    ir_13_18.name = "ir"+(index+13);
-    let cc = col.clone();
-    cc.position.set(x - 0.175 + 0.071 - (index * 0.0142), z + b1, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ir_13_18);
-  }
-
-  for (let index = 0; index < 6; index++) {
-    let ir_19_24 = new THREE.Mesh(geometry, material);
-    ir_19_24.position.set(x - 0.189, z + b1, y + 0.03 - index * 0.0142);
-    ir_19_24.rotation.x = 1.56;
-    ir_19_24.rotation.z = 1.56;
-    ir_19_24.name = "ir"+(index+19);
-    let cc = col.clone();
-    cc.position.set(x - 0.193, z + b1, y + 0.03 - index * 0.0142);
-    cc.rotation.x = 1.56;
-    cc.rotation.z = 1.56;
-    arr2.push(cc);
-    arr.push(ir_19_24);
-  }
-
-  for (let i = 0; i < 3; i++) {
-    let b2 = - 0.022 + i * 0.026;
-    for (let index = 0; index < 6; index++) {
-      let ir_1_6 = new THREE.Mesh(geometry, material);
-      ir_1_6.position.set(x - 0.175 + index * 0.0142, z + b2, y - 0.055);
-      ir_1_6.rotation.x = 1.56;
-      ir_1_6.name = "ir"+(index+ (25 + 24*i));
-      let cc = col.clone();
-      cc.position.set(x - 0.175 + index * 0.0142, z + b2, y - 0.059);
-      cc.rotation.x = 1.56;
-      arr2.push(cc);
-
-      arr.push(ir_1_6);
-    }
-
-    for (let index = 0; index < 6; index++) {
-      let ir_7_12 = new THREE.Mesh(geometry, material);
-      ir_7_12.position.set(x - 0.09, z + b2, y - 0.042 + index * 0.0142);
-      ir_7_12.rotation.x = 1.56;
-      ir_7_12.rotation.z = 1.56;
-      ir_7_12.name = "ir"+(index+ (25+6 + 24*i));
-      let cc = col.clone();
-      cc.position.set(x - 0.085, z + b2, y - 0.042 + index * 0.0142);
-      cc.rotation.x = 1.56;
-      cc.rotation.z = 1.56;
-      arr2.push(cc);
-      arr.push(ir_7_12);
-    }
-
-    for (let index = 0; index < 6; index++) {
-      let ir_13_18 = new THREE.Mesh(geometry, material);
-      ir_13_18.position.set(x - 0.175 + 0.071 - (index * 0.0142), z + b2, y + 0.045);
-      ir_13_18.rotation.x = 1.56;
-      ir_13_18.name = "ir"+(index+ (25+6+6 + 24*i));
-      let cc = col.clone();
-      cc.position.set(x - 0.175 + 0.071 - (index * 0.0142), z + b2, y + 0.049);
-      cc.rotation.x = 1.56;
-      arr2.push(cc);
-      arr.push(ir_13_18);
-    }
-
-    for (let index = 0; index < 6; index++) {
-      let ir_19_24 = new THREE.Mesh(geometry, material);
-      ir_19_24.position.set(x - 0.189, z + b2, y + 0.03 - index * 0.0142);
-      ir_19_24.rotation.x = 1.56;
-      ir_19_24.rotation.z = 1.56;
-      ir_19_24.name = "ir"+(index+ (25+6+6+6 + 24*i));
-      let cc = col.clone();
-      cc.position.set(x - 0.193, z + b2, y + 0.03 - index * 0.0142);
-      cc.rotation.x = 1.56;
-      cc.rotation.z = 1.56;
-      arr2.push(cc);
-      arr.push(ir_19_24);
-    }
-  }
-  return [arr,arr2];
-}
-
-
-//长吹 IK 1-46
-export const iks = ({
-  x,
-  z,
-  y,
-  col
-}) => {
-  let arr = [];
-  let arr2 =[];
-  let geometry = new THREE.CylinderGeometry(radiolll,radiolll, 0.003, 32);
-  //let material = new THREE.MeshBasicMaterial({ color: '#ffffff' });
-
-  let ik1 = new THREE.Mesh(geometry, material);
-  ik1.position.set(x - 0.143, z + 0.086, y - 0.055);
-  ik1.rotation.x = 1.56;
-  ik1.name = "ik1";
-  let cc = col.clone();
-  cc.position.set(x - 0.143, z + 0.086, y - 0.059);
-  cc.rotation.x = 1.56;
-  arr2.push(cc);
-  arr.push(ik1);
-
-  let ik2 = new THREE.Mesh(geometry, material);
-  ik2.position.set(x - 0.143, z + 0.086, y + 0.045);
-  ik2.rotation.x = 1.56;
-  ik2.name = "ik2";
-  cc = col.clone();
-  cc.position.set(x - 0.143, z + 0.086, y + 0.049);
-  cc.rotation.x = 1.56;
-  arr2.push(cc);
-  arr.push(ik2);
-
-  let ik3 = new THREE.Mesh(geometry, material);
-  ik3.position.set(x - 0.143, z + 0.066, y - 0.055);
-  ik3.rotation.x = 1.56;
-  ik3.name = "ik3";
-  cc = col.clone();
-  cc.position.set(x - 0.143, z + 0.066, y - 0.059);
-  cc.rotation.x = 1.56;
-  arr2.push(cc);
-  arr.push(ik3);
-
-  let ik4 = new THREE.Mesh(geometry, material);
-  ik4.position.set(x - 0.143, z + 0.066, y + 0.045);
-  ik4.rotation.x = 1.56;
-  ik4.name = "ik4";
-  cc = col.clone();
-  cc.position.set(x - 0.143, z + 0.066, y + 0.049);
-  cc.rotation.x = 1.56;
-  arr2.push(cc);
-  arr.push(ik4);
-
-
-  for (let index = 0; index < 4; index++) {
-    let ik5 = new THREE.Mesh(geometry, material);
-    ik5.position.set(x - 0.117, z + 0.126 - index * 0.015, y - 0.055);
-    ik5.rotation.x = 1.56;
-    ik5.name = "ik"+(5+index*2);
-    cc = col.clone();
-    cc.position.set(x - 0.117, z + 0.126 - index * 0.015, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik5);
-
-    let ik6 = new THREE.Mesh(geometry, material);
-    ik6.position.set(x - 0.117, z + 0.126 - index * 0.015, y + 0.045);
-    ik6.rotation.x = 1.56;
-    ik6.name = "ik"+(6+index*2);
-    cc = col.clone();
-    cc.position.set(x - 0.117, z + 0.126 - index * 0.015, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik6);
-  }
-
-  for (let index = 0; index < 3; index++) {
-    let ik5 = new THREE.Mesh(geometry, material);
-    ik5.position.set(x - 0.089, z + 0.12 - index * 0.015, y - 0.055);
-    ik5.rotation.x = 1.56;
-    ik5.name = "ik"+(13+index*2);
-    cc = col.clone();
-    cc.position.set(x - 0.089, z + 0.12 - index * 0.015, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik5);
-
-    let ik6 = new THREE.Mesh(geometry, material);
-    ik6.position.set(x - 0.089, z + 0.12 - index * 0.015, y + 0.045);
-    ik6.rotation.x = 1.56;
-    ik6.name = "ik"+(14+index*2);
-    cc = col.clone();
-    cc.position.set(x - 0.089, z + 0.12 - index * 0.015, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik6);
-  }
-
-  for (let index = 0; index < 2; index++) {
-    let ik5 = new THREE.Mesh(geometry, material);
-    ik5.position.set(x - 0.063, z + 0.126 - index * 0.015, y - 0.055);
-    ik5.rotation.x = 1.56;
-    ik5.name = "ik"+(19+index*2);
-    cc = col.clone();
-    cc.position.set(x - 0.063, z + 0.126 - index * 0.015, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik5);
-
-    let ik6 = new THREE.Mesh(geometry, material);
-    ik6.position.set(x - 0.063, z + 0.126 - index * 0.015, y + 0.045);
-    ik6.rotation.x = 1.56;
-    ik6.name = "ik"+(20+index*2);
-    cc = col.clone();
-    cc.position.set(x - 0.063, z + 0.126 - index * 0.015, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik6);
-  }
-
-  //IK 23-28
-  for (let index = 0; index < 3; index++) {
-    let ik5 = new THREE.Mesh(geometry, material);
-    ik5.position.set(x - 0.033, z + 0.126 - index * 0.015, y - 0.055);
-    ik5.rotation.x = 1.56;
-    ik5.name = "ik"+(23+index*2);
-    cc = col.clone();
-    cc.position.set(x - 0.033, z + 0.126 - index * 0.015, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik5);
-
-    let ik6 = new THREE.Mesh(geometry, material);
-    ik6.position.set(x - 0.033, z + 0.126 - index * 0.015, y + 0.045);
-    ik6.rotation.x = 1.56;
-    ik6.name = "ik"+(24+index*2);
-    cc = col.clone();
-    cc.position.set(x - 0.033, z + 0.126 - index * 0.015, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik6);
-  }
-
-  // IK 29-40
-  for (let index = 0; index < 3; index++) {
-    let h = 0.048;
-    let jx = 0.02;
-    let ik5 = new THREE.Mesh(geometry, material);
-    ik5.position.set(x - 0.033, z + h - index * jx, y - 0.055);
-    ik5.rotation.x = 1.56;
-    ik5.name = "ik"+(29+index*4);
-    cc = col.clone();
-    cc.position.set(x - 0.033, z + h - index * jx, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik5);
-
-    let ik6 = new THREE.Mesh(geometry, material);
-    ik6.position.set(x - 0.033, z + h - index * jx, y + 0.045);
-    ik6.rotation.x = 1.56;
-    ik6.name = "ik"+(30+index*4);
-    cc = col.clone();
-    cc.position.set(x - 0.033, z + h - index * jx, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik6);
-
-    let ik55 = new THREE.Mesh(geometry, material);
-    ik55.position.set(x - 0.023, z + h - index * jx, y - 0.055);
-    ik55.rotation.x = 1.56;
-    ik55.name = "ik"+(31+index*4);
-    cc = col.clone();
-    cc.position.set(x - 0.023, z + h - index * jx, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik55);
-
-    let ik66 = new THREE.Mesh(geometry, material);
-    ik66.position.set(x - 0.023, z + h - index * jx, y + 0.045);
-    ik66.rotation.x = 1.56;
-    ik66.name = "ik"+(32+index*4);
-    cc = col.clone();
-    cc.position.set(x - 0.023, z + h - index * jx, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik66);
-  }
-
-  // IK 41-46
-  for (let index = 0; index < 2; index++) {
-    let h = 0.048;
-    let jx = 0.02;
-    if (index == 1) {
-      let ik5 = new THREE.Mesh(geometry, material);
-      ik5.position.set(x - 0.008, z + h - index * jx, y - 0.055);
-      ik5.rotation.x = 1.56;
-      ik5.name = "ik"+43;
-      cc = col.clone();
-      cc.position.set(x - 0.008, z + h - index * jx, y - 0.059);
-      cc.rotation.x = 1.56;
-      arr2.push(cc);
-      arr.push(ik5);
-
-      let ik6 = new THREE.Mesh(geometry, material);
-      ik6.position.set(x - 0.008, z + h - index * jx, y + 0.045);
-      ik6.rotation.x = 1.56;
-      ik6.name = "ik"+44;
-      cc = col.clone();
-      cc.position.set(x - 0.008, z + h - index * jx, y + 0.049);
-      cc.rotation.x = 1.56;
-      arr2.push(cc);
-      arr.push(ik6);
-    }
-
-    let ik55 = new THREE.Mesh(geometry, material);
-    ik55.position.set(x + 0.003, z + h - index * jx, y - 0.055);
-    ik55.rotation.x = 1.56;
-    ik55.name = "ik"+(41+index*4);
-    cc = col.clone();
-    cc.position.set(x + 0.003, z + h - index * jx, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik55);
-
-    let ik66 = new THREE.Mesh(geometry, material);
-    ik66.position.set(x + 0.003, z + h - index * jx, y + 0.045);
-    ik66.rotation.x = 1.56;
-    ik66.name = "ik"+(42+index*4);
-    cc = col.clone();
-    cc.position.set(x + 0.003, z + h - index * jx, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik66);
-  }
-  return [arr,arr2];
-}
-
-
-//半长吹 IL 1-16
-export const ils = ({
-  x,
-  z,
-  y,
-  col
-}) => {
-  let arr = [];
-  let arr2 =[];
-  let geometry = new THREE.CylinderGeometry(radiolll,radiolll, 0.003, 32);
-  //let material = new THREE.MeshBasicMaterial({ color: '#ffffff' });
-
-  let h = -0.013;
-  let ik5 = new THREE.Mesh(geometry, material);
-  ik5.position.set(x - 0.033, z + h, y - 0.055);
-  ik5.rotation.x = 1.56;
-  ik5.name = "il"+1;
-  let cc = col.clone();
-  cc.position.set(x - 0.033, z + h, y - 0.059);
-  cc.rotation.x = 1.56;
-  arr2.push(cc);
-  arr.push(ik5);
-
-  let ik6 = new THREE.Mesh(geometry, material);
-  ik6.position.set(x - 0.033, z + h, y + 0.045);
-  ik6.rotation.x = 1.56;
-  ik6.name = "il"+2;
-  cc = col.clone();
-  cc.position.set(x - 0.033, z + h, y + 0.049);
-  cc.rotation.x = 1.56;
-  arr2.push(cc);
-  arr.push(ik6);
-
-  let ik55 = new THREE.Mesh(geometry, material);
-  ik55.position.set(x - 0.023, z + h, y - 0.055);
-  ik55.rotation.x = 1.56;
-  ik55.name = "il"+3;
-  cc = col.clone();
-  cc.position.set(x - 0.023, z + h, y - 0.059);
-  cc.rotation.x = 1.56;
-  arr2.push(cc);
-  arr.push(ik55);
-
-  let ik66 = new THREE.Mesh(geometry, material);
-  ik66.position.set(x - 0.023, z + h, y + 0.045);
-  ik66.rotation.x = 1.56;
-  ik66.name = "il"+4;
-  cc = col.clone();
-  cc.position.set(x - 0.023, z + h, y + 0.049);
-  cc.rotation.x = 1.56;
-  arr2.push(cc);
-  arr.push(ik66);
-
-
-  for (let index = 0; index < 2; index++) {
-    let h1 = 0;
-    let jx = 0.02;
-    let ik5 = new THREE.Mesh(geometry, material);
-    ik5.position.set(x - 0.008, z + h1 - index * jx, y - 0.055);
-    ik5.rotation.x = 1.56;
-    ik5.name = "il"+(5+index*4);
-    cc = col.clone();
-    cc.position.set(x - 0.008, z + h1 - index * jx, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik5);
-
-    let ik6 = new THREE.Mesh(geometry, material);
-    ik6.position.set(x - 0.008, z + h1 - index * jx, y + 0.045);
-    ik6.rotation.x = 1.56;
-    ik6.name = "il"+(6+index*4);
-    cc = col.clone();
-    cc.position.set(x - 0.008, z + h1 - index * jx, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik6);
-
-    let ik55 = new THREE.Mesh(geometry, material);
-    ik55.position.set(x + 0.003, z + h1 - index * jx, y - 0.055);
-    ik55.rotation.x = 1.56;
-    ik55.name = "il"+(7+index*4);
-    cc = col.clone();
-    cc.position.set(x + 0.003, z + h1 - index * jx, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik55);
-
-    let ik66 = new THREE.Mesh(geometry, material);
-    ik66.position.set(x + 0.003, z + h1 - index * jx, y + 0.045);
-    ik66.rotation.x = 1.56;
-    ik66.name = "il"+(8+index*4);
-    cc = col.clone();
-    cc.position.set(x + 0.003, z + h1 - index * jx, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik66);
-  }
-
-  for (let index = 0; index < 1; index++) {
-    let h1 = -0.055;
-    let jx = 0.02;
-    let ik5 = new THREE.Mesh(geometry, material);
-    ik5.position.set(x + 0.145, z + h1 - index * jx, y - 0.055);
-    ik5.rotation.x = 1.56;
-    ik5.name = "il13";
-    cc = col.clone();
-    cc.position.set(x + 0.145, z + h1 - index * jx, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik5);
-
-    let ik6 = new THREE.Mesh(geometry, material);
-    ik6.position.set(x + 0.145, z + h1 - index * jx, y + 0.045);
-    ik6.rotation.x = 1.56;
-    ik6.name = "il14";
-    cc = col.clone();
-    cc.position.set(x + 0.145, z + h1 - index * jx, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik6);
-
-    let ik55 = new THREE.Mesh(geometry, material);
-    ik55.position.set(x + 0.155, z + h1 - index * jx, y - 0.055);
-    ik55.rotation.x = 1.56;
-    ik55.name = "il15";
-    cc = col.clone();
-    cc.position.set(x + 0.155, z + h1 - index * jx, y - 0.059);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik55);
-
-    let ik66 = new THREE.Mesh(geometry, material);
-    ik66.position.set(x + 0.155, z + h1 - index * jx, y + 0.045);
-    ik66.rotation.x = 1.56;
-    ik66.name = "il16";
-    cc = col.clone();
-    cc.position.set(x + 0.155, z + h1 - index * jx, y + 0.049);
-    cc.rotation.x = 1.56;
-    arr2.push(cc);
-    arr.push(ik66);
-  }
-  return [arr,arr2];
-}
-
-
-//预热器 IA 1-2
 export const ias = ({
   x,
   z,
@@ -554,29 +44,311 @@ export const ias = ({
 }) => {
   let arr = [];
   let arr2 =[];
-  let geometry = new THREE.CylinderGeometry(radiolll,radiolll, 0.003, 32);
+  // let geometry = new THREE.CylinderGeometry(radiolll,radiolll, 0.003, 32);
+  
+
+  let geometry = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
 
 
-  let h1 = -0.105;
-  let jx = 0.02;
-  let ik5 = new THREE.Mesh(geometry, material);
-  ik5.position.set(x + 0.15, z + h1, y - 0);
-  ik5.rotation.x = 1.56;
-  ik5.name = "ia1";
+  let qian=0.048;
+  let hou=-0.051;
+
+  let ia1 = new THREE.Mesh(geometry, material);
+  ia1.position.set(x + 0.158, z - 0.06, y + 0.04+qian);
+  ia1.rotation.x = 1.56;
+  ia1.name = "ia1";
   let cc = col.clone();
-  cc.position.set(x + 0.15, z + h1, y + 0.005);
+  cc.position.set(x + 0.158, z - 0.06, y + 0.04+qian);
   cc.rotation.x = 1.56;
   arr2.push(cc);
-  arr.push(ik5);
+  arr.push(ia1);
 
-  let ik6 = new THREE.Mesh(geometry, material);
-  ik6.position.set(x + 0.15, z + h1 - 0.039, y - 0);
-  ik6.rotation.x = 1.56;
-  ik6.name = "ia2";
+  ia1 = new THREE.Mesh(geometry, material);
+  ia1.position.set(x + 0.158, z - 0.06, y + 0.04+hou);
+  ia1.rotation.x = 1.56;
+  ia1.name = "ia1";
+  arr.push(ia1);
+
+  let ia2 = new THREE.Mesh(geometry, material);
+  ia2.position.set(x + 0.158, z - 0.095, y + 0.04+qian);
+  ia2.rotation.x = 1.56;
+  ia2.name = "ia2";
   cc = col.clone();
-  cc.position.set(x + 0.15, z + h1 - 0.039, y + 0.005);
+  cc.position.set(x + 0.158, z - 0.095, y + 0.04+qian);
   cc.rotation.x = 1.56;
   arr2.push(cc);
-  arr.push(ik6);
+  arr.push(ia2);
+
+  ia2 = new THREE.Mesh(geometry, material);
+  ia2.position.set(x + 0.158, z - 0.095, y + 0.04+hou);
+  ia2.rotation.x = 1.56;
+  ia2.name = "ia2";
+  arr.push(ia2);
+
+  let ia3 = new THREE.Mesh(geometry, material);
+  ia3.position.set(x + 0.158, z - 0.134, y + 0.04+qian);
+  ia3.rotation.x = 1.56;
+  ia3.name = "ia3";
+  cc = col.clone();
+  cc.position.set(x + 0.158, z - 0.134, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ia3);
+
+  ia3 = new THREE.Mesh(geometry, material);
+  ia3.position.set(x + 0.158, z - 0.134, y + 0.04+hou);
+  ia3.rotation.x = 1.56;
+  ia3.name = "ia3";
+  arr.push(ia3);
+
+  return [arr,arr2];
+}
+
+//长吹 ib 1-46
+export const ibs = ({
+  x,
+  z,
+  y,
+  col
+}) => {
+  let arr = [];
+  let arr2 =[];
+  // let geometry = new THREE.CylinderGeometry(radiolll,radiolll, 0.003, 32);
+  
+
+  let geometry = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
+
+
+  let qian=0.048;
+  let hou=-0.051;
+
+  let ib1 = new THREE.Mesh(geometry, material);
+  ib1.position.set(x + 0.038, z + 0.166, y + 0.04+qian);
+  ib1.rotation.x = 1.56;
+  ib1.name = "ib1";
+  let cc = col.clone();
+  cc.position.set(x + 0.038, z + 0.166, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib1);
+
+  ib1 = new THREE.Mesh(geometry, material);
+  ib1.position.set(x + 0.038, z + 0.166, y + 0.04+hou);
+  ib1.rotation.x = 1.56;
+  ib1.name = "ib1";
+  arr.push(ib1);
+
+
+
+  let ib2 = new THREE.Mesh(geometry, material);
+  ib2.position.set(x + 0.073, z + 0.166, y + 0.04+qian);
+  ib2.rotation.x = 1.56;
+  ib2.name = "ib2";
+  cc = col.clone();
+  cc.position.set(x + 0.073, z + 0.166, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib2);
+
+  ib2 = new THREE.Mesh(geometry, material);
+  ib2.position.set(x + 0.073, z + 0.166, y + 0.04+hou);
+  ib2.rotation.x = 1.56;
+  ib2.name = "ib2";
+  arr.push(ib2);
+
+
+
+  let ib3 = new THREE.Mesh(geometry, material);
+  ib3.position.set(x + 0.038, z + 0.136, y + 0.04+qian);
+  ib3.rotation.x = 1.56;
+  ib3.name = "ib3";
+  cc = col.clone();
+  cc.position.set(x + 0.038, z + 0.136, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib3);
+
+  ib3 = new THREE.Mesh(geometry, material);
+  ib3.position.set(x + 0.038, z + 0.136, y + 0.04+hou);
+  ib3.rotation.x = 1.56;
+  ib3.name = "ib3";
+  arr.push(ib3);
+
+  let ib4 = new THREE.Mesh(geometry, material);
+  ib4.position.set(x + 0.073, z + 0.136, y + 0.04+qian);
+  ib4.rotation.x = 1.56;
+  ib4.name = "ib4";
+  cc = col.clone();
+  cc.position.set(x + 0.073, z + 0.136, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib4);
+
+  ib4 = new THREE.Mesh(geometry, material);
+  ib4.position.set(x + 0.073, z + 0.136, y + 0.04+hou);
+  ib4.rotation.x = 1.56;
+  ib4.name = "ib4";
+  arr.push(ib4);
+
+  let ib5 = new THREE.Mesh(geometry, material);
+  ib5.position.set(x + 0.038, z + 0.106, y + 0.04+qian);
+  ib5.rotation.x = 1.56;
+  ib5.name = "ib5";
+  cc = col.clone();
+  cc.position.set(x + 0.038, z + 0.106, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib5);
+
+  ib5 = new THREE.Mesh(geometry, material);
+  ib5.position.set(x + 0.038, z + 0.106, y + 0.04+hou);
+  ib5.rotation.x = 1.56;
+  ib5.name = "ib5";
+  arr.push(ib5);
+
+  let ib6 = new THREE.Mesh(geometry, material);
+  ib6.position.set(x + 0.073, z + 0.106, y + 0.04+qian);
+  ib6.rotation.x = 1.56;
+  ib6.name = "ib6";
+  cc = col.clone();
+  cc.position.set(x + 0.073, z + 0.106, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib6);
+
+  ib6 = new THREE.Mesh(geometry, material);
+  ib6.position.set(x + 0.073, z + 0.106, y + 0.04+hou);
+  ib6.rotation.x = 1.56;
+  ib6.name = "ib6";
+  arr.push(ib6);
+
+  let ib7 = new THREE.Mesh(geometry, material);
+  ib7.position.set(x + 0.083, z + 0.066, y + 0.04+qian);
+  ib7.rotation.x = 1.56;
+  ib7.name = "ib7";
+  cc = col.clone();
+  cc.position.set(x + 0.083, z + 0.066, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib7);
+
+  ib7 = new THREE.Mesh(geometry, material);
+  ib7.position.set(x + 0.083, z + 0.066, y + 0.04+hou);
+  ib7.rotation.x = 1.56;
+  ib7.name = "ib7";
+  arr.push(ib7);
+
+  let ib8 = new THREE.Mesh(geometry, material);
+  ib8.position.set(x + 0.083, z + 0.036, y + 0.04+qian);
+  ib8.rotation.x = 1.56;
+  ib8.name = "ib8";
+  cc = col.clone();
+  cc.position.set(x + 0.083, z + 0.036, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib8);
+
+  ib8 = new THREE.Mesh(geometry, material);
+  ib8.position.set(x + 0.083, z + 0.036, y + 0.04+hou);
+  ib8.rotation.x = 1.56;
+  ib8.name = "ib8";
+  arr.push(ib8);
+
+  let ib9 = new THREE.Mesh(geometry, material);
+  ib9.position.set(x + 0.033, z + 0.006, y + 0.04+qian);
+  ib9.rotation.x = 1.56;
+  ib9.name = "ib9";
+  cc = col.clone();
+  cc.position.set(x + 0.033, z + 0.006, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib9);
+
+  ib9 = new THREE.Mesh(geometry, material);
+  ib9.position.set(x + 0.033, z + 0.006, y + 0.04+hou);
+  ib9.rotation.x = 1.56;
+  ib9.name = "ib9";
+  arr.push(ib9);
+
+  let ib10 = new THREE.Mesh(geometry, material);
+  ib10.position.set(x + 0.033, z - 0.024, y + 0.04+qian);
+  ib10.rotation.x = 1.56;
+  ib10.name = "ib10";
+  cc = col.clone();
+  cc.position.set(x + 0.033, z - 0.024, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib10);
+
+  ib10 = new THREE.Mesh(geometry, material);
+  ib10.position.set(x + 0.033, z - 0.024, y + 0.04+hou);
+  ib10.rotation.x = 1.56;
+  ib10.name = "ib10";
+  arr.push(ib10);
+
+  let ib11 = new THREE.Mesh(geometry, material);
+  ib11.position.set(x + 0.058, z - 0.134, y + 0.04+qian);
+  ib11.rotation.x = 1.56;
+  ib11.name = "ib11";
+  cc = col.clone();
+  cc.position.set(x + 0.058, z - 0.134, y + 0.04+qian);
+  cc.rotation.x = 1.56;
+  arr2.push(cc);
+  arr.push(ib11);
+
+  ib11 = new THREE.Mesh(geometry, material);
+  ib11.position.set(x + 0.058, z - 0.134, y + 0.04+hou);
+  ib11.rotation.x = 1.56;
+  ib11.name = "ib11";
+  arr.push(ib11);
+
+  // let ia1 = new THREE.Mesh(geometry, material);
+  // ia1.position.set(x + 0.158, z - 0.06, y + 0.04+qian);
+  // ia1.rotation.x = 1.56;
+  // ia1.name = "ia1";
+  // cc = col.clone();
+  // cc.position.set(x + 0.158, z - 0.06, y + 0.04+qian);
+  // cc.rotation.x = 1.56;
+  // arr2.push(cc);
+  // arr.push(ia1);
+
+  // ia1 = new THREE.Mesh(geometry, material);
+  // ia1.position.set(x + 0.158, z - 0.06, y + 0.04+hou);
+  // ia1.rotation.x = 1.56;
+  // ia1.name = "ia1";
+  // arr.push(ia1);
+
+  // let ia2 = new THREE.Mesh(geometry, material);
+  // ia2.position.set(x + 0.158, z - 0.095, y + 0.04+qian);
+  // ia2.rotation.x = 1.56;
+  // ia2.name = "ia2";
+  // cc = col.clone();
+  // cc.position.set(x + 0.158, z - 0.095, y + 0.04+qian);
+  // cc.rotation.x = 1.56;
+  // arr2.push(cc);
+  // arr.push(ia2);
+
+  // ia2 = new THREE.Mesh(geometry, material);
+  // ia2.position.set(x + 0.158, z - 0.095, y + 0.04+hou);
+  // ia2.rotation.x = 1.56;
+  // ia2.name = "ia2";
+  // arr.push(ia2);
+
+  // let ia3 = new THREE.Mesh(geometry, material);
+  // ia3.position.set(x + 0.158, z - 0.134, y + 0.04+qian);
+  // ia3.rotation.x = 1.56;
+  // ia3.name = "ia3";
+  // cc = col.clone();
+  // cc.position.set(x + 0.158, z - 0.134, y + 0.04+qian);
+  // cc.rotation.x = 1.56;
+  // arr2.push(cc);
+  // arr.push(ia3);
+
+  // ia3 = new THREE.Mesh(geometry, material);
+  // ia3.position.set(x + 0.158, z - 0.134, y + 0.04+hou);
+  // ia3.rotation.x = 1.56;
+  // ia3.name = "ia3";
+  // arr.push(ia3);
+
   return [arr,arr2];
 }

@@ -283,6 +283,14 @@ export const getDateMore = (data, type, jtime) => {
             element[et] = ''
           }
         } 
+        else if (type === 6){
+          if(element[et])
+          {
+            element[et] = element[et].substr(11,5)
+          }else{
+            element[et] = ''
+          }
+        } 
       }
     }
     o.push(element);

@@ -66,7 +66,7 @@ namespace WHCH.Api.ViewModels.Rbac.Dncchlist
         /// <summary>
     	/// 区域1为污染率满足判据时添加入的吹灰器；区域2为周期性(短吹)、长时间未吹灰的、低负荷长期运行添加入的吹灰器
     	/// </summary>
-        public System.Int32 AddReason { get; set; } 
+        public System.String AddReason { get; set; } 
 	
     
         /// <summary>

@@ -21,6 +21,16 @@ export const getLzburnList = (data) => {
   })
 }
 
+export const getLzburnListk = (data) => {
+  return axios.request({
+    url:  'Dnclzburn' +'/listk',
+    method: 'post',
+    withPrefix: false,
+    prefix:"api/WHCH1/",
+    data
+  })
+}
+
 // createRole
 export const createLzburn = (data) => {
   return axios.request({

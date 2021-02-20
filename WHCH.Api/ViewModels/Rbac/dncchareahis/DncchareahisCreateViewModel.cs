@@ -8,17 +8,17 @@ namespace WHCH.Api.ViewModels.Rbac.Dncchareahis
 	{
     
         public System.Int32 Id = 0;
-        
-    
+        public System.Int32 AreaId { get; set; }
+
         /// <summary>
-    	/// 序号
-    	/// </summary>
-    	
-	
-    
+        /// 序号
+        /// </summary>
+
+
+
         /// <summary>
-    	/// 区域描述
-    	/// </summary>
+        /// 区域描述
+        /// </summary>
         public System.String K_Name_kw { get; set; } 
     	
 	

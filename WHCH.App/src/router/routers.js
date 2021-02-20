@@ -49,41 +49,41 @@ export const mainRouter = [{
     }]
   },
   {
-    path: '/message',
-    name: '_message',
+    path: '/znrs',
+    name: '_znrs',
     component: Main,
     meta: {
       hideInMenu: true,
       notCache: true
     },
     children: [{
-      path: '/message',
-      name: '__message',
+      path: '/znrs',
+      name: '__znrs',
       meta: {
-        title: 'message',
+        title: 'znrs',
         icon: 'md-home',
         notCache: true,
       },
-      component: () => import('@/view/single-page/message/index.vue')
+      component: () => import('@/view/single-page/home/example.vue')
     }]
   },
   {
-    path: '/conf',
-    name: '_conf',
+    path: '/znch',
+    name: '_znch',
     component: Main,
     meta: {
       hideInMenu: true,
       notCache: true
     },
     children: [{
-      path: '/conf',
-      name: '__conf',
+      path: '/znch',
+      name: '__znch',
       meta: {
-        title: 'conf',
+        title: 'znch',
         icon: 'md-home',
         notCache: true,
       },
-      component: () => import('@/view/single-page/home/conf.vue')
+      component: () => import('@/view/single-page/home/example6.vue')
     }]
   },
   

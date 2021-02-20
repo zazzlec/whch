@@ -32,14 +32,11 @@ namespace WHCH.Api.Controllers
         {
 
             //Sbwl64302391
-            string password = CryptoClass.RSAEncryption("Sbwl64302391");
-            _logger.LogDebug(message: "LogDebug()...");
-            _logger.LogInformation(message: "LogInformation()...");
-            _logger.LogWarning(message: "LogWarning()...");
-            _logger.LogError(message: "LogError()...");
-            ResponseResultModel response = ResponseModelFactory.CreateResultInstance;
-            response.SetSuccess(message: "test logger success");
-            return Ok(value: response);
+            //string password = CryptoClass.RSAEncryption("Sbwl64302391");
+
+
+
+            return Ok();
         }
     }
 }
