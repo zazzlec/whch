@@ -194,17 +194,20 @@ namespace WHCH.Api.dataoperate
 
                 DBHelper db = new DBHelper();
                 //获取锅炉信息
-                string sql_boiler = "select Edfh,K_Name_kw from dncboiler where Status=1 and IsDeleted=0 and Id=" + boilerid;
+                string sql_boiler = "select Edfh,K_Name_k,Ch_Run,Ch_EndTime from dncboiler where Status=1 and IsDeleted=0 and Id=" + boilerid;
                 DataTable dt_boiler = db.GetCommand(sql_boiler);
-                if (dt_boiler != null && dt_boiler.Rows.Count > 0)
-                {
-
-                  
-
+                
                     int edfh = int.Parse(dt_boiler.Rows[0][0].ToString());
                     boiler_name = dt_boiler.Rows[0][1].ToString();
+                    int chrun = int.Parse( dt_boiler.Rows[0][2].ToString());
+                    DateTime dt_chend = DateTime.MinValue;
+                     if (dt_boiler.Rows[0][3] != null && dt_boiler.Rows[0][3].ToString() != "")
+                    {
+                        dt_chend = DateTime.Parse(dt_boiler.Rows[0][3].ToString());
+                    }
 
-                    //获取定额参数配置表信息
+
+                //获取定额参数配置表信息
                     string sql_para = "select Airpress,Drybulbtemp,Wetbulbtemp,Watertemp3,Flyashratio,Slagratio,Temp0cp,Temp100cp,Temp200cp,Temp0ch,Temp100ch,Temp200ch,Specificheat,Heatloss,Airheat,Design_in_wind_temp from dncparameter where Status=1 and IsDeleted=0 and DncBoilerId=" + boilerid;
                     DataTable dt_ch_para = db.GetCommand(sql_para);
 
@@ -294,9 +297,10 @@ namespace WHCH.Api.dataoperate
                         double jnq_press_out = Compute.Avgdata(dic["24"]);//节能器出口烟气侧压力
                         double kyq_press_in = Compute.Avgdata(dic["25"]);//空预器进口烟气侧压力
                         double kyq_press_out = Compute.Avgdata(dic["26"]);//空预器出口烟气侧压力
+                        double fh = Compute.Avgdata(dic["27"]);//实时负荷
 
-                        //以下为锅炉效率（反平衡）计算过程
-                        double xdsd = Wxds(Drybulbtemp,Wetbulbtemp,Watertemp3,Airpress);//相对湿度
+                    //以下为锅炉效率（反平衡）计算过程
+                    double xdsd = Wxds(Drybulbtemp,Wetbulbtemp,Watertemp3,Airpress);//相对湿度
                         double bhzqyl = 611.7927 + 42.7809 * Drybulbtemp + 1.6883 * Math.Pow( Drybulbtemp ,2 )+ 1.2079 * Math.Pow(Drybulbtemp , 3) / 100 + 6.1637 * Math.Pow(Drybulbtemp , 4) / 10000;//饱和蒸汽压力
                         double jdsd = 0.622 * xdsd / 100 * bhzqyl / (1000 * Airpress - xdsd / 100 * bhzqyl);//绝对湿度
 
@@ -348,12 +352,17 @@ namespace WHCH.Api.dataoperate
 
                     }
 
-                    string sql_chsta = "select  Ch_Run,Ch_EndTime from ";
+              
 
-
-
+                if (chrun == 0 && yl_fh_out>10)//计算污染率并加入待吹灰列表
+                {
+                    string sql_area = "";
 
                 }
+
+
+
+                
             }
 
             catch (Exception rrr)
