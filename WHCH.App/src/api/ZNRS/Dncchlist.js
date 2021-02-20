@@ -42,6 +42,22 @@ export const loadChlist = (data) => {
   })
 }
 
+export const dochui = (data) => {
+  return axios.request({
+    url: 'Dncchlist' +'/dochui/' + data.code,
+    method: 'get',
+    withPrefix: false,
+    prefix:"api/WHCH1/"
+  })
+}
+export const dochui2 = (data) => {
+  return axios.request({
+    url: 'Dncchlist' +'/dochui2/' + data.code,
+    method: 'get',
+    withPrefix: false,
+    prefix:"api/WHCH1/"
+  })
+}
 // editRole
 export const editChlist = (data) => {
   return axios.request({

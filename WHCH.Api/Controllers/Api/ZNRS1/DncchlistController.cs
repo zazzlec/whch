@@ -67,39 +67,52 @@ namespace WHCH.Api.Controllers.Api.WHCH1
         public IActionResult List(DncchlistRequestPayload payload)
         {
             var response = ResponseModelFactory.CreateResultInstance;
-            using (_dbContext)
+            try
             {
-                var query = _dbContext.Dncchlist.AsQueryable();
-                //模糊查询
-                if (!string.IsNullOrEmpty(payload.Kw))
+                using (_dbContext)
                 {
-                    query = query.Where(x =>   x.K_Name_kw.Contains(payload.Kw.Trim())  );
-                }
-                
-                //是否删除，是否启用
-                if (payload.IsDeleted > CommonEnum.IsDeleted.All)
-                {
-                    query = query.Where(x => x.IsDeleted == payload.IsDeleted);
-                }
-                if (payload.Status > CommonEnum.Status.All)
-                {
-                    query = query.Where(x => x.Status == payload.Status);
-                }
-                if (!string.IsNullOrEmpty(payload.boilerid+""))
-                {
-                    query = query.Where(x => x.DncBoilerId==payload.boilerid);
-                }
-                if (payload.FirstSort != null)
-                {
-                    query = query.OrderBy(payload.FirstSort.Field, payload.FirstSort.Direct == "DESC");
-                }
-                var list = query.Paged(payload.CurrentPage, payload.PageSize).ToList();
-                var totalCount = query.Count();
-                var data = list.Select(_mapper.Map< Dncchlist, DncchlistJsonModel>);
+                    var query = _dbContext.Dncchlist.AsQueryable();
+                    //模糊查询
+                    if (!string.IsNullOrEmpty(payload.Kw))
+                    {
+                        query = query.Where(x => x.K_Name_kw.Contains(payload.Kw.Trim()));
+                    }
+                    if (!string.IsNullOrEmpty(payload.boilerid + ""))
+                    {
+                        query = query.Where(x => x.DncBoilerId == payload.boilerid);
+                    }
 
-                response.SetData(data, totalCount);
+                    //是否删除，是否启用
+                    if (payload.IsDeleted > CommonEnum.IsDeleted.All)
+                    {
+                        query = query.Where(x => x.IsDeleted == payload.IsDeleted);
+                    }
+                    if (payload.Status > CommonEnum.Status.All)
+                    {
+                        query = query.Where(x => x.Status == payload.Status);
+                    }
+                    if (!string.IsNullOrEmpty(payload.boilerid + ""))
+                    {
+                        query = query.Where(x => x.DncBoilerId == payload.boilerid);
+                    }
+                    if (payload.FirstSort != null)
+                    {
+                        query = query.OrderBy(payload.FirstSort.Field, payload.FirstSort.Direct == "DESC");
+                    }
+                    var list = query.Paged(payload.CurrentPage, payload.PageSize).ToList();
+                    var totalCount = query.Count();
+                    var data = list.Select(_mapper.Map<Dncchlist, DncchlistJsonModel>);
+
+                    response.SetData(data, totalCount);
+                    return Ok(response);
+                }
+            }
+            catch (Exception  yy)
+            {
+                response.SetError(yy.Message);
                 return Ok(response);
             }
+            
         }
 
         /// <summary>
@@ -179,6 +192,58 @@ namespace WHCH.Api.Controllers.Api.WHCH1
             }
         }
 
+        [HttpGet("{code}")]
+        [ProducesResponseType(200)]
+        public IActionResult DoChui(string code)
+        {
+            using (_dbContext)
+            {
+                //var r=_dbContext.Dncchlist.AsQueryable();
+                //r = r.Where(x => x.DncBoilerId == int.Parse(code) && x.Status == CommonEnum.Status.Normal && x.IsDeleted == CommonEnum.IsDeleted.No);
+                //foreach (var item in r.ToList())
+                //{
+
+                //}
+
+                //var entity = _dbContext.Dncchlist.FirstOrDefault(x => x.Id == int.Parse(code));
+
+
+                var sql = string.Format("UPDATE Dncchlist SET IsDeleted=1,Status=0,RunTime=now() WHERE IsDeleted=0 and Status=1 and DncBoilerId="+ code);
+                _dbContext.Database.ExecuteSqlCommand(sql);
+                sql = string.Format("UPDATE DncBoiler SET Ch_Run=0,Ch_EndTime=now() where id=" + code);
+                _dbContext.Database.ExecuteSqlCommand(sql);
+
+                var response = ResponseModelFactory.CreateInstance;
+                response.SetSuccess();
+                return Ok(response);
+            }
+        }
+        [HttpGet("{code}")]
+        [ProducesResponseType(200)]
+        public IActionResult DoChui2(string code)
+        {
+            using (_dbContext)
+            {
+                //var r=_dbContext.Dncchlist.AsQueryable();
+                //r = r.Where(x => x.DncBoilerId == int.Parse(code) && x.Status == CommonEnum.Status.Normal && x.IsDeleted == CommonEnum.IsDeleted.No);
+                //foreach (var item in r.ToList())
+                //{
+
+                //}
+
+                //var entity = _dbContext.Dncchlist.FirstOrDefault(x => x.Id == int.Parse(code));
+
+
+                var sql = string.Format("UPDATE dncchrunlist_kyq SET IsDeleted=1,Status=0,RunTime=now() WHERE IsDeleted=0 and Status=1 and DncBoilerId=" + code);
+                _dbContext.Database.ExecuteSqlCommand(sql);
+                sql = string.Format("UPDATE DncBoiler SET Ch_Run_kyq=0,Ch_EndTime_kyq=now() where id=" + code);
+                _dbContext.Database.ExecuteSqlCommand(sql);
+
+                var response = ResponseModelFactory.CreateInstance;
+                response.SetSuccess();
+                return Ok(response);
+            }
+        }
         /// <summary>
         /// 保存编辑后的信息
         /// </summary>
@@ -233,6 +298,8 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 return Ok(response);
             }
         }
+
+
 
         /// <summary>
         /// 删除

@@ -21,6 +21,7 @@ using System.Transactions;
 using System.Collections.Generic;
 using WHCH.Api.Utils;
 using MySql.Data.MySqlClient;
+using LitJson;
 
 namespace WHCH.Api.Controllers.Api.WHCH1
 {
@@ -94,6 +95,51 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 return Ok(response);
             }
         }
+        [HttpPost]
+        public IActionResult Listk(DnclzburnRequestPayload payload)
+        {
+            var response = ResponseModelFactory.CreateResultInstance;
+            try
+            {
+                using (_dbContext)
+                {
+                    //查炉渣
+                    var query1 = _dbContext.Dnclzburn.AsQueryable();
+                    if (payload.IsDeleted > CommonEnum.IsDeleted.All)
+                    {
+                        query1 = query1.Where(x => x.IsDeleted == payload.IsDeleted);
+                    }
+                    if (payload.Status > CommonEnum.Status.All)
+                    {
+                        query1 = query1.Where(x => x.Status == payload.Status);
+                    }
+
+                    if (!string.IsNullOrEmpty(payload.dat)&& payload.dat!="[]")
+                    {
+                        JsonData jsonData = JsonMapper.ToObject(payload.dat);
+                        query1 = query1.Where(x => x.AddTime >= DateTime.Parse(jsonData[0].ToJson().Replace("\"", "")) && x.AddTime <= DateTime.Parse(jsonData[1].ToJson().Replace("\"", "")));
+                    }
+                    if (!string.IsNullOrEmpty(payload.boilerid + ""))
+                    {
+                        query1 = query1.Where(x => x.DncBoilerId == payload.boilerid);
+                    }
+                    if (payload.FirstSort != null)
+                    {
+                        query1 = query1.OrderBy(payload.FirstSort.Field, payload.FirstSort.Direct == "DESC");
+                    }
+                    var list1 = query1.Paged(payload.CurrentPage, payload.PageSize).ToList();
+                    var data = list1.Select(_mapper.Map<Dnclzburn, DnclzburnJsonModel>);
+                    response.SetData(list1);
+                    return Ok(response);
+                }
+            }
+            catch (Exception g)
+            {
+                response.SetError(g.Message);
+                return Ok(response);
+            }
+            
+        }
 
         /// <summary>
         /// 创建
@@ -107,23 +153,104 @@ namespace WHCH.Api.Controllers.Api.WHCH1
             var response = ResponseModelFactory.CreateInstance;
             using (_dbContext)
             {
-                var entity = _mapper.Map< DnclzburnCreateViewModel, Dnclzburn>(model);
-                if (string.IsNullOrEmpty(model.DncBoiler_Name))
+                var DncBoiler = _dbContext.Dncboiler.FirstOrDefault(x => x.Id == int.Parse(model.DncBoiler_Name));
+
+                var d = DateTime.Now.ToString("yyyy-MM-dd");
+                if (model.AddTime.HasValue )
                 {
-                    entity.DncBoiler = _dbContext.Dncboiler.FirstOrDefault(x => (x.K_Name_kw + "") == "无");
-                    entity.DncBoiler_Name = entity.DncBoiler.K_Name_kw;
+                    d=model.AddTime.Value.ToString("yyyy-MM-dd");
+                }
+
+                var r=_dbContext.Dnclzburn.AsQueryable();
+                r = r.Where(x => x.AddTime.Value.ToString("yyyy-MM-dd") == d);
+                var list = r.ToList();
+                if (list.Count>0)
+                {
+                    var entity = list[0];
+
+                    entity.OptionUser = model.OptionUser;
+                    entity.Pvalue = model.Pvalue;
+                    entity.Remark = model.Remark;
+                    entity.Fvalue = model.Fvalue;
+                    entity.FJson = model.FJson;
+                    entity.BJson = model.BJson;
+
+                    _dbContext.SaveChanges();
+
+                    _dbContext.Database.ExecuteSqlCommand("delete from dnchfburn where Lid=" + entity.Id);
+
+                    
+
+                    JsonData FJsondata = JsonMapper.ToObject(model.FJson);
+                    JsonData BJsondata = JsonMapper.ToObject(model.BJson);
+                    List<Dnchfburn> arr = new List<Dnchfburn>();
+                    for (int i = 0; i < FJsondata.Count; i++)
+                    {
+                        Dnchfburn df = new Dnchfburn();
+                        df.DncBoiler = DncBoiler;
+                        df.DncBoilerId = DncBoiler.Id;
+                        df.DncBoiler_Name = DncBoiler.K_Name_kw;
+                        df.DncClasses = _dbContext.Dncclasses.FirstOrDefault(x => x.Id == int.Parse(BJsondata[i].ToString().Replace("\"", "")));
+                        df.DncClassesId = df.DncClasses.Id;
+                        df.DncClasses_Name = df.DncClasses.K_Name_kw;
+                        df.IsDeleted = CommonEnum.IsDeleted.No;
+                        df.Lid = entity.Id;
+                        df.Pvalue = double.Parse(FJsondata[i].ToString().Replace("\"", ""));
+                        df.Status = CommonEnum.Status.Normal;
+                        arr.Add(df);
+                        
+                    }
+                    _dbContext.Dnchfburn.AddRange(arr);
+                    _dbContext.SaveChanges();
+                    response.SetSuccess();
+                    return Ok(response);
                 }
                 else
                 {
-                    entity.DncBoiler = _dbContext.Dncboiler.FirstOrDefault(x => (x.K_Name_kw + "") == model.DncBoiler_Name);
-                    entity.DncBoiler_Name = entity.DncBoiler.K_Name_kw;
-                }
-                entity.Status = CommonEnum.Status.Normal;
-                _dbContext.Dnclzburn.Add(entity);
-                _dbContext.SaveChanges();
+                    var entity = _mapper.Map<DnclzburnCreateViewModel, Dnclzburn>(model);
+                    entity.DncBoiler = DncBoiler;
+                    entity.DncBoiler_Name = DncBoiler.K_Name_kw;
+                    entity.DncBoilerId = DncBoiler.Id;
+                    entity.AddTime = DateTime.Now;
 
-                response.SetSuccess();
-                return Ok(response);
+                    entity.Status = CommonEnum.Status.Normal;
+                    _dbContext.Dnclzburn.Add(entity);
+                    _dbContext.SaveChanges();
+
+                    _dbContext.Database.ExecuteSqlCommand("delete from dnchfburn where Lid=" + entity.Id);
+
+
+
+                    JsonData FJsondata = JsonMapper.ToObject(model.FJson);
+                    JsonData BJsondata = JsonMapper.ToObject(model.BJson);
+                    List<Dnchfburn> arr = new List<Dnchfburn>();
+                    for (int i = 0; i < FJsondata.Count; i++)
+                    {
+                        Dnchfburn df = new Dnchfburn();
+                        df.DncBoiler = DncBoiler;
+                        df.DncBoilerId = DncBoiler.Id;
+                        df.DncBoiler_Name = DncBoiler.K_Name_kw;
+                        df.DncClasses = _dbContext.Dncclasses.FirstOrDefault(x => x.Id == int.Parse(BJsondata[i].ToString().Replace("\"", "")));
+                        df.DncClassesId = df.DncClasses.Id;
+                        df.DncClasses_Name = df.DncClasses.K_Name_kw;
+                        df.IsDeleted = CommonEnum.IsDeleted.No;
+                        df.Lid = entity.Id;
+                        df.Pvalue = double.Parse(FJsondata[i].ToString().Replace("\"", ""));
+                        df.Status = CommonEnum.Status.Normal;
+                        arr.Add(df);
+
+                    }
+                    _dbContext.Dnchfburn.AddRange(arr);
+                    _dbContext.SaveChanges();
+
+
+
+
+                    response.SetSuccess();
+                    return Ok(response);
+                }
+
+                
             }
         }
 

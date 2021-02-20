@@ -8,18 +8,18 @@ namespace WHCH.Api.ViewModels.Rbac.Dncfuelpara
 	{
     
         public System.Int32 Id = 0;
-        
-    
+        public System.String K_Name_kw { get; set; }
+
         /// <summary>
-    	/// 序号
-    	/// </summary>
-    	
-	
-    
+        /// 序号
+        /// </summary>
+
+
+
         /// <summary>
-    	/// 机组id
-    	/// </summary>
-    	public WHCH.Api.Entities.Dncboiler DncBoiler { get; set; } 
+        /// 机组id
+        /// </summary>
+        public WHCH.Api.Entities.Dncboiler DncBoiler { get; set; } 
         public int DncBoilerId { get; set; }
     	
 	

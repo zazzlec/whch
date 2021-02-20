@@ -37,17 +37,17 @@ const LOGIN_PAGE_NAME = "login";
 
 const initRouter = () => {
   let list = []
-  axios.request({
-    url: 'account/menu',
-    method: 'get'
-  }).then(res => {
-    var menuData = res.data;
-    // 格式化菜单
-    list = formatMenu(menuData)
-    // 刷新界面菜单
-    store.dispatch('refreshMenuList', list)
+  // axios.request({
+  //   url: 'account/menu',
+  //   method: 'get'
+  // }).then(res => {
+  //   var menuData = res.data;
+  //   // 格式化菜单
+  //   list = formatMenu(menuData)
+  //   // 刷新界面菜单
+  //   store.dispatch('refreshMenuList', list)
 
-  });
+  // });
 
   return list
 }
@@ -62,11 +62,11 @@ const turnTo = (to, checkPermission, permissions, next) => {
   //   }); // 无权限，重定向到401页面
 
   // 有权限，可访问
-  to.meta.checkPermission = checkPermission;
-  permissions = permissions || [];
-  if (permissions && permissions[to.name]) {
-    to.meta.permissions = permissions[to.name];
-  }
+  // to.meta.checkPermission = checkPermission;
+  // permissions = permissions || [];
+  // if (permissions && permissions[to.name]) {
+  //   to.meta.permissions = permissions[to.name];
+  // }
   next();
 };
 
@@ -77,51 +77,53 @@ router.beforeEach((to, from, next) => {
       next({ path: "/404", replace: true });
     }
   }
+  next();
+  //iView.LoadingBar.start();
 
-  iView.LoadingBar.start();
-
-  setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluaXN0cmF0b3IiLCJndWlkIjpbIjIwMjYzZGE0LWFlZDQtNGFiYS1hNmNjLWI5ODVjMDE2ODU4ZSIsIjIwMjYzZGE0LWFlZDQtNGFiYS1hNmNjLWI5ODVjMDE2ODU4ZSJdLCJhdmF0YXIiOiIiLCJkaXNwbGF5TmFtZSI6Iuezu-e7n-euoeeQhuWRmCIsImxvZ2luTmFtZSI6ImFkbWluaXN0cmF0b3IiLCJlbWFpbEFkZHJlc3MiOiIiLCJ1c2VyVHlwZSI6IjAiLCJuYmYiOjE2MTE5MDIzMTYsImV4cCI6MTYxMjUwNzExNiwiaWF0IjoxNjExOTAyMzE2fQ.fizoqMTotXnvc5FdBWyEEInbS0ZfLO4tLW6HcUYMiQ8')
-  const token = getToken();
+  //setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluaXN0cmF0b3IiLCJndWlkIjpbIjIwMjYzZGE0LWFlZDQtNGFiYS1hNmNjLWI5ODVjMDE2ODU4ZSIsIjIwMjYzZGE0LWFlZDQtNGFiYS1hNmNjLWI5ODVjMDE2ODU4ZSJdLCJhdmF0YXIiOiIiLCJkaXNwbGF5TmFtZSI6Iuezu-e7n-euoeeQhuWRmCIsImxvZ2luTmFtZSI6ImFkbWluaXN0cmF0b3IiLCJlbWFpbEFkZHJlc3MiOiIiLCJ1c2VyVHlwZSI6IjAiLCJuYmYiOjE2MTE5MDIzMTYsImV4cCI6MTYxMjUwNzExNiwiaWF0IjoxNjExOTAyMzE2fQ.fizoqMTotXnvc5FdBWyEEInbS0ZfLO4tLW6HcUYMiQ8')
+  //const token = getToken();
 
 
 // console.log(from);
 // console.log(JSON.stringify(to));
 
-  if (!token && to.name !== LOGIN_PAGE_NAME) {
-    // 未登录且要跳转的页面不是登录页
-    next({
-      name: LOGIN_PAGE_NAME // 跳转到登录页
-    });
-  } else if (!token && to.name === LOGIN_PAGE_NAME) {
-    // 未登陆且要跳转的页面是登录页
-    next(); // 跳转
-  } else if (token && to.name === LOGIN_PAGE_NAME) {
-    // 已登录且要跳转的页面是登录页
-    next({
-      name: homeName // 跳转到homeName页
-    });
-  } else {
-    let checkPermission = true;
-    initRouter();
-    turnTo(to, false, [], next)
-    // if (store.state.user.hasGetInfo) {
-    //   checkPermission = store.state.user.user_type != 0;
-    //   next()
-    //   turnTo(to, checkPermission, store.state.user.permissions, next)
-    // } else {
-    //   store.dispatch('getUserInfo').then(user => {
-    //     // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin']
-    //     checkPermission = user.user_type != 0;
-    //     initRouter();
-    //     turnTo(to, checkPermission, user.permissions, next)
-    //   }).catch(() => {
-    //     setToken('')
-    //     next({
-    //       name: 'login'
-    //     })
-    //   })
-    // }
-  }
+  // if (!token && to.name !== LOGIN_PAGE_NAME) {
+  //   // 未登录且要跳转的页面不是登录页
+  //   next({
+  //     name: LOGIN_PAGE_NAME // 跳转到登录页
+  //   });
+  // } else if (!token && to.name === LOGIN_PAGE_NAME) {
+  //   // 未登陆且要跳转的页面是登录页
+  //   next({
+  //     name: LOGIN_PAGE_NAME // 跳转到homeName页
+  //   });
+  // } else if (token && to.name === LOGIN_PAGE_NAME) {
+  //   // 已登录且要跳转的页面是登录页
+  //   next({
+  //     name: LOGIN_PAGE_NAME // 跳转到homeName页
+  //   });
+  // } else {
+  //   let checkPermission = true;
+  //   // initRouter();
+  //   turnTo(to, false, [], next)
+  //   // if (store.state.user.hasGetInfo) {
+  //   //   checkPermission = store.state.user.user_type != 0;
+  //   //   next()
+  //   //   turnTo(to, checkPermission, store.state.user.permissions, next)
+  //   // } else {
+  //   //   store.dispatch('getUserInfo').then(user => {
+  //   //     // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin']
+  //   //     checkPermission = user.user_type != 0;
+  //   //     initRouter();
+  //   //     turnTo(to, checkPermission, user.permissions, next)
+  //   //   }).catch(() => {
+  //   //     setToken('')
+  //   //     next({
+  //   //       name: 'login'
+  //   //     })
+  //   //   })
+  //   // }
+  // }
 });
 
 router.afterEach(to => {

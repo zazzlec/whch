@@ -12,9 +12,9 @@ namespace WHCH.Api.ViewModels.Rbac.Dncfuelpara
         /// <summary>
     	/// 序号
     	/// </summary>
-        public System.Int32 Id { get; set; } 
-	
-    
+        public System.Int32 Id { get; set; }
+
+        public System.String K_Name_kw { get; set; }
         /// <summary>
     	/// 机组id
     	/// </summary>

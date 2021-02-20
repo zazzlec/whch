@@ -85,7 +85,10 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 {
                     query = query.Where(x => x.Status == payload.Status);
                 }
-                
+                if (!string.IsNullOrEmpty(payload.boilerid + ""))
+                {
+                    query = query.Where(x => x.DncBoilerId == payload.boilerid);
+                }
                 if (payload.FirstSort != null)
                 {
                     query = query.OrderBy(payload.FirstSort.Field, payload.FirstSort.Direct == "DESC");

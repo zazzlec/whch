@@ -81,7 +81,10 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 {
                     query = query.Where(x => x.Status == payload.Status);
                 }
-                
+                if (!string.IsNullOrEmpty(payload.boilerid + ""))
+                {
+                    query = query.Where(x => x.DncBoilerId == payload.boilerid);
+                }
                 if (payload.FirstSort != null)
                 {
                     query = query.OrderBy(payload.FirstSort.Field, payload.FirstSort.Direct == "DESC");
@@ -104,23 +107,42 @@ namespace WHCH.Api.Controllers.Api.WHCH1
         [ProducesResponseType(200)]
         public IActionResult Create(DncfuelparaCreateViewModel model)
         {
+            //提交-1   修改0  应用1
             var response = ResponseModelFactory.CreateInstance;
             using (_dbContext)
             {
-                var entity = _mapper.Map< DncfuelparaCreateViewModel, Dncfuelpara>(model);
-                if (string.IsNullOrEmpty(model.DncBoiler_Name))
+                //应用
+                if (model.Status == CommonEnum.Status.Normal)
                 {
-                    entity.DncBoiler = _dbContext.Dncboiler.FirstOrDefault(x => (x.K_Name_kw + "") == "无");
-                    entity.DncBoiler_Name = entity.DncBoiler.K_Name_kw;
+                    var entity =_dbContext.Dncfuelpara.FirstOrDefault(x=>x.Id==model.Id);
+                    entity.Status = CommonEnum.Status.Normal;
+                    entity.IsDeleted = CommonEnum.IsDeleted.No;
+                    entity.RealTime = DateTime.Now;
+                    _dbContext.SaveChanges();
                 }
-                else
+                //修改
+                else if (model.Status == CommonEnum.Status.Forbidden)
                 {
-                    entity.DncBoiler = _dbContext.Dncboiler.FirstOrDefault(x => (x.K_Name_kw + "") == model.DncBoiler_Name);
-                    entity.DncBoiler_Name = entity.DncBoiler.K_Name_kw;
+                    var entity = _mapper.Map<DncfuelparaCreateViewModel, Dncfuelpara>(model);
+                    entity.Status = CommonEnum.Status.Normal;
+                    entity.IsDeleted = CommonEnum.IsDeleted.No;
+                    entity.RealTime = DateTime.Now;
+                    _dbContext.SaveChanges();
                 }
-                entity.Status = CommonEnum.Status.Normal;
-                _dbContext.Dncfuelpara.Add(entity);
-                _dbContext.SaveChanges();
+                //提交
+                else if (model.Status == CommonEnum.Status.All)
+                {
+                    var entity = _mapper.Map<DncfuelparaCreateViewModel, Dncfuelpara>(model);
+                    entity.DncBoiler = _dbContext.Dncboiler.FirstOrDefault(x => x.Id == int.Parse( model.DncBoiler_Name));
+                    entity.DncBoiler_Name = entity.DncBoiler.K_Name_kw;
+                    entity.Status = CommonEnum.Status.Normal;
+                    entity.IsDeleted = CommonEnum.IsDeleted.No;
+                    entity.RealTime = DateTime.Now;
+                    entity.Id = 0;
+                    _dbContext.Dncfuelpara.Add(entity);
+                    _dbContext.SaveChanges();
+                }
+                
 
                 response.SetSuccess();
                 return Ok(response);
