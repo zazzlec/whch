@@ -6,20 +6,15 @@ using AutoMapper;
 using WHCH.Api.Entities;
 using WHCH.Api.Entities.Enums;
 using WHCH.Api.Extensions;
-using WHCH.Api.Extensions.AuthContext;
-using WHCH.Api.Extensions.CustomException;
 using WHCH.Api.Extensions.DataAccess;
 using WHCH.Api.Models.Response;
-using WHCH.Api.RequestPayload.Rbac.Role;
 using WHCH.Api.Utils;
-using WHCH.Api.ViewModels.Rbac.DncRole;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WHCH.Api.RequestPayload.Rbac.Fuelpara;
 using WHCH.Api.ViewModels.Rbac.Dncfuelpara;
 using System.Transactions;
 using System.Collections.Generic;
-using WHCH.Api.Utils;
 using MySql.Data.MySqlClient;
 
 namespace WHCH.Api.Controllers.Api.WHCH1
@@ -111,6 +106,9 @@ namespace WHCH.Api.Controllers.Api.WHCH1
             var response = ResponseModelFactory.CreateInstance;
             using (_dbContext)
             {
+
+                _dbContext.Database.ExecuteSqlCommand("update Dncfuelpara set Status=0,IsDeleted=1 where DncBoilerId= " + model.DncBoilerId);
+
                 //应用
                 if (model.Status == CommonEnum.Status.Normal)
                 {
@@ -123,7 +121,22 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 //修改
                 else if (model.Status == CommonEnum.Status.Forbidden)
                 {
-                    var entity = _mapper.Map<DncfuelparaCreateViewModel, Dncfuelpara>(model);
+                    var entity = _dbContext.Dncfuelpara.FirstOrDefault(x => x.Id == model.Id);
+                    //var entity1 = _mapper.Map<DncfuelparaCreateViewModel, Dncfuelpara>(model);
+                    entity.Carbon = model.Carbon;
+                    entity.Hydrogen = model.Hydrogen;
+                    entity.O2 = model.O2;
+                    //entity.Watertemp3 = model.Watertemp3;
+                    entity.Nitrogen = model.Nitrogen;
+                    entity.Sulfur = model.Sulfur;
+                    entity.H2o = model.H2o;
+                    entity.Ashcontent = model.Ashcontent;
+                    entity.Flyashfuel = model.Flyashfuel;
+                    entity.Cinderfuel = model.Cinderfuel;
+                    entity.Co = model.Co;
+                    entity.Calorificvalue = model.Calorificvalue;
+                    entity.Chargingfuel = model.Chargingfuel;
+                    entity.K_Name_kw = model.K_Name_kw;
                     entity.Status = CommonEnum.Status.Normal;
                     entity.IsDeleted = CommonEnum.IsDeleted.No;
                     entity.RealTime = DateTime.Now;

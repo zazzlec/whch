@@ -67,8 +67,16 @@ export const n2_1 = {
     legend: {
         data: ['正平衡效率', '反平衡效率']
     },
+    // tooltip: {
+    //     position: 'right'
+    // },
     tooltip: {
-        position: 'right'
+        trigger: 'axis',
+        formatter:function(a) {
+            console.log(JSON.stringify(a));
+            // let t=0;
+            return '时间: '+a[0].axisValue+'<br/>'+''+a[0].seriesName+': '+ parseFloat(a[0].value).toFixed(2)+'%'+'<br/>'+''+a[1].seriesName+': '+ parseFloat(a[1].value).toFixed(2)+'%' ;
+        }
     },
     animation: false,
     grid: {
@@ -82,6 +90,10 @@ export const n2_1 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
@@ -115,7 +127,11 @@ export const n2_2 = {
         data: ['左墙沸下温度', '右墙沸下温度','右墙沸上温度','前墙#1沸上温度','前墙#2沸上温度','前墙#3沸上温度','右墙沸中温度']
     },
     tooltip: {
-        position: 'right'
+        trigger: 'axis',
+        // formatter:function(a) {
+        //     console.log(JSON.stringify(a));
+        //     return '时间: '+a[0].axisValue+'<br/>'+''+a[0].seriesName+': '+ parseFloat(a[0].value).toFixed(2)+'%'+'<br/>'+''+a[1].seriesName+': '+ parseFloat(a[1].value).toFixed(2)+'%' ;
+        // }
     },
     animation: false,
     grid: {
@@ -130,7 +146,11 @@ export const n2_2 = {
     },
     xAxis: {
         type: 'category',
-        data: []
+        data: [],
+        axisLabel:{
+            interval:10,
+            rotate:40
+        }
     },
     yAxis: {
         type: 'value',
@@ -196,7 +216,11 @@ export const n2_3_1 = {
         data: ['低温过热器壁温1', '低温过热器壁温2','低温过热器壁温3','低温过热器壁温4']
     },
     tooltip: {
-        position: 'right'
+        trigger: 'axis',
+        // formatter:function(a) {
+        //     console.log(JSON.stringify(a));
+        //     return '时间: '+a[0].axisValue+'<br/>'+''+a[0].seriesName+': '+ parseFloat(a[0].value).toFixed(2)+'%'+'<br/>'+''+a[1].seriesName+': '+ parseFloat(a[1].value).toFixed(2)+'%' ;
+        // }
     },
     animation: false,
     grid: {
@@ -210,6 +234,10 @@ export const n2_3_1 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
@@ -254,7 +282,11 @@ export const n2_3_2 = {
         data: ['屏式过热器壁温1', '屏式过热器壁温2','屏式过热器壁温3','屏式过热器壁温4']
     },
     tooltip: {
-        position: 'right'
+        trigger: 'axis',
+        // formatter:function(a) {
+        //     console.log(JSON.stringify(a));
+        //     return '时间: '+a[0].axisValue+'<br/>'+''+a[0].seriesName+': '+ parseFloat(a[0].value).toFixed(2)+'%'+'<br/>'+''+a[1].seriesName+': '+ parseFloat(a[1].value).toFixed(2)+'%' ;
+        // }
     },
     animation: false,
     grid: {
@@ -268,6 +300,10 @@ export const n2_3_2 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
@@ -312,7 +348,11 @@ export const n2_3_3 = {
         data: ['高温过热器壁温1', '高温过热器壁温2','高温过热器壁温3','高温过热器壁温4']
     },
     tooltip: {
-        position: 'right'
+        trigger: 'axis',
+        // formatter:function(a) {
+        //     console.log(JSON.stringify(a));
+        //     return '时间: '+a[0].axisValue+'<br/>'+''+a[0].seriesName+': '+ parseFloat(a[0].value).toFixed(2)+'%'+'<br/>'+''+a[1].seriesName+': '+ parseFloat(a[1].value).toFixed(2)+'%' ;
+        // }
     },
     animation: false,
     grid: {
@@ -326,6 +366,10 @@ export const n2_3_3 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
@@ -399,6 +443,10 @@ export const n4_1 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
@@ -501,6 +549,10 @@ export const n4_2 = {
             y2: 80 //距离下边的距离
         },
         xAxis: {
+            axisLabel:{
+                interval:10,
+                rotate:40
+            },
             type: 'category',
             data: []
         },
@@ -602,6 +654,10 @@ export const n4_3 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
@@ -698,6 +754,10 @@ export const n5_1 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
@@ -794,6 +854,10 @@ export const n5_2 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
@@ -890,6 +954,10 @@ export const n5_3 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
@@ -974,6 +1042,7 @@ export const n5_4 = {
             return '堵塞率: '+t+'<br/>'+'堵塞率待吹灰上限: '+n5_4.tooltip.t1+'<br/>'+'堵塞率执行上限: '+n5_4.tooltip.y
         }
     },
+    
     animation: false,
     grid: {
         height: '50%',
@@ -986,6 +1055,10 @@ export const n5_4 = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
