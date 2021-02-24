@@ -103,7 +103,20 @@ namespace WHCH.Api.dataoperate
         /// <returns></returns>
         /// 
 
-
+        private static void AddLgoToTXT(string logstring)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + "logs/synlog_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
+            if (!System.IO.File.Exists(path))
+            {
+                FileStream stream = System.IO.File.Create(path);
+                stream.Close();
+                stream.Dispose();
+            }
+            using (StreamWriter writer = new StreamWriter(path, true))
+            {
+                writer.WriteLine(logstring);
+            }
+        }
 
         public static double Whz(double temp, double press)
         {
@@ -161,20 +174,7 @@ namespace WHCH.Api.dataoperate
 
         }
 
-        private static void AddLgoToTXT(string logstring)
-        {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "logs/synlog_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-            if (!System.IO.File.Exists(path))
-            {
-                FileStream stream = System.IO.File.Create(path);
-                stream.Close();
-                stream.Dispose();
-            }
-            using (StreamWriter writer = new StreamWriter(path, true))
-            {
-                writer.WriteLine(logstring);
-            }
-        }
+       
 
         class point
         {
@@ -425,8 +425,15 @@ namespace WHCH.Api.dataoperate
                         double boiler_efficiency_positive = (grq_ll_out * grq_out_hz - (jws + gsll) * whz_gs) / (Calorificvalue * Chargingfuel + (wind_in1 + wind_in2) * (jzwd_air_in - 25) * Airheat);//锅炉效率（正平衡）
 
 
+                    //以下为空预器实际烟气侧效率计算过程
+                    double wind_temp_in = jzwd_air_in;//实测进口风温=（进口一次风量*进口一次风温+进口二次风量*进口二次风温）/（进口一次风量+进口二次风量）
+                    double py_temp_dif_modify = (Design_in_wind_temp- wind_temp_in) *0.33;//经进口风温修正后排烟温度变化值=(设计进口风温-实测进口风温)*0.33
+                    double py_temp_modify= temp_gas_out+ py_temp_dif_modify;//修正后的排烟温度=实测排烟温度+经进口风温修正后排烟温度变化值
+                    double yqc_radio = (kyq_in_temp_gas- py_temp_modify) /(kyq_in_temp_gas- wind_temp_in);//实际烟气侧效率=(预热器进口烟温-修正后排烟温度)/(预热器进口烟温-实测进口风温)
 
-                        arr.Add("update dncboiler set Syntime='"+ uptime + "',Positive=" + boiler_efficiency_positive+ ",Counter="+ boiler_efficiency_counter+ " where Id="+boilerid+";");
+
+
+                    arr.Add("update dncboiler set Syntime='"+ uptime + "',Positive=" + boiler_efficiency_positive+ ",Counter="+ boiler_efficiency_counter+ " where Id="+boilerid+";");
                         arr.Add("insert into dncboilerrat (Positive,Counter,RealTime,Status,IsDeleted,DncBoilerId,DncBoiler_Name) values("+ boiler_efficiency_positive + ","+ boiler_efficiency_counter + ",'"+ uptime + "',1,0,"+boilerid+",'"+boiler_name+"');");
                     db.ExecuteTransaction(arr);
                     arr.Clear();                        
@@ -509,7 +516,7 @@ namespace WHCH.Api.dataoperate
                                         arr.Add("update dnccharea set Dsl_Val=" + dsl + " where area_id=" + area_id);
                                         arr.Add("update dncchqpoint set Dsl_Val=" + wrl + " where DncChareaId=" + area_id);
                                     }
-                                   
+
 
                                     //if (wrl > Wrldch_Val || dsl > Dslhigh_Val)
                                     //{
@@ -520,6 +527,7 @@ namespace WHCH.Api.dataoperate
                                     {
                                         sta_ch_exec = 1;
                                     }
+                                    
 
                                 }
                                   
@@ -530,33 +538,78 @@ namespace WHCH.Api.dataoperate
                             arr.Clear();
                             if (sta_ch_exec == 0)
                             {
-                                arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 0, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = 1 and DncChareaId<4;");
+                                arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 0, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = " + boilerid + " and DncCharea_Name<>'空预器';");
                                 arr.Add("update dncboiler set Ch_Run=2 where DncBoilerId=" + boilerid);
                                 db.ExecuteTransaction(arr);
                                 arr.Clear();
+
+                                string sql_dch_num = "select * from dncchlist where `Status`=0 and IsDeleted=0 and DncBoilerId = " + boilerid;
+                                DataTable dt_dch_num = db.GetCommand(sql_dch_num);
+                                if (dt_dch_num.Rows.Count >= 5)//待吹灰列表中达到5组加入执行列表
+                                {
+                                    arr.Add("update dncchlist set `Status`=1 where `Status`=0 and IsDeleted=0 and DncBoilerId = "+boilerid);
+                                    arr.Add("update dncboiler set Ch_Run=3 where DncBoilerId=" + boilerid);
+                                    db.ExecuteTransaction(arr);
+                                    arr.Clear();
+                                }
+
+
                             }
                             else
                             {
-                                arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 1, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = 1 and DncChareaId<4;");
+                                arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 1, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = " + boilerid + " and DncCharea_Name<>'空预器';");
                                 arr.Add("update dncboiler set Ch_Run=3 where DncBoilerId=" + boilerid);
                                 db.ExecuteTransaction(arr);
                                 arr.Clear();
                             }
 
+
+
                         }
                     }
 
 
-                   
+
                     if (chrun_kyq == 0)//吹灰刚执行完，准备计算参考压降
                     {
-                       
+
 
                         if (dtnow.Subtract(dt_chend_kyq).TotalMinutes > 20)
                         {
-                            string sql_area = "select Id";
+                            // string sql_area = "select Id";
                             arr.Add("update dnccharea set Ckyj_Val=" + kyq_sjyj + ",Ckyj_time='" + dtnow + "' where DncBoilerId=" + boilerid + " and Name_kw='空预器';");
                             arr.Add("update dncboiler set Ch_Run_kyq=1 where DncBoilerId=" + boilerid);
+                            db.ExecuteTransaction(arr);
+                            arr.Clear();
+                        }
+
+                    }
+                    else if (chrun_kyq == 1)//
+                    {
+                        string sql_area_kyq = "select Id,Wrlexec_Val,Dslexec_Val,Ckyj_Val from dnccharea where Name_kw='空预器' DncBoilerId=" + boilerid;
+                        DataTable dt_area_kyq = db.GetCommand(sql_area_kyq);
+                        int area_id_kyq = int.Parse(dt_area_kyq.Rows[0][0].ToString());//区域ID
+                      
+                        double Wrlexec_Val_kyq = double.Parse(dt_area_kyq.Rows[0][1].ToString()); //加入执行吹灰列表烟气侧效率下限
+                       
+                        double Dslexec_Val_kyq = double.Parse(dt_area_kyq.Rows[0][2].ToString());//加入执行吹灰列表堵塞率上限
+                       
+                        double ckyj_kyq = double.Parse(dt_area_kyq.Rows[0][3].ToString());//参考压降
+                       
+                        double dsl_kyq = 0;//堵塞率初始化
+                        arr.Add("update dnccharea set Wrl_Val=" + yqc_radio + " where Name_kw='空预器' and DncBoilerId= "+boilerid);
+                        arr.Add("update dncchqpoint set Wrl_Val=" + yqc_radio + " where DncCharea_Name='空预器' and DncBoilerId= " + boilerid);
+                        dsl_kyq = ckyj_kyq / kyq_sjyj;//空预器堵塞率
+                        arr.Add("update dnccharea set Dsl_Val=" + dsl_kyq + " where Name_kw='空预器' and DncBoilerId= " + boilerid);
+                        arr.Add("update dncchqpoint set Dsl_Val=" + dsl_kyq + " where DncCharea_Name='空预器' and DncBoilerId= " + boilerid);
+                        db.ExecuteTransaction(arr);
+                        arr.Clear();
+                        if (yqc_radio< Wrlexec_Val_kyq|| dsl_kyq> Dslexec_Val_kyq)
+                        {
+                            arr.Add("insert dncchrunlist_kyq(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN  Wrl_Val < Wrlhigh_Val THEN '烟气侧效率低于下限' WHEN Dsl_Val > Dslhigh_Val then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 1, 0, DncChareaId from dncchqpoint where  DncBoilerId = " + boilerid+ " and DncCharea_Name='空预器';");
+                            arr.Add("update dncboiler set Ch_Run_kyq=2 where DncBoilerId=" + boilerid);
+                            db.ExecuteTransaction(arr);
+                            arr.Clear();
                         }
 
                     }
@@ -568,7 +621,6 @@ namespace WHCH.Api.dataoperate
 
                 
                 
-
 
 
                 

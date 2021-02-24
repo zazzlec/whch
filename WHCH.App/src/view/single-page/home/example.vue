@@ -1,4 +1,4 @@
-﻿<style  lang="less">
+<style  lang="less">
 @h: 700px;
 @bcolor : #3e3e3e;
 .example{
@@ -506,22 +506,22 @@
         <div class="c">
           <div class="y">
             <div class="t1">主汽流量</div>
-            <div class="t2">{{zqll}}</div>
+            <div class="t2">{{zqll.toFixed(2)}}</div>
           </div>
 
           <div class="y">
             <div class="t1" style="font-size:16px;line-height:20px">锅炉效率<br>（正平衡）</div>
-            <div class="t2">{{boilerPositive}}</div>
+            <div class="t2">{{boilerPositive.toFixed(2)}}%</div>
           </div>
 
           <div class="y">
             <div class="t1" style="font-size:16px;line-height:20px">锅炉效率<br>（反平衡）</div>
-            <div class="t2">{{boilerCounter}}</div>
+            <div class="t2">{{boilerCounter.toFixed(2)}}%</div>
           </div>
 
           <div class="y">
             <div class="t1">主汽压力</div>
-            <div class="t2">{{zqyl}}</div>
+            <div class="t2">{{zqyl.toFixed(2)}}</div>
           </div>
         </div>
         <div class="r">
