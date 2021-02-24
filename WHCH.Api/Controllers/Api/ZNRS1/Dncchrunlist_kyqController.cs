@@ -75,7 +75,10 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 {
                     query = query.Where(x =>   x.Name_kw.Contains(payload.Kw.Trim())  );
                 }
-                
+                if (!string.IsNullOrEmpty(payload.boilerid + ""))
+                {
+                    query = query.Where(x => x.DncBoilerId == payload.boilerid);
+                }
                 //是否删除，是否启用
                 if (payload.IsDeleted > CommonEnum.IsDeleted.All)
                 {

@@ -304,7 +304,7 @@
               </div>
               <div class="update-paste-btn-con">
                 <span class="paste-tip"> </span>
-                <Button type="primary" style="float: right;margin-left:9px;" @click="handleShow2(-1)">提交</Button>
+                <Button type="primary" style="float: right;margin-left:9px;" @click="handleShow2(-1)">新增</Button>
                 <Button type="warning" style="float: right;margin-left:9px;" @click="handleShow2(0)">修改</Button>
                 <Button type="success" style="float: right;margin-left:9px;" @click="handleShow2(1)">应用</Button>
                 
@@ -316,8 +316,6 @@
         <div slot="footer">
         </div>
     </Modal>
-
-
 
     <Modal
         v-model="modal.opened"
@@ -374,6 +372,8 @@
         <div slot="footer">
         </div>
     </Modal>
+
+
     <Card style="width:300px;position:absolute;left:180px;top:10px;z-index:999;border:2px solid #f66 " class="kk"  v-if="rlsj.data3.length>0 && showd">
               <p slot="title" >
                   燃料数据
@@ -463,7 +463,9 @@
                       </span>
                   </li>
               </ul>
-          </Card>
+    </Card>
+
+
     <div class="l">
       <img :src="huo" class="huo" @mouseover="mov" @mouseout="mou"/>
       <Dropdown class="drop"  @on-click="drophld">
@@ -475,6 +477,7 @@
             <DropdownItem v-for="(item,index) in boilers" :selected="item.id==boilerid" :name="item.k_Name_kw"  v-bind:key="'iuyiy'+index">{{item.k_Name_kw}}</DropdownItem>
         </DropdownMenu>
       </Dropdown>
+
       <Menu :theme="'light'" active-name="0"  style="width:96%;margin-top:50px" @on-select="hanldselect">
             <MenuItem name="0">
                 主界面
@@ -522,27 +525,52 @@
           </div>
         </div>
         <div class="r">
-          <Card :bordered="false">
-                <span slot="title"><b>吹灰列表</b></span>
-                <div class="b">
-                  <Row :gutter="16">
-                    <Col span="6">序号</Col>
-                    <!-- <Col span="8">区域</Col> -->
-                    <Col span="6">吹灰器</Col>
-                    <Col span="6">出现时间</Col>
-                    <Col span="6">执行时间</Col>
-                  </Row>
-                  <Row :gutter="16" v-for="(item,index ) in v1_3 " class="qlist"  v-bind:key="'yyuytyu'+index">
-                    <Col span="6">{{index+1}}</Col>
-                    <!-- <Col span="8">{{item.k_Name_kw}}</Col> -->
-                    <Col span="6">{{item.dncChqpoint_Name}}</Col>
-                    <Col span="6">{{item.addTime}}</Col>
-                    <Col span="6">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
-                  </Row>
-                </div>
-                  
-                
-          </Card>
+
+          <Tabs value="name156">
+              <TabPane label="吹灰列表" name="name156">
+                <Card :bordered="false">
+                  <!-- <span slot="title"><b>吹灰列表</b></span> -->
+                  <div class="b">
+                    <Row :gutter="16">
+                      <Col span="6">序号</Col>
+                      <!-- <Col span="8">区域</Col> -->
+                      <Col span="6">吹灰器</Col>
+                      <Col span="6">出现时间</Col>
+                      <Col span="6">执行时间</Col>
+                    </Row>
+                    <Row :gutter="16" v-for="(item,index ) in v1_3 " class="qlist"  v-bind:key="'yyuytyu'+index">
+                      <Col span="6">{{index+1}}</Col>
+                      <!-- <Col span="8">{{item.k_Name_kw}}</Col> -->
+                      <Col span="6">{{item.dncChqpoint_Name}}</Col>
+                      <Col span="6">{{item.addTime}}</Col>
+                      <Col span="6">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
+                    </Row>
+                  </div>
+                </Card>
+              </TabPane>
+              <TabPane label="空预器吹灰列表" name="name256">
+                <Card :bordered="false">
+                  <!-- <span slot="title"><b>吹灰列表</b></span> -->
+                  <div class="b">
+                    <Row :gutter="16">
+                      <Col span="6">序号</Col>
+                      <!-- <Col span="8">区域</Col> -->
+                      <Col span="6">吹灰器</Col>
+                      <Col span="6">出现时间</Col>
+                      <Col span="6">执行时间</Col>
+                    </Row>
+                    <Row :gutter="16" v-for="(item,index ) in v1_6 " class="qlist"  v-bind:key="'yyuy88tyu'+index">
+                      <Col span="6">{{index+1}}</Col>
+                      <!-- <Col span="8">{{item.k_Name_kw}}</Col> -->
+                      <Col span="6">{{item.dncChqpoint_Name}}</Col>
+                      <Col span="6">{{item.addTime}}</Col>
+                      <Col span="6">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
+                    </Row>
+                  </div>
+                </Card>
+              </TabPane>
+          </Tabs>
+          
         </div>
       </div>
       <Tabs value="name1" v-if="pagenow==1" name="tab1">
@@ -751,6 +779,12 @@ import {
   getChlistList
 } from "@/api/ZNRS/Dncchlist";
 import {
+  getChrunlist_kyqList
+} from "@/api/ZNRS/Dncchrunlist_kyq";
+
+
+
+import {
   getBoilerratList
 } from "@/api/ZNRS/Dncboilerrat";
 import {
@@ -845,6 +879,7 @@ export default {
       zqyl:"",
 
       v1_3:[],
+      v1_6:[],
     }
   },
   methods:{
@@ -1012,10 +1047,27 @@ export default {
               }
             ]
           }).then(res => {
-            let d= getDateMore(res.data.data,1,["addTime","runTime",]);
+          let d= getDateMore(res.data.data,0,["addTime","runTime",]);
           o.v1_3=d;
       });
-    
+      getChrunlist_kyqList({
+            totalCount: 0,
+            pageSize: 2000,
+            currentPage: 1,
+            kw: "",
+            isDeleted: 0,
+            status: -1,
+            boilerid: bid,
+            sort: [
+              {
+                direct: "DESC",
+                field: "id"
+              }
+            ]
+          }).then(res => {
+          let d= getDateMore(res.data.data,0,["addTime","runTime",]);
+          o.v1_6=d;
+      });
     },
     ViewData2(bid){
       let o=this;

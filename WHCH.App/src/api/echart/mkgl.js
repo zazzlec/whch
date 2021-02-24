@@ -10,7 +10,20 @@ export const noxdata = {
         top:15
     },
     tooltip: {
-        position: 'right'
+        t1:0,
+        y:9,
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            }
+        },
+        formatter:function(a) {
+            // console.log(JSON.stringify(a));
+            // let t=0;
+            return '时间: '+a[0].name+'<br/>'+'主汽温度: '+a[0].value ;
+        }
     },
     animation: false,
     grid: {
@@ -24,6 +37,10 @@ export const noxdata = {
         y2: 80 //距离下边的距离
     },
     xAxis: {
+        axisLabel:{
+            interval:10,
+            rotate:40
+        },
         type: 'category',
         data: []
     },
