@@ -49,8 +49,8 @@ export const noxdata = {
     },
     series: [{
         data: [],
-        type: 'line',
-        smooth: true
+        type: 'line',smooth: true,
+        showSymbol: false
     }]
 }
 
@@ -91,7 +91,7 @@ export const n2_1 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:6,
             rotate:40
         },
         type: 'category',
@@ -103,13 +103,25 @@ export const n2_1 = {
     series: [{
         name:"正平衡效率",
         data: [],
+        // showSymbol: false,
+        // symbol: 'none', //取消折点圆圈
+        showSymbol: false,
+        type: 'line',
         smooth: true,
-        type: 'line'
+        emphasis: {
+            focus: 'series'
+        }
     },{
         name:"反平衡效率",
-        smooth: true,
+        // showSymbol: false,
+        // symbol: 'none', //取消折点圆圈
+        showSymbol: false,
         data: [],
-        type: 'line'
+        type: 'line',
+        smooth: true,
+        emphasis: {
+            focus: 'series'
+        }
     }]
 }
 
@@ -148,7 +160,7 @@ export const n2_2 = {
         type: 'category',
         data: [],
         axisLabel:{
-            interval:10,
+            interval:6,
             rotate:40
         }
     },
@@ -159,42 +171,49 @@ export const n2_2 = {
     series: [
     {
         name:"左墙沸下温度",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },
     {
         name:"右墙沸下温度",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },
     {
         name:"右墙沸上温度",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },
     {
         name:"前墙#1沸上温度",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },
     {
         name:"前墙#2沸上温度",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },
     {
         name:"前墙#3沸上温度",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },
     {
         name:"右墙沸中温度",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
@@ -235,7 +254,7 @@ export const n2_3_1 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:6,
             rotate:40
         },
         type: 'category',
@@ -248,20 +267,24 @@ export const n2_3_1 = {
     series: [{
         name:"低温过热器壁温1",
         data: [],
+        showSymbol: false,
         smooth: true,
         type: 'line'
     },{
         name:"低温过热器壁温2",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },{
         name:"低温过热器壁温3",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },{
         name:"低温过热器壁温4",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
@@ -301,7 +324,7 @@ export const n2_3_2 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:6,
             rotate:40
         },
         type: 'category',
@@ -314,20 +337,24 @@ export const n2_3_2 = {
     series: [{
         name:"屏式过热器壁温1",
         data: [],
+        showSymbol: false,
         smooth: true,
         type: 'line'
     },{
         name:"屏式过热器壁温2",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },{
         name:"屏式过热器壁温3",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },{
         name:"屏式过热器壁温4",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
@@ -367,7 +394,7 @@ export const n2_3_3 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:6,
             rotate:40
         },
         type: 'category',
@@ -380,20 +407,24 @@ export const n2_3_3 = {
     series: [{
         name:"高温过热器壁温1",
         data: [],
+        showSymbol: false,
         smooth: true,
         type: 'line'
     },{
         name:"高温过热器壁温2",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },{
         name:"高温过热器壁温3",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
     },{
         name:"高温过热器壁温4",
+        showSymbol: false,
         smooth: true,
         data: [],
         type: 'line'
@@ -458,12 +489,13 @@ export const n4_1 = {
     {
         name:"污染率",
         data: [],
+        showSymbol: false,
         smooth: true,
         type: 'line'
     },
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -484,8 +516,8 @@ export const n4_1 = {
     }
     ,
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -564,12 +596,13 @@ export const n4_2 = {
         series: [{
             name:"污染率",
             data: [],
+            showSymbol: false,
             smooth: true,
             type: 'line'
         },
         {
-            smooth: true,
-            type: 'line',
+            showSymbol: false,
+            type: 'line',smooth: true,
             markLine : {
                 symbol:"none",               //去掉警戒线最后面的箭头
                 data : [{
@@ -590,8 +623,8 @@ export const n4_2 = {
         }
         ,
         {
-            smooth: true,
-            type: 'line',
+            showSymbol: false,
+            type: 'line',smooth: true,
             markLine : {
                 symbol:"none",               //去掉警戒线最后面的箭头
                 data : [{
@@ -669,12 +702,13 @@ export const n4_3 = {
     series: [{
         name:"污染率",
         data: [],
+        showSymbol: false,
         smooth: true,
         type: 'line'
     },
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -695,8 +729,8 @@ export const n4_3 = {
     }
     // ,
     // {
-    //     smooth: true,
-    //     type: 'line',
+    //     showSymbol: false,
+    //     type: 'line',smooth: true,
     //     markLine : {
     //         symbol:"none",               //去掉警戒线最后面的箭头
     //         data : [{
@@ -769,12 +803,13 @@ export const n5_1 = {
     series: [{
         name:"污染率",
         data: [],
+        showSymbol: false,
         smooth: true,
         type: 'line'
     },
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -795,8 +830,8 @@ export const n5_1 = {
     }
     ,
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -869,12 +904,13 @@ export const n5_2 = {
     series: [{
         name:"污染率",
         data: [],
+        showSymbol: false,
         smooth: true,
         type: 'line'
     },
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -895,8 +931,8 @@ export const n5_2 = {
     }
     ,
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -969,12 +1005,13 @@ export const n5_3 = {
     series: [{
         name:"污染率",
         data: [],
+        showSymbol: false,
         smooth: true,
         type: 'line'
     },
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -995,8 +1032,8 @@ export const n5_3 = {
     }
     ,
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -1070,12 +1107,13 @@ export const n5_4 = {
     series: [{
         name:"污染率",
         data: [],
+        showSymbol: false,
         smooth: true,
         type: 'line'
     },
     {
-        smooth: true,
-        type: 'line',
+        showSymbol: false,
+        type: 'line',smooth: true,
         markLine : {
             symbol:"none",               //去掉警戒线最后面的箭头
             data : [{
@@ -1096,8 +1134,8 @@ export const n5_4 = {
     }
     // ,
     // {
-    //     smooth: true,
-    //     type: 'line',
+    //     showSymbol: false,
+    //     type: 'line',smooth: true,
     //     markLine : {
     //         symbol:"none",               //去掉警戒线最后面的箭头
     //         data : [{

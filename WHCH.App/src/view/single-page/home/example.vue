@@ -589,42 +589,7 @@
         </TabPane>
       </Tabs>
       <Tabs value="tb2" v-if="pagenow==2">
-        <TabPane label="灰渣可燃物" name="tb2">
-          <Card :bordered="false">
-                
-                <span slot="title"><b>日期范围:</b><DatePicker  @on-change="handleSearch"  type="datetimerange" format="yyyy-MM-dd" placeholder="选择日期范围" style="width: 200px;margin-left:20px"></DatePicker>
-                <Button type="primary" style="float:right;margin-right:10px" @click="handleadd">添加</Button></span>
-                <!-- <span style="float:right"><Button type="primary">新增</Button></span> -->
-                <div class="b">
-                  <Row :gutter="16" class="qlist2h" >
-                    <Col span="3">日期</Col>
-                    <Col span="6">班次</Col>
-                    <Col span="3">飞灰可燃物</Col>
-                    <Col span="4">飞灰可燃物平均值</Col>
-                    <Col span="3">炉渣可燃物</Col>
-                    <Col span="3">化检员</Col>
-                    <Col span="2">操作</Col>
-                  </Row>
-                  <Row :gutter="16"  class="qlist2"  type="flex" justify="center" align="middle"   v-for="(itemRight, index) in lzlist" :key="`drwwag_li2_${index}`" >
-                    <Col span="3">{{itemRight.addTime}}</Col>
-                    <Col span="6" style="padding-top:10px;padding-bottom:10px;">
-                      <p style="height: 30px;line-height:30px" v-for="(item, i) in modal.classes" :key="`itemhzkkk_${i}`" >{{item.k_Name_kw}} {{item.startTime}}-{{item.endTime}}</p>
-                    </Col>
-                    <Col span="3" style="padding-top:10px;padding-bottom:10px;">
-                      <p style="height: 30px;line-height:30px" v-for="(item, i) in  JSON.parse(itemRight.fJson)" :key="`itemhzkkk_${i}`" >{{item}}</p>
-                    </Col>
-                    <Col span="4">{{itemRight.fvalue}}</Col>
-                    <Col span="3">{{itemRight.pvalue}}</Col>
-                    <Col span="3">{{itemRight.optionUser}}</Col>
-                    <Col span="2"><Button type="warning"  @click="handleup(itemRight)">修改</Button></Col>
-                  </Row>
-
-                </div>
-                  
-                
-          </Card>
-        </TabPane>
-        <TabPane label="燃料数据" name="tb3">
+        <TabPane label="燃料数据" name="tb2">
           <Card style="width:300px;margin-left:8px;float:left;" :class="index==0?'hhh kk':'kk'"  v-for="(iii, index) in rlsj.data3" :key="`opppo2_${index}`">
               <div class="tt" v-if="index==0">使用中</div>
               <p slot="title" style="text-align: center;">
@@ -721,17 +686,53 @@
           </Card>
           <!-- <Table :columns="rlsj.columns3" :data="rlsj.data3"></Table> -->
         </TabPane>
+        <TabPane label="灰渣可燃物" name="tb3">
+          <Card :bordered="false">
+                
+                <span slot="title"><b>日期范围:</b><DatePicker @on-clear="handleClear"  @on-change="handleSearch"  type="datetimerange" format="yyyy-MM-dd" placeholder="选择日期范围" style="width: 200px;margin-left:20px"></DatePicker>
+                <Button type="primary" style="float:right;margin-right:10px" @click="handleadd">添加</Button></span>
+                <!-- <span style="float:right"><Button type="primary">新增</Button></span> -->
+                <div class="b">
+                  <Row :gutter="16" class="qlist2h" >
+                    <Col span="3">日期</Col>
+                    <Col span="6">班次</Col>
+                    <Col span="3">飞灰可燃物</Col>
+                    <Col span="4">飞灰可燃物平均值</Col>
+                    <Col span="3">炉渣可燃物</Col>
+                    <Col span="3">化检员</Col>
+                    <Col span="2">操作</Col>
+                  </Row>
+                  <Row :gutter="16"  class="qlist2"  type="flex" justify="center" align="middle"   v-for="(itemRight, index) in lzlist" :key="`drwwag_li2_${index}`" >
+                    <Col span="3">{{itemRight.addTime}}</Col>
+                    <Col span="6" style="padding-top:10px;padding-bottom:10px;">
+                      <p style="height: 30px;line-height:30px" v-for="(item, i) in modal.classes" :key="`itemhzkkk_${i}`" >{{item.k_Name_kw}} {{item.startTime}}-{{item.endTime}}</p>
+                    </Col>
+                    <Col span="3" style="padding-top:10px;padding-bottom:10px;">
+                      <p style="height: 30px;line-height:30px" v-for="(item, i) in  JSON.parse(itemRight.fJson)" :key="`itemhzkkk_${i}`" >{{item}}</p>
+                    </Col>
+                    <Col span="4">{{itemRight.fvalue}}</Col>
+                    <Col span="3">{{itemRight.pvalue}}</Col>
+                    <Col span="3">{{itemRight.optionUser}}</Col>
+                    <Col span="2"><Button type="warning"  @click="handleup(itemRight)">修改</Button></Col>
+                  </Row>
+
+                </div>
+                  
+                
+          </Card>
+        </TabPane>
+        
       </Tabs>
-      <Tabs value="name1" v-if="pagenow==3">
-        <TabPane label="低过" name="name1"><v-chart :options="n4_1" autoresize  class="ct"></v-chart></TabPane>
-        <TabPane label="省煤器" name="name2"><v-chart :options="n4_2" autoresize  class="ct"></v-chart></TabPane>
-        <TabPane label="空预器" name="name3"><v-chart :options="n4_3" autoresize  class="ct"></v-chart></TabPane>
+      <Tabs value="name51" v-if="pagenow==3">
+        <TabPane label="低过" name="name51"><v-chart :options="n4_1" autoresize  class="ct"></v-chart></TabPane>
+        <TabPane label="省煤器" name="name52"><v-chart :options="n4_2" autoresize  class="ct"></v-chart></TabPane>
+        <TabPane label="空预器" name="name53"><v-chart :options="n4_3" autoresize  class="ct"></v-chart></TabPane>
       </Tabs>
-      <Tabs value="name1" v-if="pagenow==5">
-        <TabPane label="低过" name="name1"><v-chart :options="n5_1" autoresize  class="ct"></v-chart></TabPane>
-        <TabPane label="省煤器" name="name2"><v-chart :options="n5_2" autoresize  class="ct"></v-chart></TabPane>
-        <TabPane label="节能器" name="name3"><v-chart :options="n5_3" autoresize  class="ct"></v-chart></TabPane>
-        <TabPane label="空预器" name="name4"><v-chart :options="n5_4" autoresize  class="ct"></v-chart></TabPane>
+      <Tabs value="name61" v-if="pagenow==5">
+        <TabPane label="低过" name="name61"><v-chart :options="n5_1" autoresize  class="ct"></v-chart></TabPane>
+        <TabPane label="省煤器" name="name62"><v-chart :options="n5_2" autoresize  class="ct"></v-chart></TabPane>
+        <TabPane label="节能器" name="name63"><v-chart :options="n5_3" autoresize  class="ct"></v-chart></TabPane>
+        <TabPane label="空预器" name="name64"><v-chart :options="n5_4" autoresize  class="ct"></v-chart></TabPane>
       </Tabs>
     </div>
     
@@ -927,7 +928,29 @@ export default {
     hanldselect(n){
       this.pagenow=n;
     },
+    handleClear(){
+      let o=this;
+      getLzburnListk({
+            totalCount: 0,
+            pageSize: 2000,
+            currentPage: 1,
+            kw: "",
+            isDeleted: 0,
+            status: -1,
+            boilerid: o.boilerid,
+            sort: [
+              {
+                direct: "DESC",
+                field: "id"
+              }
+            ]
+          }).then(res => {
+            let d= getDateMore(res.data.data,1,["addTime",]);
+          o.lzlist=d;  
+      });
+    },
     handleSearch(d){
+      // console.log(d);
       let o=this;
       this.dat=d;
       getLzburnListk({
