@@ -378,7 +378,7 @@
 
     <Card style="width:300px;position:absolute;left:180px;top:10px;z-index:999;border:2px solid #f66 " class="kk"  v-if="rlsj.data3.length>0 && showd">
               <p slot="title" >
-                  燃料数据
+                  最新燃料数据_{{rlsj.data3[0].k_Name_kw}}
               </p>
               <ul type="none">
                   <li >
