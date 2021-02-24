@@ -87,6 +87,10 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                     {
                         query = query.Where(x => x.IsDeleted == payload.IsDeleted);
                     }
+                    else
+                    {
+                        query = query.Where(x => x.IsDeleted == CommonEnum.IsDeleted.No || (x.IsDeleted == CommonEnum.IsDeleted.Yes && x.RunTime.HasValue && (x.RunTime.Value.Year == DateTime.Now.Year && x.RunTime.Value.Month == DateTime.Now.Month && x.RunTime.Value.Date == DateTime.Now.Date)));
+                    }
                     if (payload.Status > CommonEnum.Status.All)
                     {
                         query = query.Where(x => x.Status == payload.Status);

@@ -200,7 +200,9 @@
         .qlist{
           font-weight: normal !important;
           font-size: 13px;
-          
+          .hs{
+            color: #999;
+          }
         }
       }
     }
@@ -539,11 +541,11 @@
                       <Col span="7">执行时间</Col>
                     </Row>
                     <Row :gutter="16" v-for="(item,index ) in v1_3 " class="qlist"  v-bind:key="'yyuytyu'+index">
-                      <Col span="5">{{index+1}}</Col>
+                      <Col span="5" :class="item.isDeleted==1 ? 'hs' : ''">{{index+1}}</Col>
                       <!-- <Col span="8">{{item.k_Name_kw}}</Col> -->
-                      <Col span="5">{{item.dncChqpoint_Name}}</Col>
-                      <Col span="7">{{item.addTime}}</Col>
-                      <Col span="7">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
+                      <Col span="5" :class="item.isDeleted==1 ? 'hs' : ''">{{item.dncChqpoint_Name}}</Col>
+                      <Col span="7" :class="item.isDeleted==1 ? 'hs' : ''">{{item.addTime}}</Col>
+                      <Col span="7" :class="item.isDeleted==1 ? 'hs' : ''">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
                     </Row>
                   </div>
                 </Card>
@@ -560,11 +562,11 @@
                       <Col span="7">执行时间</Col>
                     </Row>
                     <Row :gutter="16" v-for="(item,index ) in v1_6 " class="qlist"  v-bind:key="'yyuy88tyu'+index">
-                      <Col span="5">{{index+1}}</Col>
+                      <Col span="5" :class="item.isDeleted==1 ? 'hs' : ''">{{index+1}}</Col>
                       <!-- <Col span="8">{{item.k_Name_kw}}</Col> -->
-                      <Col span="5">{{item.dncChqpoint_Name}}</Col>
-                      <Col span="7">{{item.addTime}}</Col>
-                      <Col span="7">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
+                      <Col span="5" :class="item.isDeleted==1 ? 'hs' : ''">{{item.dncChqpoint_Name}}</Col>
+                      <Col span="7" :class="item.isDeleted==1 ? 'hs' : ''">{{item.addTime}}</Col>
+                      <Col span="7" :class="item.isDeleted==1 ? 'hs' : ''">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
                     </Row>
                   </div>
                 </Card>
@@ -1037,7 +1039,7 @@ export default {
             pageSize: 2000,
             currentPage: 1,
             kw: "",
-            isDeleted: 0,
+            isDeleted: -1,
             status: -1,
             boilerid: bid,
             sort: [
@@ -1048,14 +1050,14 @@ export default {
             ]
           }).then(res => {
           let d= getDateMore(res.data.data,0,["addTime","runTime",]);
-          o.v1_3=d;
+          o.v1_3=d.filter(x=>x.isDeleted==0).concat(d.filter(x=>x.isDeleted==1));
       });
       getChrunlist_kyqList({
             totalCount: 0,
             pageSize: 2000,
             currentPage: 1,
             kw: "",
-            isDeleted: 0,
+            isDeleted: -1,
             status: -1,
             boilerid: bid,
             sort: [
@@ -1066,7 +1068,7 @@ export default {
             ]
           }).then(res => {
           let d= getDateMore(res.data.data,0,["addTime","runTime",]);
-          o.v1_6=d;
+          o.v1_6=d.filter(x=>x.isDeleted==0).concat(d.filter(x=>x.isDeleted==1));;
       });
     },
     ViewData2(bid){
@@ -1236,7 +1238,7 @@ export default {
       let o=this;
       getChareahisList({
             totalCount: 0,
-            pageSize: 2000,
+            pageSize: 2500,
             currentPage: 1,
             kw: "",
             isDeleted: 0,
@@ -1265,12 +1267,12 @@ export default {
             }).reverse();
 
             n4_1.series[0].data = dg.map(x=>{
-              return x.wrl_Val;
+              return x.wrl_Val.toFixed(2);
             }).reverse();
-            n4_1.series[1].markLine.data[0].yAxis=dg[0].wrldch_Val;
-            n4_1.series[2].markLine.data[0].yAxis=dg[0].wrlexcu_Val;
-            n4_1.tooltip.t1=dg[0].wrldch_Val;
-            n4_1.tooltip.y=dg[0].wrlexcu_Val;
+            n4_1.series[1].markLine.data[0].yAxis=dg[0].wrldch_Val.toFixed(2);
+            n4_1.series[2].markLine.data[0].yAxis=dg[0].wrlexcu_Val.toFixed(2);
+            n4_1.tooltip.t1=dg[0].wrldch_Val.toFixed(2);
+            n4_1.tooltip.y=dg[0].wrlexcu_Val.toFixed(2);
 
             //省煤器
             n4_2.xAxis.data=smq.map(x=>{
@@ -1278,12 +1280,12 @@ export default {
             }).reverse();
 
             n4_2.series[0].data = smq.map(x=>{
-              return x.wrl_Val;
+              return x.wrl_Val.toFixed(2);
             }).reverse();
-            n4_2.series[1].markLine.data[0].yAxis=smq[0].wrldch_Val;
-            n4_2.series[2].markLine.data[0].yAxis=smq[0].wrlexcu_Val;
-            n4_2.tooltip.t1=smq[0].wrldch_Val;
-            n4_2.tooltip.y=smq[0].wrlexcu_Val;
+            n4_2.series[1].markLine.data[0].yAxis=smq[0].wrldch_Val.toFixed(2);
+            n4_2.series[2].markLine.data[0].yAxis=smq[0].wrlexcu_Val.toFixed(2);
+            n4_2.tooltip.t1=smq[0].wrldch_Val.toFixed(2);
+            n4_2.tooltip.y=smq[0].wrlexcu_Val.toFixed(2);
 
             //空预器
             n4_3.xAxis.data=kyq.map(x=>{
@@ -1291,12 +1293,12 @@ export default {
             }).reverse();
 
             n4_3.series[0].data = kyq.map(x=>{
-              return x.wrl_Val;
+              return x.wrl_Val.toFixed(2);
             }).reverse();
-            n4_3.series[1].markLine.data[0].yAxis=kyq[0].wrldch_Val;
-            n4_3.series[2].markLine.data[0].yAxis=kyq[0].wrlexcu_Val;
-            n4_3.tooltip.t1=kyq[0].wrldch_Val;
-            n4_3.tooltip.y=kyq[0].wrlexcu_Val;
+            n4_3.series[1].markLine.data[0].yAxis=kyq[0].wrldch_Val.toFixed(2);
+            // n4_3.series[2].markLine.data[0].yAxis=kyq[0].wrlexcu_Val;
+            n4_3.tooltip.t1=kyq[0].wrldch_Val.toFixed(2);
+            n4_3.tooltip.y=kyq[0].wrlexcu_Val.toFixed(2);
 
 
             //低过
@@ -1305,12 +1307,12 @@ export default {
             }).reverse();
 
             n5_1.series[0].data = dg.map(x=>{
-              return x.dsl_Val;
+              return x.dsl_Val.toFixed(2);
             }).reverse();
-            n5_1.series[1].markLine.data[0].yAxis=dg[0].dslhigh_Val;
-            n5_1.series[2].markLine.data[0].yAxis=dg[0].dslexcu_Val;
-            n5_1.tooltip.t1=dg[0].dslhigh_Val;
-            n5_1.tooltip.y=dg[0].dslexcu_Val;
+            n5_1.series[1].markLine.data[0].yAxis=dg[0].dslhigh_Val.toFixed(2);
+            n5_1.series[2].markLine.data[0].yAxis=dg[0].dslexcu_Val.toFixed(2);
+            n5_1.tooltip.t1=dg[0].dslhigh_Val.toFixed(2);
+            n5_1.tooltip.y=dg[0].dslexcu_Val.toFixed(2);
 
             //省煤器
             n5_2.xAxis.data=smq.map(x=>{
@@ -1318,36 +1320,36 @@ export default {
             }).reverse();
 
             n5_2.series[0].data = smq.map(x=>{
-              return x.dsl_Val;
+              return x.dsl_Val.toFixed(2);
             }).reverse();
-            n5_2.series[1].markLine.data[0].yAxis=smq[0].dslhigh_Val;
-            n5_2.series[2].markLine.data[0].yAxis=smq[0].dslexcu_Val;
-            n5_2.tooltip.t1=smq[0].dslhigh_Val;
-            n5_2.tooltip.y=smq[0].dslexcu_Val;
+            n5_2.series[1].markLine.data[0].yAxis=smq[0].dslhigh_Val.toFixed(2);
+            n5_2.series[2].markLine.data[0].yAxis=smq[0].dslexcu_Val.toFixed(2);
+            n5_2.tooltip.t1=smq[0].dslhigh_Val.toFixed(2);
+            n5_2.tooltip.y=smq[0].dslexcu_Val.toFixed(2);
             //节能器
             n5_3.xAxis.data=jnq.map(x=>{
               return x.realTime;
             }).reverse();
 
             n5_3.series[0].data = jnq.map(x=>{
-              return x.dsl_Val;
+              return x.dsl_Val.toFixed(2);
             }).reverse();
-            n5_3.series[1].markLine.data[0].yAxis=jnq[0].dslhigh_Val;
-            n5_3.series[2].markLine.data[0].yAxis=jnq[0].dslexcu_Val;
-            n5_3.tooltip.t1=jnq[0].dslhigh_Val;
-            n5_3.tooltip.y=jnq[0].dslexcu_Val;
+            n5_3.series[1].markLine.data[0].yAxis=jnq[0].dslhigh_Val.toFixed(2);
+            n5_3.series[2].markLine.data[0].yAxis=jnq[0].dslexcu_Val.toFixed(2);
+            n5_3.tooltip.t1=jnq[0].dslhigh_Val.toFixed(2);
+            n5_3.tooltip.y=jnq[0].dslexcu_Val.toFixed(2);
             //空预器
             n5_4.xAxis.data=kyq.map(x=>{
               return x.realTime;
             }).reverse();
 
             n5_4.series[0].data = kyq.map(x=>{
-              return x.dsl_Val;
+              return x.dsl_Val.toFixed(2);
             }).reverse();
-            n5_4.series[1].markLine.data[0].yAxis=kyq[0].dslhigh_Val;
-            n5_4.series[2].markLine.data[0].yAxis=kyq[0].dslexcu_Val;
-            n5_4.tooltip.t1=kyq[0].dslhigh_Val;
-            n5_4.tooltip.y=kyq[0].dslexcu_Val;
+            n5_4.series[1].markLine.data[0].yAxis=kyq[0].dslhigh_Val.toFixed(2);
+            // n5_4.series[2].markLine.data[0].yAxis=kyq[0].dslexcu_Val;
+            n5_4.tooltip.t1=kyq[0].dslhigh_Val.toFixed(2);
+            n5_4.tooltip.y=kyq[0].dslexcu_Val.toFixed(2);
       });
     },
     refreshall(bid){

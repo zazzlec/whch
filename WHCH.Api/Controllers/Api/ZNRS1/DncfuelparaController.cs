@@ -68,14 +68,14 @@ namespace WHCH.Api.Controllers.Api.WHCH1
                 //模糊查询
                 
                 //是否删除，是否启用
-                if (payload.IsDeleted > CommonEnum.IsDeleted.All)
-                {
-                    query = query.Where(x => x.IsDeleted == payload.IsDeleted);
-                }
-                if (payload.Status > CommonEnum.Status.All)
-                {
-                    query = query.Where(x => x.Status == payload.Status);
-                }
+                //if (payload.IsDeleted > CommonEnum.IsDeleted.All)
+                //{
+                //    query = query.Where(x => x.IsDeleted == payload.IsDeleted);
+                //}
+                //if (payload.Status > CommonEnum.Status.All)
+                //{
+                //    query = query.Where(x => x.Status == payload.Status);
+                //}
                 if (!string.IsNullOrEmpty(payload.boilerid + ""))
                 {
                     query = query.Where(x => x.DncBoilerId == payload.boilerid);

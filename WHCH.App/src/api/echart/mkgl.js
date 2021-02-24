@@ -444,7 +444,7 @@ export const n4_1 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:2,
             rotate:40
         },
         type: 'category',
@@ -454,7 +454,8 @@ export const n4_1 = {
         type: 'value',
         scale:true
     },
-    series: [{
+    series: [
+    {
         name:"污染率",
         data: [],
         smooth: true,
@@ -550,7 +551,7 @@ export const n4_2 = {
         },
         xAxis: {
             axisLabel:{
-                interval:10,
+                interval:2,
                 rotate:40
             },
             type: 'category',
@@ -655,7 +656,7 @@ export const n4_3 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:2,
             rotate:40
         },
         type: 'category',
@@ -692,28 +693,28 @@ export const n4_3 = {
             ]
         }
     }
-    ,
-    {
-        smooth: true,
-        type: 'line',
-        markLine : {
-            symbol:"none",               //去掉警戒线最后面的箭头
-            data : [{
-                silent:false,             //鼠标悬停事件  true没有，false有
-                lineStyle:{               //警戒线的样式  ，虚实  颜色
-                    type:"solid",
-                    color:"rgba(238, 33, 33)"
-                },
-                label:{
-                    position:'middle',
-                    formatter:"污染率执行上限"
-                },
-                name: '污染率执行上限',
-                yAxis: 80
-            }
-            ]
-        }
-    }
+    // ,
+    // {
+    //     smooth: true,
+    //     type: 'line',
+    //     markLine : {
+    //         symbol:"none",               //去掉警戒线最后面的箭头
+    //         data : [{
+    //             silent:false,             //鼠标悬停事件  true没有，false有
+    //             lineStyle:{               //警戒线的样式  ，虚实  颜色
+    //                 type:"solid",
+    //                 color:"rgba(238, 33, 33)"
+    //             },
+    //             label:{
+    //                 position:'middle',
+    //                 formatter:"污染率执行上限"
+    //             },
+    //             name: '污染率执行上限',
+    //             yAxis: 80
+    //         }
+    //         ]
+    //     }
+    // }
     ]
 }
 
@@ -755,7 +756,7 @@ export const n5_1 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:2,
             rotate:40
         },
         type: 'category',
@@ -855,7 +856,7 @@ export const n5_2 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:2,
             rotate:40
         },
         type: 'category',
@@ -955,7 +956,7 @@ export const n5_3 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:2,
             rotate:40
         },
         type: 'category',
@@ -1056,7 +1057,7 @@ export const n5_4 = {
     },
     xAxis: {
         axisLabel:{
-            interval:10,
+            interval:2,
             rotate:40
         },
         type: 'category',
@@ -1093,27 +1094,27 @@ export const n5_4 = {
             ]
         }
     }
-    ,
-    {
-        smooth: true,
-        type: 'line',
-        markLine : {
-            symbol:"none",               //去掉警戒线最后面的箭头
-            data : [{
-                silent:false,             //鼠标悬停事件  true没有，false有
-                lineStyle:{               //警戒线的样式  ，虚实  颜色
-                    type:"solid",
-                    color:"rgba(238, 33, 33)"
-                },
-                label:{
-                    position:'middle',
-                    formatter:"堵塞率执行上限"
-                },
-                name: '堵塞率执行上限',
-                yAxis: 80
-            }
-            ]
-        }
-    }
+    // ,
+    // {
+    //     smooth: true,
+    //     type: 'line',
+    //     markLine : {
+    //         symbol:"none",               //去掉警戒线最后面的箭头
+    //         data : [{
+    //             silent:false,             //鼠标悬停事件  true没有，false有
+    //             lineStyle:{               //警戒线的样式  ，虚实  颜色
+    //                 type:"solid",
+    //                 color:"rgba(238, 33, 33)"
+    //             },
+    //             label:{
+    //                 position:'middle',
+    //                 formatter:"堵塞率执行上限"
+    //             },
+    //             name: '堵塞率执行上限',
+    //             yAxis: 80
+    //         }
+    //         ]
+    //     }
+    // }
     ]
 }
