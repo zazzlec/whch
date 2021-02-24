@@ -229,7 +229,7 @@ namespace Whapp
                 double Airheat = double.Parse(dt_ch_para.Rows[0][14].ToString());//空气比热
                 double Design_in_wind_temp = double.Parse(dt_ch_para.Rows[0][15].ToString());//设计进口风温
 
-                string sql_fuel_para = "select Carbon,Hydrogen,O2,Nitrogen,Sulfur,H2o,Ashcontent,Flyashfuel,Cinderfuel,Co,Calorificvalue,Chargingfuel from dncfuelpara where Status=1 and IsDeleted=0 and DncBoilerId=" + boilerid;
+                string sql_fuel_para = "select Carbon,Hydrogen,O2,Nitrogen,Sulfur,H2o,Ashcontent,Flyashfuel,Cinderfuel,Co,Calorificvalue,Chargingfuel from dncfuelpara where Status=1 and IsDeleted=0 and DncBoilerId=" + boilerid+ " order by RealTime desc";
                 DataTable dt_fuel_para = db.GetCommand(sql_fuel_para);
                 double Carbon = double.Parse(dt_fuel_para.Rows[0][0].ToString());//碳(收到基)
                 double Hydrogen = double.Parse(dt_fuel_para.Rows[0][1].ToString());//氢(收到基)
@@ -443,17 +443,17 @@ namespace Whapp
                                         arr.Add("update dncchqpoint set Dsl_Val=" + dsl + " where DncChareaId=" + area_id + ";");
                                     }
 
+                                    
+                                  
 
-                                    //if (wrl > Wrldch_Val || dsl > Dslhigh_Val)
-                                    //{
-                                    //    arr.Add("");
-                                    //}
-
-                                    if (wrl > Wrlexec_Val || dsl > Dslexec_Val)
+                                    if (wrl > Wrlexec_Val || dsl > Dslexec_Val)//执行列表
                                     {
                                         sta_ch_exec = 1;
                                     }
-
+                                    else if ((wrl > Wrldch_Val) && (wrl <= Wrlexec_Val) || (dsl > Dslhigh_Val && dsl <= Dslexec_Val))//加入待吹灰
+                                    {
+                                        sta_ch_exec = 2;
+                                    }
 
                                 }
 
@@ -462,7 +462,10 @@ namespace Whapp
 
                             db.ExecuteTransaction(arr);
                             arr.Clear();
-                            if (sta_ch_exec == 0)
+                            db.CommandExecuteNonQuery("UPDATE dnccharea set RealTime=now() where Name_kw<>'空预器' and  DncBoilerId=" + boilerid);
+                            db.CommandExecuteNonQuery("insert dncchareahis(K_Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexcu_Val,Dsl_Val,Dslhigh_Val,Dslexcu_Val,RealTime,AreaId) select Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexec_Val,Dsl_Val,Dslhigh_Val,Dslexec_Val,RealTime,Id from dnccharea where Name_kw<>'空预器' and DncBoilerId=" + boilerid);
+
+                            if (sta_ch_exec == 2)
                             {
                                 arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 0, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = " + boilerid + " and DncCharea_Name<>'空预器';");
                                 arr.Add("update dncboiler set Ch_Run=2 where Id=" + boilerid + ";");
@@ -481,7 +484,7 @@ namespace Whapp
 
 
                             }
-                            else
+                            else if(sta_ch_exec==1)
                             {
                                 arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 1, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = " + boilerid + " and DncCharea_Name<>'空预器';");
                                 arr.Add("update dncboiler set Ch_Run=3 where Id=" + boilerid + ";");
@@ -491,6 +494,107 @@ namespace Whapp
 
 
 
+                        }
+                    }
+                    else if(chrun==2)//待吹灰列表里已有数据
+                    {
+                        string sql_area = "select Id,Wrldch_Val,Wrlexec_Val,Dslhigh_Val,Dslexec_Val,Ckws_Val,Ckyj_Val,Name_kw from dnccharea where DncBoilerId=" + boilerid;
+                        DataTable dt_area = db.GetCommand(sql_area);
+                        foreach (DataRow item in dt_area.Rows)
+                        {
+                            int area_id = int.Parse(item[0].ToString());//区域ID
+                            double Wrldch_Val = double.Parse(item[1].ToString());//加入待吹灰列表污染率上限
+                            double Wrlexec_Val = double.Parse(item[2].ToString()); //加入执行吹灰列表污染率上限
+                            double Dslhigh_Val = double.Parse(item[3].ToString());//加入待吹灰列表堵塞率上限
+                            double Dslexec_Val = double.Parse(item[4].ToString());//加入执行吹灰列表堵塞率上限
+                            double ckws = double.Parse(item[5].ToString());//参考温升
+                            double ckyj = double.Parse(item[6].ToString());//参考压降
+                            string area_name = item[7].ToString();//区域名称
+                            double wrl = 0;//污染率初始化
+                            double dsl = 0;//堵塞率初始化
+
+                            if (fh > 10)
+                            {
+                                if (Wrldch_Val > 0 && area_name == "低过")
+                                {
+                                    wrl = ckws / dg_sjws;//低过污染率
+                                    arr.Add("update dnccharea set Wrl_Val=" + wrl + " where Id=" + area_id + ";");
+                                    arr.Add("update dncchqpoint set Wrl_Val=" + wrl + " where DncChareaId=" + area_id + ";");
+
+                                }
+                                if (Dslhigh_Val > 0 && area_name == "低过")
+                                {
+                                    dsl = ckyj / dg_sjyj;//低过堵塞率
+                                    arr.Add("update dnccharea set Dsl_Val=" + dsl + " where Id=" + area_id + ";");
+                                    arr.Add("update dncchqpoint set Dsl_Val=" + dsl + " where DncChareaId=" + area_id + ";");
+                                }
+                                if (Wrldch_Val > 0 && area_name == "省煤器")
+                                {
+                                    wrl = ckws / smq_sjws;//省煤器污染率
+                                    arr.Add("update dnccharea set Wrl_Val=" + wrl + " where Id=" + area_id + ";");
+                                    arr.Add("update dncchqpoint set Wrl_Val=" + wrl + " where DncChareaId=" + area_id + ";");
+                                }
+                                if (Dslhigh_Val > 0 && area_name == "省煤器")
+                                {
+                                    dsl = ckyj / smq_sjyj;//省煤器堵塞率
+                                    arr.Add("update dnccharea set Dsl_Val=" + dsl + " where Id=" + area_id + ";");
+                                    arr.Add("update dncchqpoint set Dsl_Val=" + dsl + " where DncChareaId=" + area_id + ";");
+                                }
+                                if (Dslhigh_Val > 0 && area_name == "节能器")
+                                {
+                                    dsl = ckyj / jnq_sjyj;//节能器堵塞率
+                                    arr.Add("update dnccharea set Dsl_Val=" + dsl + " where Id=" + area_id + ";");
+                                    arr.Add("update dncchqpoint set Dsl_Val=" + dsl + " where DncChareaId=" + area_id + ";");
+                                }
+
+
+                              
+
+                                if (wrl > Wrlexec_Val || dsl > Dslexec_Val)//加入执行列表
+                                {
+                                    sta_ch_exec = 1;
+                                }
+                                else if ((wrl > Wrldch_Val) && (wrl <= Wrlexec_Val) || (dsl > Dslhigh_Val && dsl <= Dslexec_Val))//加入待吹灰
+                                {
+                                    sta_ch_exec = 2;
+                                }
+
+                            }
+
+
+                        }
+
+                        db.ExecuteTransaction(arr);
+                        arr.Clear();
+                        db.CommandExecuteNonQuery("UPDATE dnccharea set RealTime=now() where Name_kw<>'空预器' and  DncBoilerId=" + boilerid);
+                        db.CommandExecuteNonQuery("insert dncchareahis(K_Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexcu_Val,Dsl_Val,Dslhigh_Val,Dslexcu_Val,RealTime,AreaId) select Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexec_Val,Dsl_Val,Dslhigh_Val,Dslexec_Val,RealTime,Id from dnccharea where Name_kw<>'空预器' and DncBoilerId=" + boilerid);
+
+                        if (sta_ch_exec == 2)
+                        {
+                            arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 0, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = " + boilerid + " and DncCharea_Name<>'空预器' and Name_kw not in(select K_Name_kw from dncchlist where `Status`=0 and IsDeleted =0);");
+                            
+                            db.ExecuteTransaction(arr);
+                            arr.Clear();
+
+                            string sql_dch_num = "select * from dncchlist where `Status`=0 and IsDeleted=0 and DncBoilerId = " + boilerid;
+                            DataTable dt_dch_num = db.GetCommand(sql_dch_num);
+                            if (dt_dch_num.Rows.Count >= 5)//待吹灰列表中达到5组加入执行列表
+                            {
+                                arr.Add("update dncchlist set `Status`=1 where `Status`=0 and IsDeleted=0 and DncBoilerId = " + boilerid + ";");
+                                arr.Add("update dncboiler set Ch_Run=3 where Id=" + boilerid + ";");
+                                db.ExecuteTransaction(arr);
+                                arr.Clear();
+                            }
+
+
+                        }
+                        else if(sta_ch_exec == 1)
+                        {
+                            arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 1, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = " + boilerid + " and DncCharea_Name<>'空预器' and Name_kw not in(select K_Name_kw from dncchlist where `Status`=0 and IsDeleted =0);");
+                            arr.Add("update dncchlist set `Status`=1 where `Status`=0 and IsDeleted=0 and DncBoilerId = " + boilerid + ";");
+                            arr.Add("update dncboiler set Ch_Run=3 where Id=" + boilerid + ";");
+                            db.ExecuteTransaction(arr);
+                            arr.Clear();
                         }
                     }
 
@@ -530,6 +634,9 @@ namespace Whapp
                         arr.Add("update dncchqpoint set Dsl_Val=" + dsl_kyq + " where DncCharea_Name='空预器' and DncBoilerId= " + boilerid + ";");
                         db.ExecuteTransaction(arr);
                         arr.Clear();
+                        db.CommandExecuteNonQuery("UPDATE dnccharea set RealTime=now() where Name_kw='空预器' and  DncBoilerId=" + boilerid);
+                        db.CommandExecuteNonQuery("insert dncchareahis(K_Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexcu_Val,Dsl_Val,Dslhigh_Val,Dslexcu_Val,RealTime,AreaId) select Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexec_Val,Dsl_Val,Dslhigh_Val,Dslexec_Val,RealTime,Id from dnccharea where Name_kw='空预器' and DncBoilerId=" + boilerid);
+
                         if (yqc_radio < Wrlexec_Val_kyq || dsl_kyq > Dslexec_Val_kyq)
                         {
                             arr.Add("insert dncchrunlist_kyq(Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted) select Name_kw, NOW() as dtnow, NULL, CASE WHEN  Wrl_Val < Wrlhigh_Val THEN '烟气侧效率低于下限' WHEN Dsl_Val > Dslhigh_Val then '堵塞率超标'  END as addreason, Id as chqid, Name_kw, DncBoilerId, DncBoiler_Name, 1, 0 from dncchqpoint where DncBoilerId = "+boilerid+" and DncCharea_Name = '空预器';");
@@ -539,8 +646,8 @@ namespace Whapp
                         }
 
                     }
-
-
+                  //  db.CommandExecuteNonQuery("UPDATE dnccharea set RealTime=now() where DncBoilerId="+boilerid);
+                   // db.CommandExecuteNonQuery("insert dncchareahis(K_Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexcu_Val,Dsl_Val,Dslhigh_Val,Dslexcu_Val,RealTime,AreaId) select Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexec_Val,Dsl_Val,Dslhigh_Val,Dslexec_Val,RealTime,Id from dnccharea where DncBoilerId="+boilerid);
 
                 }
 
