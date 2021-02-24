@@ -1,5 +1,5 @@
 ﻿@echo off 
-E: 
-cd E:\上锅人员\五河项目\whch\WHCH.App
+F: 
+cd F:\我的程序\智能电厂\五河项目\程序\WHCH\WHCH.App
 npm run dev
 pause
