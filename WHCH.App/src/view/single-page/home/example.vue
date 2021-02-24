@@ -1,4 +1,4 @@
-<style  lang="less">
+﻿<style  lang="less">
 @h: 700px;
 @bcolor : #3e3e3e;
 .example{
@@ -506,22 +506,22 @@
         <div class="c">
           <div class="y">
             <div class="t1">主汽流量</div>
-            <div class="t2">{{zqll.toFixed(2)}}</div>
+            <div class="t2">{{parseFloat(zqll).toFixed(2)}}</div>
           </div>
 
           <div class="y">
             <div class="t1" style="font-size:16px;line-height:20px">锅炉效率<br>（正平衡）</div>
-            <div class="t2">{{boilerPositive.toFixed(2)}}%</div>
+            <div class="t2">{{parseFloat(boilerPositive).toFixed(2)}}%</div>
           </div>
 
           <div class="y">
             <div class="t1" style="font-size:16px;line-height:20px">锅炉效率<br>（反平衡）</div>
-            <div class="t2">{{boilerCounter.toFixed(2)}}%</div>
+            <div class="t2">{{parseFloat(boilerCounter).toFixed(2)}}%</div>
           </div>
 
           <div class="y">
             <div class="t1">主汽压力</div>
-            <div class="t2">{{zqyl.toFixed(2)}}</div>
+            <div class="t2">{{parseFloat(zqyl).toFixed(2)}}</div>
           </div>
         </div>
         <div class="r">
@@ -532,18 +532,18 @@
                   <!-- <span slot="title"><b>吹灰列表</b></span> -->
                   <div class="b">
                     <Row :gutter="16">
-                      <Col span="6">序号</Col>
+                      <Col span="5">序号</Col>
                       <!-- <Col span="8">区域</Col> -->
-                      <Col span="6">吹灰器</Col>
-                      <Col span="6">出现时间</Col>
-                      <Col span="6">执行时间</Col>
+                      <Col span="5">吹灰器</Col>
+                      <Col span="7">出现时间</Col>
+                      <Col span="7">执行时间</Col>
                     </Row>
                     <Row :gutter="16" v-for="(item,index ) in v1_3 " class="qlist"  v-bind:key="'yyuytyu'+index">
-                      <Col span="6">{{index+1}}</Col>
+                      <Col span="5">{{index+1}}</Col>
                       <!-- <Col span="8">{{item.k_Name_kw}}</Col> -->
-                      <Col span="6">{{item.dncChqpoint_Name}}</Col>
-                      <Col span="6">{{item.addTime}}</Col>
-                      <Col span="6">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
+                      <Col span="5">{{item.dncChqpoint_Name}}</Col>
+                      <Col span="7">{{item.addTime}}</Col>
+                      <Col span="7">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
                     </Row>
                   </div>
                 </Card>
@@ -553,18 +553,18 @@
                   <!-- <span slot="title"><b>吹灰列表</b></span> -->
                   <div class="b">
                     <Row :gutter="16">
-                      <Col span="6">序号</Col>
+                      <Col span="5">序号</Col>
                       <!-- <Col span="8">区域</Col> -->
-                      <Col span="6">吹灰器</Col>
-                      <Col span="6">出现时间</Col>
-                      <Col span="6">执行时间</Col>
+                      <Col span="5">吹灰器</Col>
+                      <Col span="7">出现时间</Col>
+                      <Col span="7">执行时间</Col>
                     </Row>
                     <Row :gutter="16" v-for="(item,index ) in v1_6 " class="qlist"  v-bind:key="'yyuy88tyu'+index">
-                      <Col span="6">{{index+1}}</Col>
+                      <Col span="5">{{index+1}}</Col>
                       <!-- <Col span="8">{{item.k_Name_kw}}</Col> -->
-                      <Col span="6">{{item.dncChqpoint_Name}}</Col>
-                      <Col span="6">{{item.addTime}}</Col>
-                      <Col span="6">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
+                      <Col span="5">{{item.dncChqpoint_Name}}</Col>
+                      <Col span="7">{{item.addTime}}</Col>
+                      <Col span="7">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
                     </Row>
                   </div>
                 </Card>
@@ -1043,7 +1043,7 @@ export default {
             sort: [
               {
                 direct: "DESC",
-                field: "id"
+                field: "runTime"
               }
             ]
           }).then(res => {
@@ -1061,7 +1061,7 @@ export default {
             sort: [
               {
                 direct: "DESC",
-                field: "id"
+                field: "runTime"
               }
             ]
           }).then(res => {
@@ -1130,65 +1130,65 @@ export default {
             n2_3_3.xAxis.data=xz;
 
             n2_2.series[0].data = d.filter(x=>x.remarks=='左墙沸下温度').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_2.series[1].data = d.filter(x=>x.remarks=='右墙沸下温度').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_2.series[2].data = d.filter(x=>x.remarks=='右墙沸上温度').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_2.series[3].data = d.filter(x=>x.remarks=='前墙#1沸上温度').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_2.series[4].data = d.filter(x=>x.remarks=='前墙#2沸上温度').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_2.series[5].data = d.filter(x=>x.remarks=='前墙#3沸上温度').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_2.series[6].data = d.filter(x=>x.remarks=='右墙沸中温度').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
 
 
             n2_3_1.series[0].data = d.filter(x=>x.remarks=='低温过热器壁温1').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_3_1.series[1].data = d.filter(x=>x.remarks=='低温过热器壁温2').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_3_1.series[2].data = d.filter(x=>x.remarks=='低温过热器壁温3').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_3_1.series[3].data = d.filter(x=>x.remarks=='低温过热器壁温4').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
 //屏式过热器
             n2_3_2.series[0].data = d.filter(x=>x.remarks=='屏式过热器壁温1').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_3_2.series[1].data = d.filter(x=>x.remarks=='屏式过热器壁温2').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_3_2.series[2].data = d.filter(x=>x.remarks=='屏式过热器壁温3').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_3_2.series[3].data = d.filter(x=>x.remarks=='屏式过热器壁温4').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
 
             n2_3_3.series[0].data = d.filter(x=>x.remarks=='高温过热器壁温1').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_3_3.series[1].data = d.filter(x=>x.remarks=='高温过热器壁温2').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_3_3.series[2].data = d.filter(x=>x.remarks=='高温过热器壁温3').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
             n2_3_3.series[3].data = d.filter(x=>x.remarks=='高温过热器壁温4').map(x=>{
-              return x.pvalue;
+              return x.pvalue.toFixed(2);
             }).reverse();
       });
     },
