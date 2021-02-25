@@ -31,7 +31,8 @@
       // opacity: 0.8;
     }
   }
-  .kk{
+  .kk {
+    border: 2px solid #fff;
     li{
       border-bottom: 1px solid #ddd;
     }
