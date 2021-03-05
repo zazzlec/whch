@@ -1128,7 +1128,7 @@ export default {
 
       getPointkks_dataList({
             totalCount: 0,
-            pageSize: 2000,
+            pageSize: 10000,
             currentPage: 1,
             kw: "",
             isDeleted: 0,
