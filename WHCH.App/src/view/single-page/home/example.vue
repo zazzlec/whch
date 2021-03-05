@@ -1277,13 +1277,13 @@ export default {
           }).then(res => {
             let d= getDateMore(res.data.data,1,["realTime",]);
             //低过
-            let dg=d.filter(x=>x.areaId==1);
+            let dg=d.filter(x=>x.k_Name_kw=='低过');
             //省煤器
-            let smq=d.filter(x=>x.areaId==2);
+            let smq=d.filter(x=>x.k_Name_kw=='省煤器');
             //节能器
-            let jnq=d.filter(x=>x.areaId==3);
+            let jnq=d.filter(x=>x.k_Name_kw=='节能器');
             //空预器
-            let kyq=d.filter(x=>x.areaId==4);
+            let kyq=d.filter(x=>x.k_Name_kw=='空预器');
 
             //低过
             n4_1.xAxis.data=dg.map(x=>{
