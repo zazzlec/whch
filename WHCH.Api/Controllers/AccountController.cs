@@ -25,7 +25,6 @@ namespace WHCH.Api.Controllers
     /// </summary>
     [Route("api/v1/[controller]/[action]")]
     [ApiController]
-    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly WHCHDbContext _dbContext;
