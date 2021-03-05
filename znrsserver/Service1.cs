@@ -1,25 +1,27 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SynZnrs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
-using System.Windows.Forms;
-using SynZnrs;
-using Newtonsoft.Json.Linq;
+using System.Threading;
 using SiPHDOM;
 using System.IO;
 using SynWHCH;
 
-namespace Whapp
+namespace znrsserver
 {
-    public partial class Form1 : Form
+    public partial class Service1 : ServiceBase
     {
-
         static ILServer m_pServer;
         static ILGroup m_pGroup;
-        static int boilerid = 2;
+        static int boilerid = 1;
         public static string boiler_name;
 
         /// <summary>
@@ -83,7 +85,13 @@ namespace Whapp
 
 
         }
-
+        class point
+        {
+            public string name { get; set; }
+            public double pvalue { get; set; }
+            public double typeid { get; set; }
+            public string typename { get; set; }
+        }
 
         /// <summary>
         /// 减温水焓增计算公式
@@ -107,19 +115,77 @@ namespace Whapp
                 writer.WriteLine(logstring);
             }
         }
-
-        public Form1()
+        static bool Connect(string szServer, string szDB, string szUser, string szPassWord, int iPort)
         {
-            InitializeComponent();
-        }
-        class point
-        {
-            public string name { get; set; }
-            public double pvalue { get; set; }
-            public double typeid { get; set; }
-            public string typename { get; set; }
+            if (m_pServer != null && m_pServer.Online)
+            {
+                m_pServer.DisConnect();
+                m_pServer = null;
+            }
+            m_pServer = new CLServer();
+            m_pServer.Connect(0, szServer, szDB, szUser, szPassWord, iPort);
+            return true;
         }
 
+        static List<int> GetIDofNames(Dictionary<int, string> dic)
+        {
+
+            // string[] Names = new string[] { "2JD1004A_2JD1004B.OUT", "1TE1009A.OUT" };
+            string[] Names = dic.Values.ToArray();
+            int[] Ids = new int[dic.Count];
+            Ids = m_pServer.GetIDOfNames(Names);
+
+            return Ids.ToList();
+        }
+
+        static bool ReadRtValue(int[] ids)
+        {
+            // int[] ids = new int[2] { m_iID1, m_iID2 };
+            ILValueList pList = null;
+            pList = m_pServer.GetRTValues(ids);
+            if (pList != null)
+            {
+                List<string> arr_up = new List<string>();
+
+                DBHelper db = new DBHelper();
+                //string sql_kks = "select Ordernum,Name_kw from  dncpointkks  where DncBoilerId=" + boilerid + " ORDER BY Ordernum";
+                //DataTable dt_kks = db.GetCommand(sql_kks);
+
+
+                //  db.ExecuteTransaction(arr_up);
+                for (uint i = 0; i < pList.Count; i++)
+                {
+                    CLValue pValue = pList.GetValue(i);
+                    long tt = pValue.Time;
+                    short uQaulity = pValue.Quality;
+                    short uStat = pValue.Stat;     //Stat=0表示无实时数据
+                    double fValue = pValue.Value;
+                    arr_up.Add("UPDATE dncpointkks set Pvalue=" + fValue + ",RealTime=now() where Ordernum=" + i + " and DncBoilerId=" + boilerid);
+
+
+                }
+                if (db.ExecuteTransaction(arr_up))
+                {
+                    arr_up.Clear();
+                    arr_up.Add("insert dncpointkks_data(DncTypeId,DncType_Name,Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,RealTime,Pvalue) SELECT DncTypeId,DncType_Name,Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,RealTime,Pvalue from dncpointkks where DncBoilerId=" + boilerid);
+                    if (db.ExecuteTransaction(arr_up))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+
+        }
         public static void Hzpoint()
         {
             DBHelper db = new DBHelper();
@@ -167,7 +233,15 @@ namespace Whapp
                 arr.Add(sql);
 
             }
-            db.ExecuteTransaction(arr);
+            if (db.ExecuteTransaction(arr))
+            {
+                AddLgoToTXT(DateTime.Now.ToString() + "：测点数据更新成功！");
+            }
+            else
+            {
+                AddLgoToTXT(DateTime.Now.ToString() + "：测点数据更新失败！");
+            }
+          
 
         }
         public static void znrs_ch()
@@ -229,7 +303,7 @@ namespace Whapp
                 double Airheat = double.Parse(dt_ch_para.Rows[0][14].ToString());//空气比热
                 double Design_in_wind_temp = double.Parse(dt_ch_para.Rows[0][15].ToString());//设计进口风温
 
-                string sql_fuel_para = "select Carbon,Hydrogen,O2,Nitrogen,Sulfur,H2o,Ashcontent,Flyashfuel,Cinderfuel,Co,Calorificvalue,Chargingfuel from dncfuelpara where Status=1 and IsDeleted=0 and DncBoilerId=" + boilerid+ " order by RealTime desc";
+                string sql_fuel_para = "select Carbon,Hydrogen,O2,Nitrogen,Sulfur,H2o,Ashcontent,Flyashfuel,Cinderfuel,Co,Calorificvalue,Chargingfuel from dncfuelpara where Status=1 and IsDeleted=0 and DncBoilerId=" + boilerid + " order by RealTime desc";
                 DataTable dt_fuel_para = db.GetCommand(sql_fuel_para);
                 double Carbon = double.Parse(dt_fuel_para.Rows[0][0].ToString());//碳(收到基)
                 double Hydrogen = double.Parse(dt_fuel_para.Rows[0][1].ToString());//氢(收到基)
@@ -443,8 +517,8 @@ namespace Whapp
                                         arr.Add("update dncchqpoint set Dsl_Val=" + dsl + " where DncChareaId=" + area_id + ";");
                                     }
 
-                                    
-                                  
+
+
 
                                     if (wrl > Wrlexec_Val || dsl > Dslexec_Val)//执行列表
                                     {
@@ -484,7 +558,7 @@ namespace Whapp
 
 
                             }
-                            else if(sta_ch_exec==1)
+                            else if (sta_ch_exec == 1)
                             {
                                 arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 1, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = " + boilerid + " and DncCharea_Name<>'空预器';");
                                 arr.Add("update dncboiler set Ch_Run=3 where Id=" + boilerid + ";");
@@ -496,7 +570,7 @@ namespace Whapp
 
                         }
                     }
-                    else if(chrun==2)//待吹灰列表里已有数据
+                    else if (chrun == 2)//待吹灰列表里已有数据
                     {
                         string sql_area = "select Id,Wrldch_Val,Wrlexec_Val,Dslhigh_Val,Dslexec_Val,Ckws_Val,Ckyj_Val,Name_kw from dnccharea where DncBoilerId=" + boilerid;
                         DataTable dt_area = db.GetCommand(sql_area);
@@ -548,7 +622,7 @@ namespace Whapp
                                 }
 
 
-                              
+
 
                                 if (wrl > Wrlexec_Val || dsl > Dslexec_Val)//加入执行列表
                                 {
@@ -572,7 +646,7 @@ namespace Whapp
                         if (sta_ch_exec == 2)
                         {
                             arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 0, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = " + boilerid + " and DncCharea_Name<>'空预器' and Name_kw not in(select K_Name_kw from dncchlist where `Status`=0 and IsDeleted =0);");
-                            
+
                             db.ExecuteTransaction(arr);
                             arr.Clear();
 
@@ -588,7 +662,7 @@ namespace Whapp
 
 
                         }
-                        else if(sta_ch_exec == 1)
+                        else if (sta_ch_exec == 1)
                         {
                             arr.Add("insert dncchlist(K_Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, Wrl_Val, Dsl_Val, AddReason, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted, DncChareaId) select Name_kw, NOW() as dtnow, NULL, NULL, Id as chqid, Name_kw, Wrl_Val, Dsl_Val, CASE WHEN Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val THEN '污染率超标' WHEN(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val) then '堵塞率超标'  END as addreason, DncBoilerId, DncBoiler_Name, 1, 0, DncChareaId from dncchqpoint where ((Wrlhigh_Val <> 0 and Wrl_Val > Wrlhigh_Val) or(Dslhigh_Val <> 0 and Dsl_Val > Dslhigh_Val)) and DncBoilerId = " + boilerid + " and DncCharea_Name<>'空预器' and Name_kw not in(select K_Name_kw from dncchlist where `Status`=0 and IsDeleted =0);");
                             arr.Add("update dncchlist set `Status`=1 where `Status`=0 and IsDeleted=0 and DncBoilerId = " + boilerid + ";");
@@ -639,15 +713,15 @@ namespace Whapp
 
                         if (yqc_radio < Wrlexec_Val_kyq || dsl_kyq > Dslexec_Val_kyq)
                         {
-                            arr.Add("insert dncchrunlist_kyq(Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted) select Name_kw, NOW() as dtnow, NULL, CASE WHEN  Wrl_Val < Wrlhigh_Val THEN '烟气侧效率低于下限' WHEN Dsl_Val > Dslhigh_Val then '堵塞率超标'  END as addreason, Id as chqid, Name_kw, DncBoilerId, DncBoiler_Name, 1, 0 from dncchqpoint where DncBoilerId = "+boilerid+" and DncCharea_Name = '空预器';");
+                            arr.Add("insert dncchrunlist_kyq(Name_kw, AddTime, RunTime, Remarks, DncChqpointId, DncChqpoint_Name, DncBoilerId, DncBoiler_Name,`Status`, IsDeleted) select Name_kw, NOW() as dtnow, NULL, CASE WHEN  Wrl_Val < Wrlhigh_Val THEN '烟气侧效率低于下限' WHEN Dsl_Val > Dslhigh_Val then '堵塞率超标'  END as addreason, Id as chqid, Name_kw, DncBoilerId, DncBoiler_Name, 1, 0 from dncchqpoint where DncBoilerId = " + boilerid + " and DncCharea_Name = '空预器';");
                             arr.Add("update dncboiler set Ch_Run_kyq=2 where Id=" + boilerid + ";");
                             db.ExecuteTransaction(arr);
                             arr.Clear();
                         }
 
                     }
-                  //  db.CommandExecuteNonQuery("UPDATE dnccharea set RealTime=now() where DncBoilerId="+boilerid);
-                   // db.CommandExecuteNonQuery("insert dncchareahis(K_Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexcu_Val,Dsl_Val,Dslhigh_Val,Dslexcu_Val,RealTime,AreaId) select Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexec_Val,Dsl_Val,Dslhigh_Val,Dslexec_Val,RealTime,Id from dnccharea where DncBoilerId="+boilerid);
+                    //  db.CommandExecuteNonQuery("UPDATE dnccharea set RealTime=now() where DncBoilerId="+boilerid);
+                    // db.CommandExecuteNonQuery("insert dncchareahis(K_Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexcu_Val,Dsl_Val,Dslhigh_Val,Dslexcu_Val,RealTime,AreaId) select Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,Wrl_Val,Wrldch_Val,Wrlexec_Val,Dsl_Val,Dslhigh_Val,Dslexec_Val,RealTime,Id from dnccharea where DncBoilerId="+boilerid);
 
                 }
 
@@ -664,133 +738,44 @@ namespace Whapp
                 AddLgoToTXT(rrr.Message + "\n " + rrr.StackTrace);
             }
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            znrs_ch();
-        }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            string szServer = "10.56.250.147";
-            string szDB = "WH";
-            string szUser = "dba";
-            string szPassWord = "123456";
-            int iPort = 1666;
-            //1.0连接服务器
-
-            Connect(szServer, szDB, szUser, szPassWord, iPort);
-
-            getpoint();
-          
-        }
-
-
-        static bool Connect(string szServer, string szDB, string szUser, string szPassWord, int iPort)
-        {
-            if (m_pServer != null && m_pServer.Online)
-            {
-                m_pServer.DisConnect();
-                m_pServer = null;
-            }
-            m_pServer = new CLServer();
-            m_pServer.Connect(0, szServer, szDB, szUser, szPassWord, iPort);
-            return true;
-        }
-
-        static List<int> GetIDofNames(Dictionary<int, string> dic)
-        {
-           
-            // string[] Names = new string[] { "2JD1004A_2JD1004B.OUT", "1TE1009A.OUT" };
-            string[] Names = dic.Values.ToArray();
-            int[] Ids = new int[dic.Count];
-            Ids = m_pServer.GetIDOfNames(Names);
-
-            return Ids.ToList();
-        }
-
-        static bool ReadRtValue(int[] ids)
-        {
-           // int[] ids = new int[2] { m_iID1, m_iID2 };
-            ILValueList pList = null;
-            pList = m_pServer.GetRTValues(ids);
-            if (pList != null)
-            {
-                List<string> arr_up = new List<string>();
-               
-                DBHelper db = new DBHelper();
-                //string sql_kks = "select Ordernum,Name_kw from  dncpointkks  where DncBoilerId=" + boilerid + " ORDER BY Ordernum";
-                //DataTable dt_kks = db.GetCommand(sql_kks);
-               
-                   
-              //  db.ExecuteTransaction(arr_up);
-                for (uint i = 0; i < pList.Count; i++)
-                {
-                    CLValue pValue = pList.GetValue(i);
-                    long tt = pValue.Time;
-                    short uQaulity = pValue.Quality;
-                    short uStat = pValue.Stat;     //Stat=0表示无实时数据
-                    double fValue = pValue.Value;
-                    arr_up.Add("UPDATE dncpointkks set Pvalue=" + fValue + ",RealTime=now() where Ordernum=" + i + " and DncBoilerId=" + boilerid);
-
-
-                }
-                if (db.ExecuteTransaction(arr_up))
-                {
-                    arr_up.Clear();
-                    arr_up.Add("insert dncpointkks_data(DncTypeId,DncType_Name,Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,RealTime,Pvalue) SELECT DncTypeId,DncType_Name,Name_kw,Remarks,`Status`,IsDeleted,DncBoilerId,DncBoiler_Name,RealTime,Pvalue from dncpointkks where DncBoilerId=" + boilerid) ;
-                    if (db.ExecuteTransaction(arr_up))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-
-                else
-                {
-                    return false;
-                }
-            }
-            return false;
-           
-        }
         //获取测点数据
         public static void getpoint()
         {
-          
-            Dictionary<int,string> a = new Dictionary<int, string>();
+            AddLgoToTXT(DateTime.Now.ToString() + "：开始获取测点！");
+            Dictionary<int, string> a = new Dictionary<int, string>();
             DBHelper db = new DBHelper();
-            string sql_kks = "select Ordernum,Name_kw from  dncpointkks  where DncBoilerId=" + boilerid+" ORDER BY Ordernum";
+            string sql_kks = "select Ordernum,Name_kw from  dncpointkks  where DncBoilerId=" + boilerid + " ORDER BY Ordernum";
             DataTable dt_kks = db.GetCommand(sql_kks);
             int k = 0;
             foreach (DataRow item in dt_kks.Rows)
             {
-                a.Add(int.Parse(item[0].ToString()),item[1].ToString());
+                a.Add(int.Parse(item[0].ToString()), item[1].ToString());
                 k++;
             }
-           
+
             List<int> arr = GetIDofNames(a);
-            bool t =  ReadRtValue(arr.ToArray());
+            bool t = ReadRtValue(arr.ToArray());
             if (t)
             {
                 Hzpoint();
             }
             else
             {
-                MessageBox.Show("测点数据获取失败！");
+                AddLgoToTXT(DateTime.Now.ToString()+"：获取测点数据失败！");
             }
-           
+
 
 
             ;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        #region 主线程
+        private void timer2_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
             {
+                AddLgoToTXT(DateTime.Now.ToString() + "：开始数据获取！");
                 string szServer = "10.56.250.147";
                 string szDB = "WH";
                 string szUser = "dba";
@@ -798,8 +783,14 @@ namespace Whapp
                 int iPort = 1666;
                 //1.0连接服务器
 
-                Connect(szServer, szDB, szUser, szPassWord, iPort);
-
+                if (Connect(szServer, szDB, szUser, szPassWord, iPort))
+                {
+                    AddLgoToTXT(DateTime.Now.ToString() + "：接口服务器连接成功！");
+                }
+                else
+                {
+                    AddLgoToTXT(DateTime.Now.ToString() + "：接口服务器连接失败！");
+                }
                 getpoint();
                 znrs_ch();
 
@@ -810,16 +801,13 @@ namespace Whapp
 
                 AddLgoToTXT(rrr.Message + "\n " + rrr.StackTrace);
             }
+
+
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            timer1.Start();
-        }
+        #endregion
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            timer1.Stop();
-        }
+       
+
     }
 }

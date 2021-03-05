@@ -22,7 +22,6 @@ namespace SynZnrs
 
         //private string m_dbs = "Data Source=127.0.0.1;Database=sg_znrs_ch;User ID=root;Password=123456;pooling=true;CharSet=utf8;port=3306;sslmode=none";//锦界现场
 
-      //  private string m_dbs = "Data Source=127.0.0.1;Database=sg_znrs_wh;User ID=root;Password=123;pooling=true;CharSet=utf8;port=3306;sslmode=none";
         private string m_dbs = "Data Source=10.56.250.147;Database=sg_znrs_wh;User ID=SG_ZNRS_WH;Password=SGZNRS@2021;pooling=true;CharSet=utf8;port=3306;sslmode=none";
         // private string m_dbs = "Data Source=localhost; Initial Catalog=sg_znrs;User Id=sa; PassWord=123;";
         /// <summary>

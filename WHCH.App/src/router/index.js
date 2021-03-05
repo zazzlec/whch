@@ -31,7 +31,7 @@ Vue.use(Router);
 
 const router = new Router({
   routes: [...routes],
-  mode: "history"
+  mode: "hash"
 });
 const LOGIN_PAGE_NAME = "login";
 
