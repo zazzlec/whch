@@ -10,12 +10,12 @@ namespace WHCH.Api.Entities
 	[Serializable]
 	public class Dnccharea
 	{
-    
-    
-    
+
+        public System.Double Yc_Val { get; set; }
+        public System.Double YcHigh_Val { get; set; }
         /// <summary>
-    	/// 序号
-    	/// </summary>
+        /// 序号
+        /// </summary>
         [Key,Required]
    
         public System.Int32 Id { get; set; } 

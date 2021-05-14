@@ -7,7 +7,8 @@ namespace WHCH.Api.ViewModels.Rbac.Dncchareahis
 	public class DncchareahisJsonModel
 	{
 
-
+        public System.Double Yc_Val { get; set; }
+        public System.Double YcHigh_Val { get; set; }
         public System.Int32 AreaId { get; set; }
         /// <summary>
     	/// 序号

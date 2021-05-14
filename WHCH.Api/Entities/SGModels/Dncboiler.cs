@@ -10,12 +10,16 @@ namespace WHCH.Api.Entities
 	[Serializable]
 	public class Dncboiler
 	{
-    
-    
-    
+
+        public System.Double Cw_High { get; set; }
+        public System.Double Cw_Low { get; set; }
+        public System.Double Bw_dg { get; set; }
+        public System.Double Bw_pg { get; set; }
+        public System.Double Bw_gg { get; set; }
+
         /// <summary>
-    	/// 序号
-    	/// </summary>
+        /// 序号
+        /// </summary>
         [Key,Required]
    
         public System.Int32 Id { get; set; } 

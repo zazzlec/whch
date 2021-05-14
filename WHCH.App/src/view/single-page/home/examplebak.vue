@@ -42,7 +42,7 @@
     width: 10%;
     height: auto;
     min-height: @h;
-    display:none;
+    display:block;
     float: left;
     position: relative;
     .huo{
@@ -74,20 +74,21 @@
       position:fixed;
       right: 11px;
       top:11px;
-      // border-radius:3px;
-      // width:60px;
-      // height: 32px;
-      // line-height:32px;
-    
-      // text-align: center;
-      // color:#fff;
-      // font-size: 16px;
+      border-radius:3px;
+      width:60px;
+      height: 32px;
+      line-height:32px;
+      border: 1px solid #333;
+      background-color: #333;
+      text-align: center;
+      color:#fff;
+      font-size: 16px;
       z-index: 999;
     }
-    // .back:hover{
-    //   background-color: rgb(72, 2, 2);
-    //   cursor: pointer;
-    // }
+    .back:hover{
+      background-color: rgb(72, 2, 2);
+      cursor: pointer;
+    }
     .qlist2{
           font-weight: normal !important;
           font-size: 13px;
@@ -107,7 +108,7 @@
       min-height: @h;
       // border:1px solid red;
       .l{
-        width: 100%;
+        width: 45%;
         height: auto;
         min-height: @h;
         // border:1px solid red;
@@ -520,19 +521,12 @@
       
     </div>
     <div class="r">
-      <!-- <div class="back"  @click="gogo('/ch')">返回</div> -->
-
-      <Button type="primary"  class="back"  @click="gogo('/ch')">
-            <Icon type="ios-arrow-back"></Icon>
-            返回
-        </Button>
-
-
+      <div class="back"  @click="gogo('/ch')">返回</div>
       <div class="m" v-if="pagenow==0">
         <div class="l">
           <v-chart :options="noxdata" autoresize  class="ct"></v-chart>
         </div>
-        <!-- <div class="c">
+        <div class="c">
           <div class="y">
             <div class="t1">主汽流量</div>
             <div class="t2">{{parseFloat(zqll).toFixed(2)}}</div>
@@ -552,21 +546,24 @@
             <div class="t1">主汽压力</div>
             <div class="t2">{{parseFloat(zqyl).toFixed(2)}}</div>
           </div>
-        </div> -->
-        <!-- <div class="r">
+        </div>
+        <div class="r">
 
           <Tabs value="name156">
               <TabPane label="吹灰列表" name="name156">
                 <Card :bordered="false">
+                  <!-- <span slot="title"><b>吹灰列表</b></span> -->
                   <div class="b">
                     <Row :gutter="16">
                       <Col span="5">序号</Col>
+                      <!-- <Col span="8">区域</Col> -->
                       <Col span="5">吹灰器</Col>
                       <Col span="7">出现时间</Col>
                       <Col span="7">执行时间</Col>
                     </Row>
                     <Row :gutter="16" v-for="(item,index ) in v1_3 " class="qlist"  v-bind:key="'yyuytyu'+index">
                       <Col span="5" :class="item.isDeleted==1 ? 'hs' : ''">{{index+1}}</Col>
+                      <!-- <Col span="8">{{item.k_Name_kw}}</Col> -->
                       <Col span="5" :class="item.isDeleted==1 ? 'hs' : ''">{{item.dncChqpoint_Name}}</Col>
                       <Col span="7" :class="item.isDeleted==1 ? 'hs' : ''">{{item.addTime}}</Col>
                       <Col span="7" :class="item.isDeleted==1 ? 'hs' : ''">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
@@ -576,15 +573,18 @@
               </TabPane>
               <TabPane label="空预器吹灰列表" name="name256">
                 <Card :bordered="false">
+                  <!-- <span slot="title"><b>吹灰列表</b></span> -->
                   <div class="b">
                     <Row :gutter="16">
                       <Col span="5">序号</Col>
+                      <!-- <Col span="8">区域</Col> -->
                       <Col span="5">吹灰器</Col>
                       <Col span="7">出现时间</Col>
                       <Col span="7">执行时间</Col>
                     </Row>
                     <Row :gutter="16" v-for="(item,index ) in v1_6 " class="qlist"  v-bind:key="'yyuy88tyu'+index">
                       <Col span="5" :class="item.isDeleted==1 ? 'hs' : ''">{{index+1}}</Col>
+                      <!-- <Col span="8">{{item.k_Name_kw}}</Col> -->
                       <Col span="5" :class="item.isDeleted==1 ? 'hs' : ''">{{item.dncChqpoint_Name}}</Col>
                       <Col span="7" :class="item.isDeleted==1 ? 'hs' : ''">{{item.addTime}}</Col>
                       <Col span="7" :class="item.isDeleted==1 ? 'hs' : ''">{{item.runTime=='0001-01-01'?'':item.runTime}}</Col>
@@ -594,14 +594,14 @@
               </TabPane>
           </Tabs>
           
-        </div> -->
+        </div>
       </div>
-      <Tabs v-model="uuu1" v-if="pagenow==1" name="tab1">
+      <Tabs value="name1" v-if="pagenow==1" name="tab1">
         <TabPane tab="tab1" label="锅炉效率" name="name1"><v-chart :options="n2_1" autoresize  class="ct"></v-chart></TabPane>
         <TabPane tab="tab1" label="床温" name="name2"><v-chart :options="n2_2" autoresize  class="ct"></v-chart></TabPane>
         <TabPane tab="tab1" label="壁温" name="name3">
           <Card :bordered="false">
-          <Tabs v-model="bwtab" name="tab1_3">
+          <Tabs value="biwen1" name="tab1_3">
               <TabPane tab="tab1_3" label="低温过热器" name="biwen1"><v-chart :options="n2_3_1" autoresize  class="ct"></v-chart></TabPane>
               <TabPane tab="tab1_3" label="屏式过热器" name="biwen2"><v-chart :options="n2_3_2" autoresize  class="ct"></v-chart></TabPane>
               <TabPane tab="tab1_3" label="高温过热器" name="biwen3"><v-chart :options="n2_3_3" autoresize  class="ct"></v-chart></TabPane>
@@ -744,12 +744,12 @@
         </TabPane>
         
       </Tabs>
-      <Tabs v-model="uuu2" v-if="pagenow==3">
+      <Tabs value="name51" v-if="pagenow==3">
         <TabPane label="低过" name="name51"><v-chart :options="n4_1" autoresize  class="ct"></v-chart></TabPane>
         <TabPane label="省煤器" name="name52"><v-chart :options="n4_2" autoresize  class="ct"></v-chart></TabPane>
         <TabPane label="空预器" name="name53"><v-chart :options="n4_3" autoresize  class="ct"></v-chart></TabPane>
       </Tabs>
-      <Tabs v-model="uuu3" v-if="pagenow==5">
+      <Tabs value="name61" v-if="pagenow==5">
         <TabPane label="低过" name="name61"><v-chart :options="n5_1" autoresize  class="ct"></v-chart></TabPane>
         <TabPane label="省煤器" name="name62"><v-chart :options="n5_2" autoresize  class="ct"></v-chart></TabPane>
         <TabPane label="节能器" name="name63"><v-chart :options="n5_3" autoresize  class="ct"></v-chart></TabPane>
@@ -866,10 +866,6 @@ export default {
         }
       },
       uuu:'tb2',
-      uuu1:'name1',
-      bwtab:'biwen1',
-      uuu2:'name51',
-      uuu3:'name61',
       activename:'',
       pagenow:0,
       modal:{
@@ -1010,7 +1006,7 @@ export default {
       let o=this;
       getHzpointList({
             totalCount: 0,
-            pageSize: 300,
+            pageSize: 2000,
             currentPage: 1,
             kw: "",
             isDeleted: 0,
@@ -1571,55 +1567,6 @@ export default {
       o.boilerPositive=o.boilers[0].positive;
       o.boilerCounter=o.boilers[0].counter;
       o.refreshall(o.boilerid);
-
-      let bid=o.$route.params.bid;
-      let bw=o.$route.params.bw;
-      if(o.$route.params.to){
-        this.boilers.map(o=>{
-          // console.log(o.id);
-          if(o.id == bid){
-            // alert(o.id)
-            this.boilerid=o.id;
-            this.boiler=o.k_Name_kw;
-            this.boilertime=o.syntime;
-            this.boilerPositive=o.positive;
-            this.boilerCounter=o.counter;
-            this.refreshall(this.boilerid);
-          }
-        });
-        o.$nextTick(() => {
-          o.activename="2";
-          o.$refs.shop.updateOpened();
-          o.$refs.shop.updateActiveName();
-        })
-        let x=o.$route.params.to;
-        if (x=="rl") {
-          o.pagenow=2;
-        }else if (x=="hz") {
-          o.pagenow=2;
-          o.uuu='tb3';
-        }else if (x=="cw") {
-          o.pagenow=1;
-          o.uuu1='name2';
-        }else if (x=="bw") {
-          o.pagenow=1;
-          o.uuu1='name3';
-          if(bw=='dg'){
-            o.bwtab='biwen1';
-          }else if(bw=='pg'){
-            o.bwtab='biwen2';
-          }else if(bw=='gg'){
-            o.bwtab='biwen3';
-          }
-        }else if (x=="zzqwd") {
-          o.pagenow=0;
-        }else if (x=="lv") {
-          o.pagenow=1;
-          o.uuu1='name1';
-        }else if (x=="ds") {
-          o.pagenow=5;
-        }
-      }
     });
     o.timer2=setInterval(() => {
       if(o.boilerid==-1){
@@ -1631,8 +1578,22 @@ export default {
 
 
     ///http://localhost:9000/#/znrs
-    //  alert(o.$route.params.bid)
-    
+    // alert(o.$route.params.id)
+    if(o.$route.params.to){
+
+      o.$nextTick(() => {
+        o.activename="2";
+        o.$refs.shop.updateOpened();
+        o.$refs.shop.updateActiveName();
+      })
+      let x=o.$route.params.to;
+      if (x=="rl") {
+        o.pagenow=2;
+      }else if (x=="hz") {
+        o.pagenow=2;
+        o.uuu='tb3';
+      }
+    }
 
   },
   beforeDestroy() {

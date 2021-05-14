@@ -6,9 +6,10 @@ namespace WHCH.Api.ViewModels.Rbac.Dnccharea
 {
 	public class DncchareaJsonModel
 	{
-    
-    
-    
+
+
+        public System.Double Yc_Val { get; set; }
+        public System.Double YcHigh_Val { get; set; }
         /// <summary>
     	/// 序号
     	/// </summary>

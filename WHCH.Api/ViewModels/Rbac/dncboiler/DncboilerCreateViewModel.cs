@@ -8,17 +8,21 @@ namespace WHCH.Api.ViewModels.Rbac.Dncboiler
 	{
     
         public System.Int32 Id = 0;
-        
-    
+
+
         /// <summary>
-    	/// 序号
-    	/// </summary>
-    	
-	
-    
+        /// 序号
+        /// </summary>
+        public System.Double Cw_High { get; set; }
+        public System.Double Cw_Low { get; set; }
+        public System.Double Bw_dg { get; set; }
+        public System.Double Bw_pg { get; set; }
+        public System.Double Bw_gg { get; set; }
+
+
         /// <summary>
-    	/// 锅炉名称
-    	/// </summary>
+        /// 锅炉名称
+        /// </summary>
         public System.String K_Name_kw { get; set; } 
     	
 	

@@ -57,7 +57,7 @@ export const mainRouter = [{
       notCache: true
     },
     children: [{
-      path: '/znrs',
+      path: '/znrs/:to/:bid/:bw',
       name: '__znrs',
       meta: {
         title: 'znrs',
@@ -86,7 +86,44 @@ export const mainRouter = [{
       component: () => import('@/view/single-page/home/example6.vue')
     }]
   },
-  
+  {
+    path: '/ch',
+    name: '_ch',
+    component: Main,
+    meta: {
+      hideInMenu: true,
+      notCache: true
+    },
+    children: [{
+      path: '/ch',
+      name: '__ch',
+      meta: {
+        title: 'ch',
+        icon: 'md-home',
+        notCache: true,
+      },
+      component: () => import('@/view/single-page/home/example66.vue')
+    }]
+  },
+  {
+    path: '/f',
+    name: '_f',
+    component: Main,
+    meta: {
+      hideInMenu: true,
+      notCache: true
+    },
+    children: [{
+      path: '/f',
+      name: '__f',
+      meta: {
+        title: 'f',
+        icon: 'md-home',
+        notCache: true,
+      },
+      component: () => import('@/view/single-page/home/f.vue')
+    }]
+  },
   {
     path: '/error_store',
     name: 'error_store',

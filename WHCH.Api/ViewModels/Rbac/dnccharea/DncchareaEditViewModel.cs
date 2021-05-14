@@ -6,12 +6,13 @@ namespace WHCH.Api.ViewModels.Rbac.Dnccharea
 {
 	public class DncchareaEditViewModel
 	{
-    
-    
-    
+
+        public System.Double Yc_Val { get; set; }
+        public System.Double YcHigh_Val { get; set; }
+
         /// <summary>
-    	/// 序号
-    	/// </summary>
+        /// 序号
+        /// </summary>
         public System.Int32 Id { get; set; } 
 	
     

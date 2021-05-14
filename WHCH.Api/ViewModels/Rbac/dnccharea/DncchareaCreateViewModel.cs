@@ -8,17 +8,18 @@ namespace WHCH.Api.ViewModels.Rbac.Dnccharea
 	{
     
         public System.Int32 Id = 0;
-        
-    
+
+
         /// <summary>
-    	/// 序号
-    	/// </summary>
-    	
-	
-    
+        /// 序号
+        /// </summary>
+
+        public System.Double Yc_Val { get; set; }
+        public System.Double YcHigh_Val { get; set; }
+
         /// <summary>
-    	/// 区域描述
-    	/// </summary>
+        /// 区域描述
+        /// </summary>
         public System.String Name_kw { get; set; } 
     	
 	
