@@ -178,12 +178,13 @@ namespace Whapp
                 DBHelper db = new DBHelper();
                 List<string> arr = new List<string>();
                 //获取锅炉信息
-                string sql_boiler = "select Edfh,K_Name_kw,Ch_Run,Ch_EndTime,Ch_Run_kyq,Ch_EndTime_kyq from dncboiler where Status=1 and IsDeleted=0 and Id=" + boilerid;
+                string sql_boiler = "select Edfh,K_Name_kw,Ch_Run,Ch_EndTime,Ch_Run_kyq,Ch_EndTime_kyq,NowStatus from dncboiler where Status=1 and IsDeleted=0 and Id=" + boilerid;
                 DataTable dt_boiler = db.GetCommand(sql_boiler);
 
                 int edfh = int.Parse(dt_boiler.Rows[0][0].ToString());
                 boiler_name = dt_boiler.Rows[0][1].ToString();
                 int chrun = int.Parse(dt_boiler.Rows[0][2].ToString());
+                
                 /*
                  * 0：吹灰刚执行完，准备计算参考温升、参考压降
                  * 1：20分钟时，更新参考温升、参考压降完成
@@ -207,6 +208,8 @@ namespace Whapp
                 {
                     dt_chend_kyq = DateTime.Parse(dt_boiler.Rows[0][5].ToString());
                 }
+
+                int nowstatus = int.Parse(dt_boiler.Rows[0][6].ToString());//运行状态（0：停机 1：运行）
 
                 //获取定额参数配置表信息
                 string sql_para = "select Airpress,Drybulbtemp,Wetbulbtemp,Watertemp3,Flyashratio,Slagratio,Temp0cp,Temp100cp,Temp200cp,Temp0ch,Temp100ch,Temp200ch,Specificheat,Heatloss,Airheat,Design_in_wind_temp from dncparameter where Status=1 and IsDeleted=0 and DncBoilerId=" + boilerid;
@@ -357,9 +360,22 @@ namespace Whapp
                     double py_temp_modify = temp_gas_out + py_temp_dif_modify;//修正后的排烟温度=实测排烟温度+经进口风温修正后排烟温度变化值
                     double yqc_radio = (kyq_in_temp_gas - py_temp_modify) / (kyq_in_temp_gas - wind_temp_in);//实际烟气侧效率=(预热器进口烟温-修正后排烟温度)/(预热器进口烟温-实测进口风温)
 
+                    if (nowstatus == 0 && grq_ll_out > 5)
+                    {
+                        arr.Add("update dncboiler set Syntime='" + uptime + "',Positive=" + boiler_efficiency_positive + ",Counter=" + boiler_efficiency_counter + ",NowStatus=1,Ch_StartTime=now() where Id=" + boilerid + ";");
+                    }
+
+                    else if (nowstatus == 1 && grq_ll_out < 5)
+                    {
+                        arr.Add("update dncboiler set Syntime='" + uptime + "',Positive=" + boiler_efficiency_positive + ",Counter=" + boiler_efficiency_counter + ",NowStatus=0  where Id=" + boilerid + ";");
+                    }
+                    else
+                    {
+                        arr.Add("update dncboiler set Syntime='" + uptime + "',Positive=" + boiler_efficiency_positive + ",Counter=" + boiler_efficiency_counter + " where Id=" + boilerid + ";");
+                    }
 
 
-                    arr.Add("update dncboiler set Syntime='" + uptime + "',Positive=" + boiler_efficiency_positive + ",Counter=" + boiler_efficiency_counter + " where Id=" + boilerid + ";");
+
                     arr.Add("insert into dncboilerrat (Positive,Counter,RealTime,Status,IsDeleted,DncBoilerId,DncBoiler_Name) values(" + boiler_efficiency_positive + "," + boiler_efficiency_counter + ",'" + uptime + "',1,0," + boilerid + ",'" + boiler_name + "');");
                     db.ExecuteTransaction(arr);
                     arr.Clear();

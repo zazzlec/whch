@@ -146,6 +146,7 @@
             width: calc(20vh); 
             height: 80%;
             line-height: 600%;
+            // color: #6da0e4;
           }
           .b{
             text-align: center;
@@ -894,8 +895,8 @@
         <div class="b"  style="color:#228B22"><Icon type="md-square" />&nbsp;&nbsp;堵塞概率</div>
       </div>
       <div class="you"  >
-        <div class="t"  >
-          --:--:--
+        <div class="t"  style="border:3px solid #6da0e4;font-size:32px;line-height:419%;color:#6da0e4">
+          {{yxsc}}
         </div>
         <div class="b"  ><Icon type="md-square" />&nbsp;运行时长(h)</div>
       </div>
@@ -1008,7 +1009,7 @@ export default {
       sm:0,
       yr:0,
 
-
+      yxsc:"--:--:--",
 
 
       ch:0,
@@ -1084,7 +1085,7 @@ export default {
       boilerid:-1,
       boiler:"",
       boilerNowStatus:-1,
-      boilerSta_time:"",
+      boilerSta_time:"",//Ch_StartTime
       boilers:[],
 
       h2:0,
@@ -1201,10 +1202,26 @@ export default {
           this.Bw_pg=o.bw_pg;
           this.Bw_gg=o.bw_gg;
 
+
+// console.log(o.boilerNowStatus);
+          o.boilerNowStatus=o.nowStatus;
+          o.boilerSta_time=o.ch_StartTime;
+          if(o.boilerNowStatus==1){
+            let t=o.boilerSta_time.replace("T"," ");
+            var dateBegin = new Date(t.replace(/-/g, "/"));
+            var dateend = new Date();
+            let j=dateend.getTime()-dateBegin.getTime();
+            this.yxsc=(j/1000/60/60).toFixed(0);
+          }else{
+            this.yxsc="--:--:--";
+          }
+
+
+
           this.boilerPositive=o.positive;
           this.boilerCounter=o.counter;
           this.quenlist(this.boilerid);
-          this.initpoint(this.boilerid);
+          // this.initpoint(this.boilerid);
         }
       });
       
@@ -1986,6 +2003,19 @@ export default {
             this.Bw_dg=o.boilers[0].bw_dg;
             this.Bw_pg=o.boilers[0].bw_pg;
             this.Bw_gg=o.boilers[0].bw_gg;
+
+            o.boilerNowStatus=o.boilers[0].nowStatus;
+            o.boilerSta_time=o.boilers[0].ch_StartTime;
+            if(o.boilerNowStatus==1){
+              let t=o.boilerSta_time.replace("T"," ");
+              console.log(t);
+              var dateBegin = new Date(t.replace(/-/g, "/"));
+              var dateend = new Date();
+              let j=dateend.getTime()-dateBegin.getTime();
+              o.yxsc=(j/1000/60/60).toFixed(0);
+            }else{
+              o.yxsc="--:--:--";
+            }
           }else{
             o.boilers.map(x=>{
               if(x.id==o.boilerid){
@@ -2116,13 +2146,27 @@ export default {
     getBoilerListAll().then(res => {
           o.boilers=getDateMore(res.data.data,-1,["syntime",]);
           if(o.boilerid==-1){
-            console.log(0);
             o.boiler=o.boilers[0].k_Name_kw;
             o.boilerid=o.boilers[0].id;
             o.boilertime=o.boilers[0].syntime;
             o.boilerPositive=o.boilers[0].positive;
             o.boilerCounter=o.boilers[0].counter;
 
+            o.boilerNowStatus=o.boilers[0].nowStatus;
+            o.boilerSta_time=o.boilers[0].ch_StartTime;
+            if(o.boilerNowStatus==1){
+              let t=o.boilerSta_time.replace("T"," ");
+              console.log(t);
+              var dateBegin = new Date(t.replace(/-/g, "/"));
+              var dateend = new Date();
+              let j=dateend.getTime()-dateBegin.getTime();
+              o.yxsc=(j/1000/60/60).toFixed(0);
+            }else{
+              o.yxsc="--:--:--";
+            }
+
+  // boilerNowStatus:-1,
+  //     boilerSta_time:"",//Ch_StartTime
             // console.log(o.boilers[0]);
             this.Cw_High=o.boilers[0].cw_High;
             this.Cw_Low=o.boilers[0].cw_Low;
