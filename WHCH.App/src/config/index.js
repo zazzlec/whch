@@ -19,8 +19,8 @@ export default {
   baseUrl: {
     dev: 'http://localhost:54321/',
     pro: 'http://localhost:54321/',
-    // dev: 'http://10.0.43.35:8092/',//测试
-    // pro: 'http://10.0.43.35:8092/',//测试
+     //dev: 'http://10.0.43.35:8092/',//五河
+     //pro: 'http://10.0.43.35:8092/',//五河
     // dev: 'http://132.0.6.21:5000/',//6号炉
    //  pro: 'http://132.0.6.21:5000/',//6号炉
     defaultPrefix:"api/v1/"
@@ -28,8 +28,8 @@ export default {
   authUrl: {
     dev: 'http://localhost:54321/api/oauth/auth',
     pro: 'http://localhost:54321/api/oauth/auth'
-    // dev: 'http://10.0.43.35:8092/api/oauth/auth',//测试
-    // pro: 'http://10.0.43.35:8092/api/oauth/auth'//测试
+     //dev: 'http://10.0.43.35:8092/api/oauth/auth',//五河
+     //pro: 'http://10.0.43.35:8092/api/oauth/auth'//五河
       //dev: 'http://132.0.6.21:5000/api/oauth/auth',//6号炉
       //pro: 'http://132.0.6.21:5000/api/oauth/auth'//6号炉
   },
